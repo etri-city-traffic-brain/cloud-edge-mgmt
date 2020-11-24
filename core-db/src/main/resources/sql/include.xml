@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.innogrid.uniq.coredb">
+
+    <sql id="paging">
+        <choose>
+            <when test="page != null and rows != null">
+                <choose>
+                    <when test="page == 0">
+                        LIMIT #{rows} OFFSET ${page}
+                    </when>
+                    <otherwise>
+                        LIMIT #{rows} OFFSET ${(page-1) * rows}
+                    </otherwise>
+                </choose>
+            </when>
+
+        </choose>
+    </sql>
+
+    <sql id="orderby">
+        <if test="sidx != null and sord != null">
+            ORDER BY
+            <choose>
+                <when test="sidx.equals('id')">
+                    id
+                </when>
+                <when test="sidx.equals('name')">
+                    name
+                </when>
+                <when test="sidx.equals('userCount')">
+                    user_count
+                </when>
+                <when test="sidx.equals('projectCount')">
+                    project_count
+                </when>
+                <when test="sidx.equals('roleCount')">
+                    role_count
+                </when>
+                <when test="sidx.equals('permissionCount')">
+                    permission_count
+                </when>
+                <when test="sidx.equals('description')">
+                    description
+                </when>
+                <when test="sidx.equals('groupId')">
+                    group_id
+                </when>
+                <when test="sidx.equals('groupName')">
+                    group_name
+                </when>
+                <when test="sidx.equals('admin')">
+                    admin
+                </when>
+                <when test="sidx.equals('enabled')">
+                    enabled
+                </when>
+                <when test="sidx.equals('login')">
+                    login
+                </when>
+                <when test="sidx.equals('user')">
+                    user
+                </when>
+                <when test="sidx.equals('email')">
+                    email
+                </when>
+                <when test="sidx.equals('contact')">
+                    contact
+                </when>
+                <when test="sidx.equals('affiliation')">
+                    affiliation
+                </when>
+                <when test="sidx.equals('key')">
+                    key
+                </when>
+                <when test="sidx.equals('type')">
+                    type
+                </when>
+                <when test="sidx.equals('socket')">
+                    socket
+                </when>
+                <when test="sidx.equals('storage')">
+                    storage
+                </when>
+                <when test="sidx.equals('expires')">
+                    expires
+                </when>
+                <when test="sidx.equals('violated')">
+                    violated
+                </when>
+                <when test="sidx.equals('details')">
+                    details
+                </when>
+                <when test="sidx.equals('userId')">
+                    user_id
+                </when>
+                <when test="sidx.equals('userName')">
+                    user_name
+                </when>
+                <when test="sidx.equals('action')">
+                    action
+                </when>
+                <when test="sidx.equals('result')">
+                    result
+                </when>
+                <when test="sidx.equals('content')">
+                    content
+                </when>
+                <when test="sidx.equals('target')">
+                    target
+                </when>
+                <when test="sidx.equals('ip')">
+                    INET_ATON(ip)
+                </when>
+                <when test="sidx.equals('deployment')">
+                    deployment
+                </when>
+                <when test="sidx.equals('cloudName')">
+                    cloud_name
+                </when>
+                <when test="sidx.equals('creator')">
+                    creator
+                </when>
+                <when test="sidx.equals('cloudId')">
+                    cloud_id
+                </when>
+                <when test="sidx.equals('menu')">
+                    cloud_type desc, type
+                </when>
+                <otherwise>
+                    create_datetime
+                </otherwise>
+            </choose>
+
+            <choose>
+                <when test="sord.equals('asc')">
+                    asc
+                </when>
+                <otherwise>
+                    desc
+                </otherwise>
+            </choose>
+        </if>
+    </sql>
+
+
+    <sql id="columnWhere">
+        <if test="(q0 != null and q0 != '') and (q1 != null and q1 != '')">
+            <choose>
+                <when test="q0.equals('createdAt')">
+                    AND create_datetime LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('description')">
+                    AND description LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('creator')">
+                    AND creator LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('login')">
+                    AND login_datetime LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('expires')">
+                    AND expires LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('id')">
+                    AND id LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('user')">
+                    AND user LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('name')">
+                    AND name LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('email')">
+                    AND email LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('contact')">
+                    AND contact LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('affiliation')">
+                    AND affiliation LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('key')">
+                    AND `key` LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('type')">
+                    AND type LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('socket')">
+                    AND socket LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('storage')">
+                    AND storage LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('violated')">
+                    <choose>
+                        <when test="q1.equals('정상')">
+                            AND violated = 'no'
+                        </when>
+                        <when test="q1.equals('비정상')">
+                            AND violated = 'yes'
+                        </when>
+                        <otherwise>
+                            AND violated LIKE CONCAT('%', #{q1}, '%')
+                        </otherwise>
+                    </choose>
+                </when>
+                <when test="q0.equals('details')">
+                    AND details LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('userId')">
+                    AND user_id LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('userName')">
+                    AND user_name LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('action')">
+                    <choose>
+                        <when test="q1.equals('라이센스 확인')">
+                            AND action = 'CHECK_LICENSE'
+                        </when>
+                        <when test="q1.equals('라이센스 수정')">
+                            AND action = 'UPDATE_LICENSE'
+                        </when>
+                        <when test="q1.equals('라이센스 삭제')">
+                            AND action = 'DELETE_LICENSE'
+                        </when>
+                        <when test="q1.equals('라이센스 생성')">
+                            AND action = 'CREATE_LICENSE'
+                        </when>
+                        <when test="q1.equals('사용자 생성')">
+                            AND action = 'CREATE_USER'
+                        </when>
+                        <when test="q1.equals('사용자 수정')">
+                            AND action = 'UPDATE_USER'
+                        </when>
+                        <when test="q1.equals('사용자 삭제')">
+                            AND action = 'DELETE_USER'
+                        </when>
+                        <when test="q1.equals('로그인')">
+                            AND action = 'LOGIN'
+                        </when>
+                        <when test="q1.equals('로그아웃')">
+                            AND action = 'LOGOUT'
+                        </when>
+                        <when test="q1.equals('라이센스')">
+                            AND action LIKE CONCAT('%', 'LICENSE', '%')
+                        </when>
+                        <when test="q1.equals('사용자')">
+                            AND action LIKE CONCAT('%', 'USER', '%')
+                        </when>
+                        <when test="q1.equals('확인')">
+                            AND action LIKE CONCAT('%', 'CHECK', '%')
+                        </when>
+                        <when test="q1.equals('생성')">
+                            AND action LIKE CONCAT('%', 'CERATE', '%')
+                        </when>
+                        <when test="q1.equals('수정')">
+                            AND action LIKE CONCAT('%', 'UPDATE', '%')
+                        </when>
+                        <when test="q1.equals('삭제')">
+                            AND action LIKE CONCAT('%', 'DELETE', '%')
+                        </when>
+                        <otherwise>
+                            AND action LIKE CONCAT('%', #{q1}, '%')
+                        </otherwise>
+                    </choose>
+                </when>
+                <when test="q0.equals('result')">
+                    <choose>
+                        <when test="q1.equals('성공')">
+                            AND result = 'SUCCESS'
+                        </when>
+                        <when test="q1.equals('실패')">
+                            AND result = 'FAIL'
+                        </when>
+                        <otherwise>
+                            AND result LIKE CONCAT('%', #{q1}, '%')
+                        </otherwise>
+                    </choose>
+                </when>
+                <when test="q0.equals('content')">
+                    AND content LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('target')">
+                    AND target LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('ip')">
+                    AND ip LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('deployment')">
+                    AND deployment LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('cloudId')">
+                    AND cloud_id LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('cloudName')">
+                    AND cloud_name LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('admin')">
+                    AND admin LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('enabled')">
+                    AND enabled LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('groupName')">
+                    AND group_name LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('groupId')">
+                    AND group_id LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('permissionCount')">
+                    AND permission_count LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('roleCount')">
+                    AND role_count LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('projectCount')">
+                    AND project_count LIKE CONCAT('%', #{q1}, '%')
+                </when>
+                <when test="q0.equals('userCount')">
+                    AND user_count LIKE CONCAT('%', #{q1}, '%')
+                </when>
+            </choose>
+        </if>
+    </sql>
+
+</mapper>

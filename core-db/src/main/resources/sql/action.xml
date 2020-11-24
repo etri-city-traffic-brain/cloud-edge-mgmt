@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.innogrid.uniq.coredb.mapper">
+
+	<resultMap id="actionResultMap" type="ActionInfo">
+		<id column="id" property="id"/>
+		<result column="group_id" property="groupId"/>
+		<result column="content" property="content"/>
+		<result column="result" property="result"/>
+		<result column="create_datetime" property="createdAt"/>
+		<result column="update_datetime" property="updatedAt"/>
+		<result column="result_detail" property="resultDetail"/>
+		<result column="user_id" property="userId"/>
+		<result column="target_id" property="targetId"/>
+		<result column="target_name" property="targetName"/>
+		<result column="action_code" property="actionCode"/>
+		<result column="type" property="type"/>
+		<result column="user_name" property="userName"/>
+	</resultMap>
+
+	<sql id="actionWhere">
+		<where>
+			<if test="id != null">
+				AND id = #{id}
+			</if>
+			<if test="groupId != null">
+				AND group_id = #{groupId}
+			</if>
+			<if test="actionCode != null">
+				AND action_code = #{actionCode}
+			</if>
+			<if test="result != null">
+				AND result = #{result}
+			</if>
+			<if test="userId != null">
+				AND user_id = #{userId}
+			</if>
+			<if test="targetId != null">
+				AND target_id = #{targetId}
+			</if>
+			<if test="targetName != null">
+				AND target_name = #{targetName}
+			</if>
+			<if test="type != null">
+				AND type = #{type}
+			</if>
+			<include refid="com.innogrid.uniq.coredb.columnWhere" />
+		</where>
+	</sql>
+
+	<sql id="actionSQL">
+		SELECT
+			a.id,
+			a.group_id,
+			a.type,
+			a.action_code,
+			a.content,
+			a.result,
+			a.create_datetime,
+			a.update_datetime,
+			a.result_detail,
+			a.user_id,
+			a.target_id,
+			a.target_name,
+			cmp_user.name as userName
+		FROM cmp.cmp_action AS a
+		LEFT JOIN cmp.cmp_user ON a.user_id= cmp_user.id
+	</sql>
+
+	<select id="getActions" resultMap="actionResultMap">
+		SELECT * FROM (
+		<include refid="actionSQL" />
+		) AS d
+		<include refid="actionWhere" />
+		<include refid="com.innogrid.uniq.coredb.orderby" />
+		<include refid="com.innogrid.uniq.coredb.paging" />
+	</select>
+
+	<select id="getActionIDCount" resultType="int">
+        SELECT COUNT(1) FROM cmp.cmp_user WHERE id = #{id}
+    </select>
+
+	<insert id="createAction" parameterType="ActionInfo">
+		INSERT INTO cmp.cmp_action (id,group_id,content,user_id,target_id,target_name,action_code,type)
+		VALUES (
+			#{id},
+			#{groupId},
+			#{content},
+			#{userId},
+			#{targetId},
+			#{targetName},
+			#{actionCode},
+			#{type}
+		)
+	</insert>
+
+	<update id="updateAction" parameterType="ActionInfo">
+	UPDATE cmp.cmp_action
+	SET
+		result = #{result},
+		update_datetime = CURRENT_TIMESTAMP,
+		result_detail = #{resultDetail}
+	WHERE id = #{id}
+	</update>
+
+	<delete id="deleteAction" parameterType="java.util.Map">
+		DELETE FROM cmp.cmp_action
+		ORDER BY create_datetime ASC
+		<if test="limit != null">
+			LIMIT #{limit}
+		</if>
+		<if test="limit == null">
+			LIMIT 0
+		</if>
+	</delete>
+
+</mapper>

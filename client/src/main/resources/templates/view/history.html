@@ -1,0 +1,93 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/view.layout">
+
+<div class="content_north" layout:fragment="content.north">
+    <div class="clearfix">
+        <div class="location location_usage">
+            <strong th:text="#{url.title.history}">사용이력</strong>
+        </div>
+        <div class="searchReset">
+            <button type="button"><span title="reset">Reset</span></button>
+        </div>
+        <div class="searchbox">
+            <select  class="select_search" title="Search scope">
+            </select>
+            <input type="text" class="input_search"/>
+            <input type="image" th:src="@{/images/icon/btn_search.png}" alt="Search" class="searchBtn" title="검색" />
+        </div>
+    </div>
+</div>
+
+<div class="content_center" layout:fragment="content.center" th:remove="all"></div>
+<div class="content_south" layout:fragment="content.south" th:remove="all"></div>
+
+<div class="content_center content_extend" layout:fragment="content.extend">
+    <div class="contentBox_center">
+        <div class="contentBox_top clearfix" id="history-view">
+
+            <div class="action_select clearfix">
+
+            </div>
+
+            <div class="action_option">
+                <button type="button" class="btn_action_refresh" title="새로고침" id="history_refresh"><span>Refresh</span></button>
+                <button type="button" class="btn_action_setting" title="테이블 설정"><span>Setting</span></button>
+            </div>
+        </div>
+
+        <div class="contentBox_body">
+            <table class="table_grid" id="history-grid">
+            </table>
+        </div>
+
+        <div class="contentBox_bottom" id="pager1">
+        </div><!-- //contentBox_bottom -->
+    </div>
+</div>
+
+<div th:remove="tag" layout:fragment="page.popup">
+</div>
+
+
+<div layout:fragment="user.embedded.script" th:remove="tag">
+    <script type="text/javascript" th:src="@{/js/console/history.js}"></script>
+    <script type="text/javascript">
+
+        $(function(){
+
+            $(".searchBtn").on('click', function() {
+                $("#history-grid").setGridParam({
+                    postData: { q0: $(".select_search").val(), q1: $(".input_search").val() }
+                }).trigger("reloadGrid");
+            });
+
+            $(".input_search").keydown(function(key) {
+                if (key.keyCode == 13) {
+                    $("#history-grid").setGridParam({
+                        postData: { q0: $(".select_search").val(), q1: $(".input_search").val() }
+                    }).trigger("reloadGrid");
+                }
+            });
+
+            $("#history_refresh").click(function(){
+                $("#history-grid").trigger("reloadGrid");
+            });
+
+            //reset button클릭 시
+            $(".searchReset button").on('click', function() {
+                $(".input_search").val('');
+                $("#history-grid").setGridParam({ page:1, postData: { q0: '', q1: ''} }).trigger("reloadGrid");
+            });
+
+            $(".btn_action_setting").on('click', function(e) {
+                $("#history-grid").configureTable();
+            });
+
+        });
+
+    </script>
+</div>
+</html>

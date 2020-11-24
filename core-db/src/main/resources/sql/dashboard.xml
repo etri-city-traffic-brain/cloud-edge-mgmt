@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.innogrid.uniq.coredb.mapper">
+
+	<resultMap id="dashboardResultMap" type="ServiceDashboardInfo">
+		<result column="id" property="id" />
+		<result column="type" property="type" />
+		<result column="total_server" property="totalServer" />
+		<result column="running_server" property="runningServer" />
+		<result column="stopped_server" property="stoppedServer" />
+		<result column="etc_server" property="etcServer" />
+		<result column="account" property="account" />
+		<result column="network" property="network" />
+		<result column="public_ip" property="publicIp" />
+		<result column="loadbalancer" property="loadbalancer" />
+		<result column="security_group" property="securityGroup" />
+		<result column="last_update_datetime" property="lastUpdatedAt" />
+		<result column="hypervisor_vcpus" property="hypervisorVcpus" />
+		<result column="hypervisor_vcpus_used" property="hypervisorVcpusUsed" />
+		<result column="hypervisor_memory" property="hypervisorMemory" />
+		<result column="hypervisor_memory_used" property="hypervisorMemoryUsed" />
+		<result column="hypervisor_disk" property="hypervisorDisk" />
+		<result column="hypervisor_disk_used" property="hypervisorDiskUsed" />
+		<result column="volume" property="volume" />
+		<result column="snapshot" property="snapshot" />
+		<result column="image" property="image" />
+		<result column="keypair" property="keypair" />
+		<result column="subnet" property="subnet" />
+		<result column="storage_account" property="storageAccount" />
+		<result column="disk" property="disk" />
+		<result column="active_directory_group" property="activeDirectoryGroup" />
+		<result column="active_directory_user" property="activeDirectoryUser" />
+		<result column="flavor" property="flavor" />
+		<result column="backup" property="backup" />
+		<result column="router" property="router" />
+		<result column="disk_count" property="diskCount" />
+		<result column="disk_usage" property="diskUsage" />
+		<result column="storage_count" property="storageCount" />
+		<result column="storage_usage" property="storageUsage" />
+		<result column="database_count" property="databaseCount" />
+		<result column="database_usage" property="databaseUsage" />
+		<result column="datacenter" property="datacenter" />
+		<result column="cluster" property="cluster" />
+		<result column="host" property="host" />
+		<result column="datastore" property="datastore" />
+		<result column="current_cost" property="currentCost" />
+		<result column="predict_month_cost" property="predictMonthCost" />
+		<result column="previous_cost" property="previousCost" />
+		<result column="previous_month_cost" property="previousMonthCost" />
+	</resultMap>
+
+	<sql id="dashboardWhere">
+		<where>
+			<if test="id != null">
+				AND id = #{id}
+			</if>
+			<if test="type != null">
+				AND type = #{type}
+			</if>
+			<include refid="com.innogrid.uniq.coredb.columnWhere" />
+		</where>
+	</sql>
+
+	<sql id="dashboardSQL">
+		SELECT
+			dashboard.id,
+			dashboard.type,
+			dashboard.total_server,
+			dashboard.running_server,
+			dashboard.stopped_server,
+			dashboard.etc_server,
+			dashboard.network,
+			dashboard.account,
+			dashboard.public_ip,
+			dashboard.loadbalancer,
+			dashboard.security_group,
+			dashboard.last_update_datetime,
+			dashboard.hypervisor_vcpus,
+			dashboard.hypervisor_vcpus_used,
+			dashboard.hypervisor_memory,
+			dashboard.hypervisor_memory_used,
+			dashboard.hypervisor_disk,
+			dashboard.hypervisor_disk_used,
+			dashboard.volume,
+			dashboard.snapshot,
+			dashboard.image,
+			dashboard.keypair,
+			dashboard.subnet,
+			dashboard.storage_account,
+			dashboard.disk,
+			dashboard.active_directory_group,
+			dashboard.active_directory_user,
+			dashboard.flavor,
+			dashboard.backup,
+			dashboard.router,
+			dashboard.disk_count,
+			dashboard.disk_usage,
+			dashboard.storage_count,
+			dashboard.storage_usage,
+			dashboard.database_count,
+			dashboard.database_usage,
+			dashboard.datacenter,
+			dashboard.cluster,
+			dashboard.host,
+			dashboard.datastore,
+			dashboard.current_cost,
+			dashboard.predict_month_cost,
+			dashboard.previous_cost,
+			dashboard.previous_month_cost
+		FROM cmp.cmp_dashboard AS dashboard
+    </sql>
+
+	<select id="getDashboard" resultMap="dashboardResultMap">
+		SELECT * FROM (
+		<include refid="dashboardSQL" />
+		) AS d
+		<include refid="dashboardWhere" />
+		<include refid="com.innogrid.uniq.coredb.orderby" />
+		<include refid="com.innogrid.uniq.coredb.paging" />
+	</select>
+
+	<select id="getDashboardIdCount" resultType="int">
+        SELECT COUNT(1) FROM cmp.cmp_dashboard WHERE id = #{id}
+    </select>
+
+	<insert id="createDashboard" parameterType="ServiceDashboardInfo">
+		INSERT INTO cmp.cmp_dashboard (
+			id,
+			type,
+			total_server,
+			running_server,
+			stopped_server,
+			etc_server,
+			network,
+			public_ip,
+			loadbalancer,
+			security_group,
+			account,
+			hypervisor_vcpus,
+			hypervisor_vcpus_used,
+			hypervisor_memory,
+			hypervisor_memory_used,
+			hypervisor_disk,
+			hypervisor_disk_used,
+			volume,
+			snapshot,
+			image,
+			keypair,
+			subnet,
+			storage_account,
+			disk,
+			active_directory_group,
+			active_directory_user,
+			flavor,
+			backup,
+			router,
+			disk_count,
+			disk_usage,
+			storage_count,
+			storage_usage,
+			database_count,
+			database_usage,
+			datacenter,
+			cluster,
+			host,
+			datastore
+		)
+		VALUES (
+			#{id},
+			#{type},
+			#{totalServer},
+            #{runningServer},
+			#{stoppedServer},
+            #{etcServer},
+            #{network},
+            #{publicIp},
+            #{loadbalancer},
+            #{securityGroup},
+            #{account},
+            #{hypervisorVcpus},
+            #{hypervisorVcpusUsed},
+            #{hypervisorMemory},
+            #{hypervisorMemoryUsed},
+            #{hypervisorDisk},
+            #{hypervisorDiskUsed},
+            #{volume},
+            #{snapshot},
+            #{image},
+            #{keypair},
+            #{subnet},
+            #{storageAccount},
+            #{disk},
+            #{activeDirectoryGroup},
+            #{activeDirectoryUser},
+            #{flavor},
+            #{backup},
+            #{router},
+            #{diskCount},
+            #{diskUsage},
+            #{storageCount},
+            #{storageUsage},
+            #{databaseCount},
+            #{databaseUsage},
+            #{datacenter},
+            #{cluster},
+            #{host},
+            #{datastore}
+		)
+	</insert>
+
+	<update id="updateDashboard" parameterType="ServiceDashboardInfo">
+		UPDATE cmp.cmp_dashboard
+		<set>
+			<if test="type != null">
+				type = #{type},
+			</if>
+			<if test="totalServer != null">
+				total_server = #{totalServer},
+			</if>
+			<if test="runningServer != null">
+				running_server = #{runningServer},
+			</if>
+			<if test="stoppedServer != null">
+				stopped_server = #{stoppedServer},
+			</if>
+			<if test="etcServer != null">
+				etc_server = #{etcServer},
+			</if>
+			<if test="account != null">
+				account = #{account},
+			</if>
+			<if test="network != null">
+				network = #{network},
+			</if>
+			<if test="publicIp != null">
+				public_ip = #{publicIp},
+			</if>
+			<if test="loadbalancer != null">
+				loadbalancer = #{loadbalancer},
+			</if>
+			<if test="securityGroup != null">
+				security_group = #{securityGroup},
+			</if>
+			<if test="lastUpdatedAt != null">
+				last_update_datetime = #{lastUpdatedAt},
+			</if>
+			<if test="hypervisorVcpus != null">
+				hypervisor_vcpus = #{hypervisorVcpus},
+			</if>
+			<if test="hypervisorVcpusUsed != null">
+				hypervisor_vcpus_used = #{hypervisorVcpusUsed},
+			</if>
+			<if test="hypervisorMemory != null">
+				hypervisor_memory = #{hypervisorMemory},
+			</if>
+			<if test="hypervisorMemoryUsed != null">
+				hypervisor_memory_used = #{hypervisorMemoryUsed},
+			</if>
+			<if test="hypervisorDisk != null">
+				hypervisor_disk = #{hypervisorDisk},
+			</if>
+			<if test="hypervisorDiskUsed != null">
+				hypervisor_disk_used = #{hypervisorDiskUsed},
+			</if>
+			<if test="volume != null">
+				volume = #{volume},
+			</if>
+			<if test="snapshot != null">
+				snapshot = #{snapshot},
+			</if>
+			<if test="image != null">
+				image = #{image},
+			</if>
+			<if test="keypair != null">
+				keypair = #{keypair},
+			</if>
+			<if test="subnet != null">
+				subnet = #{subnet},
+			</if>
+			<if test="storageAccount != null">
+				storage_account = #{storageAccount},
+			</if>
+			<if test="disk != null">
+				disk = #{disk},
+			</if>
+			<if test="activeDirectoryGroup != null">
+				active_directory_group = #{activeDirectoryGroup},
+			</if>
+			<if test="activeDirectoryUser != null">
+				active_directory_user = #{activeDirectoryUser},
+			</if>
+			<if test="flavor != null">
+				flavor = #{flavor},
+			</if>
+			<if test="backup != null">
+				backup = #{backup},
+			</if>
+			<if test="router != null">
+				router = #{router},
+			</if>
+			<if test="diskCount != null">
+				disk_count = #{diskCount},
+			</if>
+			<if test="diskUsage != null">
+				disk_usage = #{diskUsage},
+			</if>
+			<if test="storageCount != null">
+				storage_count = #{storageCount},
+			</if>
+			<if test="storageUsage != null">
+				storage_usage = #{storageUsage},
+			</if>
+			<if test="databaseCount != null">
+				database_count = #{databaseCount},
+			</if>
+			<if test="databaseUsage != null">
+				database_usage = #{databaseUsage},
+			</if>
+			<if test="datacenter != null">
+				datacenter = #{datacenter},
+			</if>
+			<if test="cluster != null">
+				cluster = #{cluster},
+			</if>
+			<if test="host != null">
+				host = #{host},
+			</if>
+			<if test="datastore != null">
+				datastore = #{datastore},
+			</if>
+			<if test="currentCost != null">
+				current_cost = #{currentCost},
+			</if>
+			<if test="predictMonthCost != null">
+				predict_month_cost = #{predictMonthCost},
+			</if>
+			<if test="previousCost != null">
+				previous_cost = #{previousCost},
+			</if>
+			<if test="previousMonthCost != null">
+				previous_month_cost = #{previousMonthCost},
+			</if>
+		</set>
+		<where>
+			<if test="id != null">
+				AND id = #{id}
+			</if>
+		</where>
+	</update>
+
+	<delete id="deleteDashboard" parameterType="ServiceDashboardInfo">
+		DELETE FROM cmp.cmp_dashboard
+		<where>
+			<if test="id != null">
+				AND id = #{id}
+			</if>
+		</where>
+	</delete>
+
+</mapper>

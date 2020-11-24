@@ -1,0 +1,16 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/view.layout">
+
+
+<div class="cont_wrap" layout:fragment="content" >
+    <div class="cont_inner">
+        <div class="cont_credentials common_clearfix" layout:fragment="content.top"></div>
+
+        <div class="cont_credentials_data" layout:fragment="content.center">
+        </div><!-- //content -->
+    </div><!-- //cont_inner -->
+</div><!-- //cont_wrap -->
+</html>

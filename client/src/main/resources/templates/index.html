@@ -1,0 +1,52 @@
+<!doctype html>
+<html th:lang="ko"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<meta charset="utf-8" />
+	<meta name="title" content="Login" />
+	<meta http-equiv="Content-Script-Type" content="text/javascript" />
+	<meta http-equiv="Content-Style-Type" content="text/css" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>UNIQ</title>
+    <link rel="icon" th:href="@{/images/favicon2.png}">
+    <link rel="shortcut icon" th:href="@{/images/favicon2.png}">
+    <link rel="stylesheet" type="text/css" media="all" href="../../css/normalize.css"  th:href="@{/css/normalize.css}" />
+    <link rel="stylesheet" type="text/css" media="all" href="../../css/login.css"  th:href="@{/css/normalize.css}" />
+    <link rel="stylesheet" type="text/css" media="all" href="../../css/fonts.css"  th:href="@{/css/fonts.css}" />
+    <link rel="stylesheet" type="text/css" media="all" href="../../css/login.css"  th:href="@{/css/login.css}" />
+    <script type="text/javascript">
+       window.onload = function() {
+         document.forms[0].username.focus();
+       };
+    </script>
+</head>
+<body>
+<div class="wrap">
+  <header class="header">
+    <img src="/images/login/login_tit.png" th:src="@{/images/uniq/login/login_tit.png}" alt="Cloud Management Platform">
+  </header>
+
+  <main class="login_wrap">
+    <div><img src="/images/login/login_tit_msg.png" th:src="@{/images/login/login_tit_msg.png}" alt="Welcome"></div>
+    <form th:action="@{/login}" method="post">
+      <section>
+        <div class="login_form">
+
+          <input type="text" name="username" placeholder="UserName" />
+          <input type="password" name="password" placeholder="Password">
+          <button type="submit" class="btn_login">SIGN IN</button>
+
+
+
+          </div>
+
+      </section>
+    </form>
+
+    <footer class="footer">Copyright (C) 2020 innogrid. All rights reserved.</footer>
+  </main>
+</div>
+</body>
+</html>

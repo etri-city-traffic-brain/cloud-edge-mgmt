@@ -1,0 +1,23 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/view.layout">
+
+
+    <div class="cont_wrap" layout:fragment="content" >
+        <div class="cont_body cont_list">
+            <div class="cont_detail_top common_clearfix" layout:fragment="detail_tit"></div>
+            <div class="cont_tab_wrap">
+                <div class="cont_tab">
+                    <div class="inner">
+                        <a th:if="${#httpServletRequest.getRequestURI().startsWith('/edge/rexgen/compute')}" th:href="@{/edge/rexgen/compute/server(id=${param.id})}" th:classappend="${#httpServletRequest.getRequestURI() == '/edge/rexgen/compute' || #httpServletRequest.getRequestURI() == '/edge/rexgen/compute/server' ? 'on':''}"><h3 th:text="#{title.tab.instance}">Instance</h3></a>
+                    </div>
+                </div>
+                <div class="cont_body_top common_clearfix" layout:fragment="layout_tit"></div>
+            </div>
+            <div class="cont_body cont_list" layout:fragment="content.center"></div>
+        </div>
+        <div class="cont_body cont_detail" layout:fragment="content.right"></div>
+    </div><!-- //cont_wrap -->
+</html>

@@ -1,0 +1,133 @@
+@charset "utf-8";
+
+body,div,p,h1,h2,h3,h4,h5,h6,ul,ol,li,dl,dt,dd,table,th,td,form,fieldset,legend,input,textarea,button,select,hr,
+article,aside,details,figcaption,figure,footer,header,main,menu,nav,section,summary {
+  margin: 0;
+  padding: 0;
+}
+* {box-sizing: border-box}
+html, body {height: 100%}
+html {font-size:13px}
+body, h1,h2,h3,h4,h5,h6 {font-family:'Roboto', sans-serif, sans-serif;}
+body {font-size:1rem; color:#667285}
+ul, li {list-style: none}
+button {cursor: pointer; outline: transparent}
+a {text-decoration:none;color:#0084e1}
+
+input, textarea {vertical-align:middle}
+h1,h2,h3,h4,h5,h6,th{font-weight: normal; font-size: inherit; color: inherit}
+
+.common_clearfix:after {
+  content: " ";
+  display: block;
+  clear: both
+}
+/*************************************** LAYOUT ***************************************/
+body {
+  height: 100%;
+  min-width: 1600px;
+
+}
+.wrap {
+  position: relative;
+  min-height: 100%;
+  padding-left: 40%
+}
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 40%;
+  padding: 168px 40px 0 0;
+  background: #4298fc url(../images/login/login_bg.jpg) no-repeat right top;
+  text-align: right
+}
+
+.login_wrap {
+  position: relative;
+  width: 500px;
+  padding: 165px 0 50px 60px;
+  background-color: #fff
+}
+.login_wrap section {
+  position: relative;
+  margin: 25px 0;
+  padding-top: 25px;
+  border-top: 1px dotted #555f70
+}
+.login_form {
+  padding-bottom: 25px
+}
+.login_form input {
+  width: 100%;
+  height: 54px;
+  padding-left: 20px;
+  margin-bottom: 6px;
+  border: 1px solid #c1c7d4;
+  background: #f6faff;
+  font-size: 14px;
+  color: #555f70;
+}
+.login_form input::-webkit-input-placeholder {
+  color: #8f99aa
+}
+.login_form input:-ms-input-placeholder {
+  color: #8f99aa
+}
+.btn_login {
+  width: 100%;
+  height: 64px;
+  border: 0;
+  border-radius: 4px;
+  margin-top: 10px;
+  font-size: 18px;
+  color: #fff;
+  background: #00d2da
+}
+.login_btm .btn_login {
+  margin: 0;
+  background: #4299fb
+}
+.login_btm {
+  padding-top: 25px;
+  border-top: 1px dotted #555f70
+}
+
+.membership_menu {
+  display: table;
+  width: 100%;
+  height: 34px;
+  table-layout: fixed;
+  margin-top: 4px;
+  border-spacing: 0;
+  border: 1px solid #e6e8ec;
+  border-radius: 4px;
+  background: #f1f4f8
+}
+.membership_menu a {
+  position: relative;
+  display: table-cell;
+  height: 100%;
+  color: #555f70;
+  font-size: 13px;
+  text-align: center;
+  vertical-align: middle;
+}
+.membership_menu a:first-child ~ a:after {
+  content: ' ';
+  position: absolute;
+  top: 10px;
+  left: 0;
+  height: 10px;
+  border-left: 1px solid #dbdee4
+}
+
+.footer {
+  position: absolute;
+  bottom: 75px;
+  left: -440px;
+  width: 400px;
+  text-align: right;
+  color: #fff
+}

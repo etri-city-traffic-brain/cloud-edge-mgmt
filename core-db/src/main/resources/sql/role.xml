@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.innogrid.uniq.coredb.mapper">
+
+	<resultMap id="roleResultMap" type="RoleInfo">
+		<result column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="create_datetime" property="createdAt" />
+		<result column="creator" property="creator" />
+		<result column="description" property="description"/>
+		<result column="user_count" property="userCount" />
+		<result column="permission_count" property="permissionCount" />
+		<result column="user_id" property="userId" />
+	</resultMap>
+
+	<sql id="roleWhere">
+		<where>
+			<if test="id != null">
+				AND id = #{id}
+			</if>
+			<if test="userId != null">
+				AND user_id = #{userId}
+			</if>
+			<if test="notUser != null">
+				AND id NOT IN (
+				SELECT
+				cmp_role_user.role_id AS id
+				FROM cmp.cmp_role_user
+				where user_id = #{notUser}
+				)
+			</if>
+			<include refid="com.innogrid.uniq.coredb.columnWhere" />
+		</where>
+	</sql>
+
+	<sql id="roleSQL">
+		SELECT
+		cmp_role.id,
+		cmp_role.name,
+		cmp_role.create_datetime,
+		cmp_role.creator,
+		cmp_role.description,
+		<if test="userId != null">
+			cmp_role_user.user_id,
+		</if>
+		(SELECT count(1) FROM cmp.cmp_role_user u WHERE u.role_id = cmp_role.id) AS user_count,
+		(SELECT count(1) FROM cmp.cmp_permission p WHERE p.role_id = cmp_role.id) AS permission_count
+		FROM cmp.cmp_role
+		<if test="userId != null">
+			, cmp.cmp_role_user
+			<where>
+				cmp_role.id = cmp_role_user.role_id
+			</where>
+		</if>
+	</sql>
+
+	<select id="getRoles" resultMap="roleResultMap">
+		SELECT * FROM (
+		<include refid="roleSQL" />
+		) AS r
+		<include refid="roleWhere" />
+		<include refid="com.innogrid.uniq.coredb.orderby" />
+		<include refid="com.innogrid.uniq.coredb.paging" />
+	</select>
+
+	<select id="getRoleTotal" resultType="int">
+		SELECT COUNT(1) FROM (
+		<include refid="roleSQL" />
+		) AS r
+		<include refid="roleWhere"/>
+	</select>
+
+	<insert id="createRole" parameterType="RoleInfo">
+		INSERT INTO cmp.cmp_role (id, name, description, creator)
+		VALUES (
+			#{id},
+			#{name},
+			#{description},
+            #{creator}
+		)
+	</insert>
+
+	<update id="updateRole" parameterType="RoleInfo">
+		UPDATE cmp.cmp_role
+		<set>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="description != null">
+				description = #{description},
+			</if>
+		</set>
+		<where>
+			<if test="id != null">
+				AND id = #{id}
+			</if>
+		</where>
+	</update>
+
+	<delete id="deleteRole" parameterType="RoleInfo">
+		DELETE FROM cmp.cmp_role
+		<where>
+			<if test="id != null">
+				AND id = #{id}
+			</if>
+		</where>
+	</delete>
+
+	<insert id="createRoleUser" parameterType="RoleInfo">
+		INSERT INTO cmp.cmp_role_user (role_id, user_id)
+		VALUES (
+			#{id},
+			#{userId}
+		)
+	</insert>
+
+	<delete id="deleteRoleUser" parameterType="RoleInfo">
+		DELETE FROM cmp.cmp_role_user
+		<where>
+			<if test="id != null">
+				AND role_id = #{id}
+			</if>
+			<if test="userId != null">
+				AND user_id = #{userId}
+			</if>
+		</where>
+	</delete>
+
+</mapper>

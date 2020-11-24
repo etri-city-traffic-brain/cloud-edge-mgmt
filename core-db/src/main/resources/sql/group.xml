@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.innogrid.uniq.coredb.mapper">
+
+	<resultMap id="groupResultMap" type="GroupInfo">
+		<result column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="create_datetime" property="createdAt" />
+		<result column="creator" property="creator" />
+		<result column="description" property="description"/>
+		<result column="user_count" property="userCount" />
+		<result column="project_count" property="projectCount" />
+	</resultMap>
+
+	<sql id="groupWhere">
+		<where>
+			<if test="id != null">
+				AND id = #{id}
+			</if>
+			<include refid="com.innogrid.uniq.coredb.columnWhere" />
+		</where>
+	</sql>
+
+	<sql id="groupSQL">
+		SELECT
+			cmp_group.id,
+			cmp_group.name,
+			cmp_group.create_datetime,
+			cmp_group.creator,
+			cmp_group.description,
+			(SELECT count(1) FROM cmp.cmp_user u WHERE u.group_id = cmp_group.id) AS user_count,
+			(SELECT count(1) FROM cmp.cmp_group_project p WHERE p.group_id = cmp_group.id) AS project_count
+		FROM cmp.cmp_group
+    </sql>
+
+	<select id="getGroups" resultMap="groupResultMap">
+		SELECT * FROM (
+		<include refid="groupSQL" />
+		) AS g
+		<include refid="groupWhere" />
+		<include refid="com.innogrid.uniq.coredb.orderby" />
+		<include refid="com.innogrid.uniq.coredb.paging" />
+	</select>
+
+	<select id="getGroupTotal" resultType="int">
+		SELECT COUNT(1) FROM (
+		<include refid="groupSQL" />
+		) AS g
+		<include refid="groupWhere"/>
+	</select>
+
+	<insert id="createGroup" parameterType="GroupInfo">
+		INSERT INTO cmp.cmp_group (id, name, description, creator)
+		VALUES (
+			#{id},
+			#{name},
+			#{description},
+            #{creator}
+		)
+	</insert>
+
+	<update id="updateGroup" parameterType="GroupInfo">
+		UPDATE cmp.cmp_group
+		<set>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="description != null">
+				description = #{description},
+			</if>
+		</set>
+		<where>
+			<if test="id != null">
+				AND id = #{id}
+			</if>
+		</where>
+	</update>
+
+	<delete id="deleteGroup" parameterType="GroupInfo">
+		DELETE FROM cmp.cmp_group
+		<where>
+			<if test="id != null">
+				AND id = #{id}
+			</if>
+		</where>
+	</delete>
+
+</mapper>

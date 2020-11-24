@@ -1,0 +1,74 @@
+<Configuration>
+    <Appenders>
+        <!-- Console Appender -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d %-5p [%t] %C{2} (%F:%L) - %m%n"/>
+        </Console>
+        <!-- File Appender -->
+        <File name="File" fileName="/var/log/uniq/api-openstack.log">
+            <PatternLayout pattern="%d{ISO8601} %-5p (%t) [%c{1}(%M:%L)] %m%n" />
+        </File>
+    </Appenders>
+    <Loggers>
+        <Logger name="org.apache.catalina.startup.ClassLoaderFactory" level="ERROR" additivity="false">
+        </Logger>
+        <Logger name="org.apache.coyote.http11.Http11NioProtocol" level="WARN" additivity="false">
+        </Logger>
+        <Logger name="org.apache.tomcat.util.net.NioSelectorPool" level="WARN" additivity="false">
+        </Logger>
+        <Logger name="org.crsh.plugin" level="WARN" additivity="false">
+        </Logger>
+        <Logger name="org.hibernate.validator.internal.util.Version" level="WARN" additivity="false">
+        </Logger>
+        <Logger name="org.apache.curator" level="WARN" additivity="false">
+        </Logger>
+        <Logger name="org.apache.zookeeper" level="WARN" additivity="false">
+        </Logger>
+        <Logger name="com.innogrid.uniq.apiopenstack" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
+        </Logger>
+        <Logger name="com.innogrid.uniq.coreopenstack" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
+        </Logger>
+
+        <Logger name="org.pacesys" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
+        </Logger>
+        <!-- Log everything in custom package -->
+        <Logger name="com.boraji.tutorial.springboot" level="debug" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
+        </Logger>
+        <Logger name="org.apache.http.client.HttpClient" level="debug" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
+        </Logger>
+        <Logger name="org.springframework.web.client.RestTemplate" level="debug" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
+        </Logger>
+        <Logger name="org.springframework.web" level="debug" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
+        </Logger>
+
+        <!-- Log everything in Spring Boot -->
+        <Logger name="org.springframework.boot" level="debug" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
+        </Logger>
+
+        <!-- Log everything in Spring Core -->
+        <Logger name="org.springframework.core" level="debug" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
+        </Logger>
+        <Root level="INFO">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
+        </Root>
+    </Loggers>
+</Configuration>

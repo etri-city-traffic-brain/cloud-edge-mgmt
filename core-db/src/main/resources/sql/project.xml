@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.innogrid.uniq.coredb.mapper">
+
+	<resultMap id="projectResultMap" type="ProjectInfo">
+		<result column="id" property="id" />
+		<result column="type" property="type" />
+		<result column="create_datetime" property="createdAt" />
+		<result column="project_id" property="projectId" />
+		<result column="group_id" property="groupId"/>
+		<result column="cloud_id" property="cloudId"/>
+		<result column="cloud_name" property="cloudName"/>
+	</resultMap>
+
+	<sql id="projectWhere">
+		<where>
+			<if test="id != null">
+				AND id = #{id}
+			</if>
+			<if test="groupId != null">
+				AND group_id = #{groupId}
+			</if>
+			<if test="cloudId != null">
+				AND cloud_id = #{cloudId}
+			</if>
+			<if test="type != null">
+				AND type = #{type}
+			</if>
+			<include refid="com.innogrid.uniq.coredb.columnWhere" />
+		</where>
+	</sql>
+
+	<sql id="projectSQL">
+		SELECT
+			group_project.id,
+			group_project.type,
+			group_project.create_datetime,
+			group_project.project_id,
+			group_project.group_id,
+			group_project.cloud_id,
+			cmp_credential.name AS cloud_name
+		FROM cmp.cmp_group_project as group_project
+		LEFT JOIN cmp.cmp_credential
+		ON cmp_credential.id = group_project.cloud_id
+    </sql>
+
+	<select id="getProjects" resultMap="projectResultMap">
+		SELECT * FROM (
+		<include refid="projectSQL" />
+		) AS p
+		<include refid="projectWhere" />
+		<include refid="com.innogrid.uniq.coredb.orderby" />
+		<include refid="com.innogrid.uniq.coredb.paging" />
+	</select>
+
+	<select id="getProjectTotal" resultType="int">
+		SELECT COUNT(1) FROM (
+		<include refid="projectSQL" />
+		) AS p
+		<include refid="projectWhere"/>
+	</select>
+
+	<insert id="createProject" parameterType="ProjectInfo">
+		INSERT INTO cmp.cmp_group_project (id, type, project_id, group_id, cloud_id)
+		VALUES (
+			#{id},
+			#{type},
+			#{projectId},
+            #{groupId},
+            #{cloudId}
+		)
+	</insert>
+
+	<delete id="deleteProject" parameterType="ProjectInfo">
+		DELETE FROM cmp.cmp_group_project
+		<where>
+			<if test="id != null">
+				AND id = #{id}
+			</if>
+			<if test="cloudId">
+				AND cloud_id = #{cloudId}
+			</if>
+		</where>
+	</delete>
+
+</mapper>

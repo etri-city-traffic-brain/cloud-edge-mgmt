@@ -1,0 +1,309 @@
+<!doctype html>
+<html th:lang="${#locale.language}"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+
+>
+    <head>
+        <title>UNIQ</title>
+        <link rel="icon" th:href="@{/images/favicon2.png}">
+        <link rel="shortcut icon" th:href="@{/images/favicon2.png}">
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+        <meta http-equiv="Content-Type" content="text/javascript">
+        <meta http-equiv="Content-Type" content="text/css">
+        <meta name="Author" content="">
+        <meta name="Keywords" content="">
+        <meta name="Description" content="">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1">
+
+        <link rel="stylesheet" type="text/css" th:href="@{/css/normalize.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/fonts.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/jquery-ui-custom.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/ui.jqgrid.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/selectric.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/swiper.min.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/fonts-kr.css}"/>
+
+        <style type="text/css" layout:fragment="user.embedded.style"></style>
+
+        <!--[if lt IE 9]>
+        <script src="./lib/js/html5shiv.min.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+        <div class="wrap">
+            <header class="header">
+                <div class="header_tit">
+                    <a href="/">
+                        <img th:src="@{/images/uniq/header_logo.png}" alt="CMP">
+                    </a>
+                </div>
+                <div class="header_cont">
+                    <div class="header_user">
+                        <div class="header_user_profile">
+                            <img th:src="@{/images/tmp_header_user_profile.png}" alt="">
+                        </div>
+                        <p class="header_user_name" th:text="${session.userInfo!=null?session.userInfo.name:''}">
+                            UserName
+                        </p>
+                        <p>진심으로 환영합니다.</p>
+                        <!--						<div class="header_user_menu" id="userMenu">
+                                                    <ul class="header_user_menu_list">
+                                                        <li id="setting_language"><a href="#" th:text="#{title.common.language}">Language</a></li>
+                                                    </ul>
+                                                    <a href="/" th:href="@{/logoutToken}" title="Logout"><button type="button" class="header_user_menu_btn">Logout</button></a>
+                                                </div>-->
+                        <!-- //header_user_menu -->
+                    </div><!-- //header_user -->
+                </div><!-- //header_cont -->
+                <nav class="snb" layout:fragment="leftside.menu">
+                </nav>
+            </header>
+
+            <main class="container">
+                <div class="cont_top">
+                    <div class="header_user">
+                        <div class="header_user_profile">
+                            <!--<img src="./lib/images/tmp_header_user_profile.png" alt="">프로필이미지등록시--></div>
+                        <button type="button" class="header_user_btn" id="userBtn"
+                                th:text="${session.userInfo.name}">
+                            Gil Dong, Hong
+                        </button>
+                        <div class="header_user_menu" id="userMenu">
+                            <ul class="header_user_menu_list">
+                                <li id="setting_language"><a  th:text="#{title.common.language}">Language</a></li>
+                            </ul>
+                            <a href="/" th:href="@{/logout}" title="Logout">
+                                <button type="button" class="header_user_menu_btn">Logout</button>
+                            </a>
+                        </div>
+                    </div><!-- //header_user -->
+                </div>
+
+                <div class="leftSide" layout:fragment="top.location">
+                </div>
+                <div class="cont_option" layout:fragment="region">
+                </div><!-- //cont_option -->
+                <div class="common_clearfix" layout:fragment="tit">
+                    <div class="cont_current"></div>
+                </div>
+                <div class="content" layout:fragment="content">
+                    <div class="cont_detail_top common_clearfix" layout:fragment="detail_tit"></div>
+                    <div class="inner" layout:fragment="layout_tit">
+                        <div class="content_center" layout:fragment="content.center"></div>
+                        <div class="content_south" layout:fragment="content.right"></div>
+                        <div class="content_extend" layout:fragment="content.extend"></div>
+                    </div><!-- //cont_wrap -->
+
+                    <!--Toast Message -->
+                    <div class="pop_msg">
+                        <div class="count" style="display: none">0</div>
+                    </div>
+                    <!--/Toast Message -->
+            </main>
+        </div><!-- //wrap -->
+
+        <div class="pop_wrap" id="pop_locale" style="width:450px">
+            <button type="button" class="btn_pop_close">
+                <span class="ico_del"></span>
+            </button>
+            <div class="pop_common">
+                <div class="pop_tit" th:text="#{title.common.language}">Language</div>
+                <div class="pop_body">
+                    <div class="pop_cont">
+                        <table class="tb_pop_data">
+                            <tr>
+                                <th th:text="#{title.common.language}">Language</th>
+                                <td>
+                                    <input type="radio" id="radio1" name="localeMyConfig" value="ko">
+                                    <label for="radio1" th:text="#{title.common.ko}">KO</label>
+                                    <input type="radio" id="radio2" name="localeMyConfig" value="en">
+                                    <label for="radio2" th:text="#{title.common.en}">EN</label>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div><!-- pop_cont -->
+                    <div class="pop_btns">
+                        <button type="button" class="btn_action" th:text="#{w.update}">Update</button>
+                    </div>
+                </div><!-- pop_body -->
+            </div><!-- pop_common -->
+        </div><!-- pop_wrap -->
+
+        <!-- Page Popup -->
+        <div th:remove="tag" layout:fragment="page.popup"></div>
+        <!-- //Page Popup -->
+
+        <!-- Loading Popup -->
+        <div class="pop_loading" id="loading_popup" style="display: none;">
+            <div class="pop_loading_cont">
+                <strong>
+                    <span name="msg"></span>
+                </strong>
+                <p name="subMsg"></p>
+            </div>
+        </div>
+        <!-- Loading Popup -->
+
+        <script type="text/javascript" th:src="@{/js/jquery-1.11.0.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/jquery.script.js}"></script>
+        <script type="text/javascript" th:src="@{/js/jquery.easing.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/jquery-ui.js}"></script>
+        <script type="text/javascript" th:src="@{/js/jquery.selectric.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/swiper.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/jquery.my.js}"></script>
+        <script type="text/javascript" th:src="@{/js/i18n/grid.locale-kr.js}"></script>
+        <script type="text/javascript" th:src="@{/js/jquery.jqGrid.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/jquery.cookie.js}"></script>
+        <script type="text/javascript" th:src="@{/js/jquery.i18n.properties.js}"></script>
+        <script type="text/javascript" th:src="@{/js/underscore.js}"></script>
+        <script type="text/javascript" th:src="@{/js/backbone-min.js}"></script>
+        <script type="text/javascript" th:inline="javascript">
+            let locale = /*[[${session.configLocale}]]*/ 'en';
+        </script>
+        <script type="text/javascript" th:src="@{/js/console/common.js}"></script>
+        <script type="text/javascript" th:src="@{/js/console/pager.js}"></script>
+        <script type="text/javascript" th:src="@{/js/d3.v3.js}"></script>
+        <script type="text/javascript" th:src="@{/js/raphael.2.1.0.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/jui/new/core.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/jui/new/chart.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/jquery.slimscroll.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/sockjs.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/stomp.min.js}"></script>
+
+        <script type="text/javascript" th:inline="javascript">
+            var userId = /*[[${session.userInfo.id}]]*/;
+
+            var config = {
+                userId: /*[[${session.userInfo.id}]]*/,
+                gridReSizeTime: 300
+            };
+
+        </script>
+        <script type="text/javascript" th:src="@{/js/console/main.js}"></script>
+        <div layout:fragment="layout.embedded.script"></div>
+        <div layout:fragment="user.embedded.script"></div>
+
+        <script type="text/javascript">
+            /*<![CDATA[*/
+            $('.haveChild > a').on('click', function () {
+                $(this).parent().siblings().children('ul').slideUp(150);
+                $(this).next('ul').slideDown(150);
+                $(this).parent().siblings().removeClass('open');
+                $(this).parent('li').addClass('open');
+            });
+
+            $('.header_nav > li.haveChild.on > a').on('click', function () {
+                $(this).next('ul').find('ul').hide();
+                $(this).next('ul').find('li.on ul').show();
+                $(this).next('ul').find('li').removeClass('open');
+                $(this).next('ul').find('li.on').addClass('open');
+            });
+
+            $('#userBtn').on('click', function () {
+                $(this).toggleClass('on');
+                $('#userMenu').slideToggle(100);
+                return false;
+            });
+            $('.header_user_menu_list a').on('click', function () {
+                $('#userBtn').removeClass('on');
+                $('#userMenu').slideUp(100);
+            });
+
+            $('.detail_action_btn').on('click', function () {
+                $(this).toggleClass('on');
+                $('#detailAction').slideToggle(100);
+                return false;
+            });
+            $('.detail_action_list button').on('click', function () {
+                $('.detail_action_btn').removeClass('on');
+                $('#detailAction').slideUp(100);
+            });
+
+            $(document).on('click', function (e) {
+                if (e.target.className == 'detail_action_list') {
+                    return false
+                } else {
+                    $('.detail_action_btn').removeClass('on');
+                    $('#detailAction').slideUp(100);
+                }
+                if (e.target.className == 'header_user_menu_list') {
+                    return false
+                } else {
+                    $('#userBtn').removeClass('on');
+                    $('#userMenu').slideUp(100);
+                }
+            });
+
+
+            $('.detail_tab a').on('click', function () {
+                $(this).addClass('on');
+                $(this).siblings('a').removeClass('on');
+                $('.detail_cont').hide();
+                $('#tab' + ($(this).index() + 1)).show();
+            });
+            $('.detail_tab a:eq(0)').click();
+
+            $('#tab_monitoring').on('click', function () {
+                $('.detail_monitoring').slimScroll({
+                    alwaysVisible: true,
+                    height: '',
+                    size: '4px',
+                    opacity: 1,
+                    color: '#758299',
+                }).parent().css({
+                    'padding-right': '9px'
+                });
+            });
+
+				$('.pop_tab_rexgen a').on('click', function(){
+					$(this).addClass('on');
+					$(this).siblings('a').removeClass('on');
+					$('.pop_tab_cont_rexgen').hide();
+					$('#pop_tab_rexgen'+ ($(this).index()+1) ).show();
+				});
+
+				$('.pop_tab_rexgen a:eq(0)').click();
+
+				$('.pop_tab_etri a').on('click', function(){
+					$(this).addClass('on');
+					$(this).siblings('a').removeClass('on');
+					$('.pop_tab_cont_etri').hide();
+					$('#pop_tab_etri'+ ($(this).index()+1) ).show();
+				});
+
+				$('.pop_tab_etri a:eq(0)').click();
+
+				$('.pop_tab a').on('click', function(){
+				  $(this).addClass('on');
+				  $(this).siblings('a').removeClass('on');
+				  $('.pop_tab_cont').hide();
+				  $('#pop_tab'+ ($(this).index()+1) ).show();
+				});
+
+                $('.pop_toast_tab a').on('click', function(){
+                    $(this).addClass('on');
+                    $(this).siblings('a').removeClass('on');
+                    $('.pop_tab_cont').hide();
+                    $('#pop_toast_tab'+ ($(this).index()+1) ).show();
+                });
+                $('.pop_toast_tab a:eq(0)').click();
+
+				$('.pop_tab a:eq(0)').click();
+
+            $('.select_wrap select').selectric();
+
+            $("#toast_msg").find("button").on("click", function () {
+                $("#toast_msg").hide();
+            })
+            /*]]>*/
+        </script>
+    </body>
+
+</html>

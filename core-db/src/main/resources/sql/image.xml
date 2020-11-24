@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.innogrid.uniq.coredb.mapper">
+
+    <resultMap id="imageResultMap" type="ImageInfo">
+        <result column="id" property="id" />
+        <result column="type" property="type" />
+    </resultMap>
+
+    <resultMap id="imageDetailResultMap" type="ImageDetailInfo">
+        <result column="id" property="id" />
+        <result column="type" property="type" />
+        <result column="name" property="name" />
+        <result column="publisher" property="publisher" />
+        <result column="os_type" property="osType" />
+        <result column="architecture" property="architecture" />
+        <result column="hypervisor" property="hypervisor" />
+        <result column="virtualization_type" property="virtualizationType" />
+        <result column="root_device_type" property="rootDeviceType" />
+        <result column="ena_support" property="enaSupport" />
+        <result column="description" property="description" />
+    </resultMap>
+
+    <select id="getImages" resultMap="imageResultMap">
+        SELECT * FROM cmp.cmp_image AS img
+        <where>
+            <if test="type != null">
+                AND img.type = #{type}
+            </if>
+        </where>
+    </select>
+
+    <select id="getImageDetails" resultMap="imageDetailResultMap">
+        SELECT * FROM cmp.cmp_image_detail AS imgd
+        <where>
+            <if test="type != null">
+                AND imgd.type = #{type}
+            </if>
+            <if test="location != null">
+                AND imgd.location = #{location}
+            </if>
+        </where>
+        ORDER BY imgd.os_type
+    </select>
+
+    <select id="getImageDetail" resultMap="imageDetailResultMap">
+        SELECT * FROM cmp.cmp_image_detail AS imgd
+        <where>
+            <if test="id != null">
+                AND imgd.id = #{id}
+            </if>
+        </where>
+    </select>
+
+    <select id="getImageDetailIdCount" resultType="int">
+        SELECT COUNT(1) FROM cmp.cmp_image_detail AS imgd WHERE imgd.id = #{id}
+    </select>
+
+    <insert id="createImageDetail" parameterType="ImageDetailInfo">
+        INSERT INTO cmp.cmp_image_detail (id, type, name, publisher, os_type, architecture, hypervisor, virtualization_type, root_device_type, ena_support, description, location)
+        VALUES (
+            #{id},
+            #{type},
+            #{name},
+            #{publisher},
+            #{osType},
+            #{architecture},
+            #{hypervisor},
+            #{virtualizationType},
+            #{rootDeviceType},
+            #{enaSupport},
+            #{description},
+            #{location}
+        )
+    </insert>
+
+    <update id="updateImageDetail" parameterType="ImageDetailInfo">
+        UPDATE cmp.cmp_image_detail
+        <set>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="publisher != null">
+                publisher = #{publisher},
+            </if>
+            <if test="osType != null">
+                os_type = #{osType},
+            </if>
+            <if test="architecture != null">
+                architecture = #{architecture},
+            </if>
+            <if test="hypervisor != null">
+                hypervisor = #{hypervisor},
+            </if>
+            <if test="virtualizationType != null">
+                virtualization_type = #{virtualizationType},
+            </if>
+            <if test="rootDeviceType != null">
+                root_device_type = #{rootDeviceType},
+            </if>
+            <if test="enaSupport != null">
+                ena_support = #{enaSupport},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="location != null">
+                location = #{location},
+            </if>
+        </set>
+        <where>
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+        </where>
+    </update>
+
+    <delete id="deleteImageDetail" parameterType="ImageDetailInfo">
+        DELETE FROM cmp.cmp_image_detail
+        <where>
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+        </where>
+    </delete>
+
+</mapper>

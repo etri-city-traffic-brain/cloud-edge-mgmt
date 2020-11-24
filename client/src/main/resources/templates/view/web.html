@@ -1,0 +1,142 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/view.layout">
+
+<div class="cont_wrap" layout:fragment="content">
+    <div class="cont_inner">
+        <div class="cont_default">
+            <table class="tb_data">
+                <tr>
+                    <th>ID</th>
+                    <td>
+                        <div class="select_wrap">
+                            <select>
+                                <option value="">User ID</option>
+                            </select>
+                        </div>
+                    </td>
+                    <th></th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>private IP</th>
+                    <td>
+                        <span class="input_wrap">
+                            <input type="radio" id="radio1" name="radioGroup">
+                            <label for="radio1">Cloud Name1</label>
+                        </span>
+                        <span class="input_wrap">
+                            <input type="radio" id="radio2" name="radioGroup">
+                            <label for="radio2">Cloud Name2</label>
+                        </span>
+                    </td>
+                    <th></th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>image</th>
+                    <td>
+                        <input type="checkbox" id="checkbox1">
+                        <label for="checkbox1">Enable SSL certificate verification for Keystone endpoints.</label>
+                    </td>
+                    <th></th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>key pair</th>
+                    <td>
+                        <input type="checkbox" id="checkbox2">
+                        <label for="checkbox2">Enable SSL certificate verification for Keystone endpoints.</label>
+                    </td>
+                    <th></th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>logo (170*40)</th>
+                    <td>
+                        <div class="setting_logo_wrap"><img th:src="@{/images/header_logo_default.png}" alt=""></div>
+                        <input type="file" class="btn_file">
+                    </td>
+                    <th></th>
+                    <td></td>
+                </tr>
+            </table>
+        </div><!-- //content -->
+    </div><!-- //cont_inner -->
+</div><!-- //cont_wrap -->
+
+<div th:remove="tag" layout:fragment="page.popup">
+    <div class="pop_wrap" id="popupCreate">
+        <button type="button" class="btn_pop_close"><span class="ico_del">Close</span></button>
+        <div class="pop_common">
+            <div class="pop_tit">uniq credentials</div>
+            <div class="pop_body">
+                <div class="pop_cont">
+                    <table class="tb_pop_data">
+                        <tr>
+                            <th>Cloud Name</th>
+                            <td><input type="text" id="" class="input_tb_text"></td>
+                        </tr>
+                        <tr>
+                            <th>Keystone URL</th>
+                            <td>
+                                <div class="select_wrap">
+                                    <select id="">
+                                        <option value="">Name</option>
+                                        <option value="">Status</option>
+                                        <option value="">Instance Name AscDesc</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Domain Name</th>
+                            <td>
+                                <span class="">
+                                    <input type="checkbox" id="checkbox1" class="">
+                                    <label for="checkbox1">Enable SSL certificate verification for Keystone endpoints.</label>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>User Name</th>
+                            <td>
+                                <span class="">
+                                    <input type="radio" id="radio1" name="radioGroup" class="">
+                                    <label for="radio1">Cloud Name</label>
+                                </span>
+                                <span class="">
+                                    <input type="radio" id="radio2" name="radioGroup" class="">
+                                    <label for="radio2">Cloud Name</label>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Password</th>
+                            <td><input type="text" id="" class="input_tb_text"></td>
+                        </tr>
+                        <tr>
+                            <th>Tenant Name</th>
+                            <td><input type="text" id="" class="input_tb_text"></td>
+                        </tr>
+                    </table>
+                    <div class="cont_tb_option">
+                        <input type="checkbox" id="checkbox2">
+                        <label for="checkbox2">Enable SSL certificate verification for Keystone endpoints.</label>
+                    </div>
+                </div><!-- pop_cont -->
+                <div class="pop_btns">
+                    <button type="button" class="btn_action">SAVE KEYS</button>
+                </div>
+            </div><!-- pop_body -->
+        </div><!-- popup -->
+    </div><!-- popup -->
+</div>
+
+<div layout:fragment="user.embedded.script" th:remove="tag">
+
+</div>
+
+</html>

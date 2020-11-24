@@ -1,0 +1,553 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/etri.layout">
+<div class="common_clearfix" layout:fragment="tit">
+    <div class="cont_current" th:text="#{w.compute}">compute</div>
+</div>
+<div class="cont_detail_top common_clearfix" layout:fragment="detail_tit">
+    <h4 class="detail_tit">COMPUTE LIST</h4>
+    <div class="cont_top_action" sec:authorize="hasAnyAuthority('ROLE_ADMIN' ,'ROLE_CLOUD_WRITE')">
+        <button type="button" class="btn_action" id="server_create"><span class="ico_add"
+                                                                          th:text="#{w.create}">CREATE</span></button>
+        <button type="button" class="btn_action" id="server_delete"><span class="ico_del"
+                                                                          th:text="#{w.delete}">DELETE</span></button>
+    </div><!-- //cont_top_action -->
+</div>
+<div class="cont_body_top common_clearfix" layout:fragment="layout_tit">
+    <div class="cont_top_search">
+        <div class="cont_top_search_box">
+            <div class="select_wrap">
+                <select class="select_search">
+                    <option value="name" th:text="#{title.jqgrid.name}">Name</option>
+                    <option value="state" th:text="#{title.jqgrid.state}">State</option>
+                    <option value="imageId" th:text="#{title.jqgrid.imageId}">Image ID</option>
+                    <option value="flavorId" th:text="#{title.jqgrid.instanceType}">Instance Type</option>
+                    <option value="cpu" th:text="#{title.jqgrid.vcpu}">vCpu</option>
+                    cont_inner
+                    <option value="privateIp" th:text="#{title.jqgrid.privateIp}">Private IP</option>
+                    <option value="publicIp" th:text="#{title.jqgrid.publicIp}">Public IP</option>
+                    <option value="keyName" th:text="#{title.jqgrid.keyName}">Key Name</option>
+                    <option value="monitoring" th:text="#{title.jqgrid.monitoring}">Monitoring</option>
+                </select>
+            </div>
+            <input type="search" class="input_search">
+            <button type="submit" class="searchBtn"><span th:title="#{w.search}">Search</span></button>
+        </div><!-- //cont_top_search_box -->
+
+        <button type="button" class="btn_control"><span class="ico_refresh" th:title="#{w.reload}">Refresh</span>
+        </button>
+    </div>
+</div>
+
+<div class="cont_body cont_list" layout:fragment="content.center">
+
+    <div class="tb_wrap">
+        <table class="tb_grid" id="server-grid">
+        </table>
+    </div><!-- //tb_wrap -->
+
+    <div class="cont_body_btm">
+        <div class="pagenation_wrap" id="pager1">
+            <div class="pagenation_inner">
+                <button type="button" class="pagenation_btn first"><span>First</span></button>
+                <button type="button" class="pagenation_btn prev"><span>Prev</span></button>
+                <div class="pagenation_current"><strong class="current">1 - 0</strong>of<span class="total">0</span>
+                </div>
+                <button type="button" class="pagenation_btn next"><span>Next</span></button>
+                <button type="button" class="pagenation_btn last"><span>Last</span></button>
+            </div>
+        </div>
+    </div><!-- //cont_body_btm -->
+</div><!-- //cont_list -->
+
+<div class="cont_body cont_detail" layout:fragment="content.right">
+    <div class="cont_detail_inner">
+        <div class="cont_detail_top common_clearfix">
+
+            <h4 class="detail_tit" th:text="#{w.t.name(#{w.instance})}">Instance Name</h4>
+            <div class="detail_option">
+                <div class="detail_option_btns">
+                    <button sec:authorize="hasAnyAuthority('ROLE_ADMIN' ,'ROLE_CLOUD_WRITE')" type="button"
+                            class="detail_option_btn" id="server_start"><span class="ico_start" th:title="#{w.run}"
+                                                                              th:text="#{w.run}">Start</span>
+                    </button>
+                    <button sec:authorize="hasAnyAuthority('ROLE_ADMIN' ,'ROLE_CLOUD_WRITE')" type="button"
+                            class="detail_option_btn" id="server_reboot"><span class="ico_setting"
+                                                                               th:title="#{w.restart}"
+                                                                               th:text="#{w.restart}">ReBoot</span>
+                    </button>
+                    <button sec:authorize="hasAnyAuthority('ROLE_ADMIN' ,'ROLE_CLOUD_WRITE')" type="button"
+                            class="detail_option_btn" id="server_stop"><span class="ico_stop" th:title="#{w.stop}"
+                                                                             th:text="#{w.stop}">Stop</span>
+                    </button>
+                </div><!-- //detail_option_btns -->
+
+            </div><!-- //detail_option -->
+        </div><!-- //cont_detail_top -->
+        <div class="cont_tab_wrap">
+            <div class="detail_tab">
+                <div class="inner">
+<!--                    <a class="on"><h5 th:text="#{title.tab.detail}">Detail</h5></a>-->
+                    <a id="tab_monitoring" th:text="#{title.tab.monitoring}"><span>Monitoring</span></a>
+
+                </div>
+            </div><!-- //detail_tab -->
+            <div class="cont_body_top common_clearfix" layout:fragment="detail_option">
+
+            </div>
+        </div>
+
+
+        <!-- TAB 1 -->
+        <div class="detail_cont" id="tab1">
+            <iframe src="http://192.168.48.131:3000/d/CnTfppTMk/edge/etri?orgId=1&panelId=2&fullscreen" width="100%" height="300px"></iframe>
+
+        </div><!-- //detail_cont -->
+
+        <!-- TAB 2 -->
+        <div class="detail_cont" id="tab2">
+            <div class="detail_data">
+                <div class="detail_data_top common_clearfix">
+                    <div class="cont_top_action">
+                        <div class="select_wrap">
+                            <select id="hour">
+                                <option value="1" th:text="#{w.t.last-time('1',#{w.time})}">Last 1 Hour</option>
+                                <option value="3" th:text="#{w.t.last-time('3',#{w.time})}">Last 3 Hours</option>
+                                <option value="6" th:text="#{w.t.last-time('6',#{w.time})}">Last 6 Hours</option>
+                                <option value="12" th:text="#{w.t.last-time('12',#{w.time})}">Last 12 Hours</option>
+                                <option value="24" th:text="#{w.t.last-time('24', #{w.time})}">Last 24 Hours</option>
+                                <option value="72" th:text="#{w.t.last-time('3',#{w.day})}">Last 3 Days</option>
+                                <option value="168" th:text="#{w.t.last-time('1',#{w.week})}">Last 1 Week</option>
+                                <option value="332" th:text="#{w.t.last-time('2',#{w.week})}">Last 2 Weeks</option>
+                            </select>
+                        </div><!-- //select_wrap -->
+                    </div><!-- //cont_top_action -->
+                    <div class="cont_top_search">
+                        <button type="button" class="btn_control"><span class="ico_refresh" th:title="#{w.reload}">Refresh</span>
+                        </button>
+                    </div><!-- //cont_top_search -->
+                </div><!-- //detail_data_top -->
+
+                <div class="detail_monitoring detail_monitoring_dark common_clearfix">
+                </div><!-- //detail_monitoring -->
+            </div><!-- //detail_data -->
+        </div>
+
+        <!-- TAB 3 -->
+        <div class="detail_cont" id="tab3">
+            <div class="detail_data">
+                <div class="detail_data_top common_clearfix">
+                    <!--<div class="cont_top_action" sec:authorize="hasAnyAuthority('ROLE_ADMIN' ,'ROLE_CLOUD_WRITE')">
+                        <button type="button" class="btn_action" id="server_volume_attach">Attach Volume</button>
+                        <button type="button" class="btn_action st2" id="server_volume_detach">Detach Volume</button>
+                    </div>&lt;!&ndash; //cont_top_action &ndash;&gt;-->
+                    <div class="cont_top_search">
+                        <div class="cont_top_search_box">
+                            <input type="search" class="sub_search" placeholder="Search Name">
+                            <button type="submit" class="sub_search_btn"><span th:title="#{w.search}">Search</span>
+                            </button>
+                        </div><!-- //cont_top_search_box -->
+
+                        <!--<div class="cont_top_pagenation" id="pager2">
+                            <button type="button" class="pagenation_btn prev"><span>Prev</span></button>
+                            <div class="pagenation_current"><strong class="current">1</strong>/<span class="total">10</span></div>
+                            <button type="button" class="pagenation_btn next"><span>Next</span></button>
+                        </div> //cont_top_pagenation -->
+
+                        <button type="button" class="btn_control"><span class="ico_refresh" th:title="#{w.reload}">Refresh</span>
+                        </button>
+                    </div><!-- //cont_top_search -->
+                </div><!-- //detail_data_top -->
+
+                <div class="tb_wrap">
+                    <table class="tb_grid" id="history-grid">
+                    </table>
+                </div><!-- //tb_wrap -->
+
+                <div class="cont_body_btm">
+                    <div class="pagenation_wrap" id="pager3">
+                        <div class="pagenation_inner">
+                            <button type="button" class="pagenation_btn first"><span>First</span></button>
+                            <button type="button" class="pagenation_btn prev"><span>Prev</span></button>
+                            <div class="pagenation_current"><strong class="current">1 - 0</strong>of<span class="total">0</span>
+                            </div>
+                            <button type="button" class="pagenation_btn next"><span>Next</span></button>
+                            <button type="button" class="pagenation_btn last"><span>Last</span></button>
+                        </div>
+                    </div>
+                </div><!-- //cont_body_btm -->
+
+            </div><!-- //detail_data -->
+        </div>
+    </div>
+</div><!-- cont_detail -->
+
+<div class="content_center content_extend" layout:fragment="content.extend" th:remove="all"></div>
+
+<div th:remove="tag" layout:fragment="page.popup">
+    <div class="pop_wrap" id="popupCreate" style="width:850px">
+        <button type="button" class="btn_pop_close"><span class="ico_del"></span></button>
+        <div class="pop_common">
+            <div class="pop_tit" th:text="#{w.t.multi(#{title.tab.instance},#{w.create})}">launch instance</div>
+            <div class="pop_body">
+                <div class="cont_tab pop_tab">
+                    <div class="inner">
+                        <a class="on"><span th:text="#{title.tab.image}">Image</span></a>
+                        <a><span th:text="#{title.jqgrid.imageType}">Image Type</span></a>
+                        <a><span th:text="#{w.security-group}">Security Group</span></a>
+                        <a><span th:text="#{w.t.multi(#{title.tab.instance},#{w.information})}">Instance Info</span></a>
+                        <a class="last"><span th:text="#{w.configuration}">Configuration</span></a>
+                    </div>
+                </div><!-- //cont_tab -->
+                <div class="pop_cont">
+
+                    <!-- TAB 1 -->
+                    <div class="pop_tab_cont" id="pop_tab1">
+                        <div class="pop_create_selectbox">
+                            <label class="tit" for="" th:text="#{title.tab.image}">Image</label>
+                            <div class="select_wrap">
+                                <select id="image">
+                                    <option value="public" th:text="#{w.t.multi(#{w.public},#{title.tab.image})}">Public
+                                        Image
+                                    </option>
+                                    <option value="custom"
+                                            th:text="#{w.t.multi(#{w.user-appointment},#{title.tab.image})}">Custom
+                                        Image
+                                    </option>
+                                </select>
+                            </div>
+                        </div><!-- //pop_create_selectbox -->
+                        <div class="pop_tb_top common_clearfix">
+                            <div class="pop_tb_top_tit" th:text="#{w.t.selection(#{w.image})}">Select One Image</div>
+                        </div><!-- //pop_tb_top -->
+                        <div class="tb_wrap">
+                            <table class="tb_grid" id="custom_img_table">
+                                <thead>
+                                <!--<tr>
+                                    <th class="row_input"></th>
+                                    <th>ID</th>
+                                    <th>Root Device Type</th>
+                                    <th>Image Type</th>
+                                    <th>Owner ID</th>
+                                </tr>-->
+                                <tr>
+                                    <th class="row_input"></th>
+                                    <th style="width: 300px;" th:text="#{title.jqgrid.name}">Name</th>
+                                    <th th:text="#{title.jqgrid.osType}">OS</th>
+                                    <th th:text="#{title.jqgrid.architecture}">Architecture</th>
+                                    <th th:text="#{w.hypervisor}">Hypervisor</th>
+                                    <th>VirtType</th>
+                                    <th th:text="#{w.t.multi(#{w.root},#{w.device})}">Root Device</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                            <table class="tb_grid" id="public_img_table">
+                                <thead>
+                                <tr>
+                                    <th class="row_input"></th>
+                                    <th style="width: 300px;" th:text="#{title.jqgrid.name}">Name</th>
+                                    <th th:text="#{title.jqgrid.osType}">OS</th>
+                                    <th th:text="#{title.jqgrid.architecture}">Architecture</th>
+                                    <th th:text="#{w.hypervisor}">Hypervisor</th>
+                                    <th>VirtType</th>
+                                    <th th:text="#{w.t.multi(#{w.root},#{w.device})}">Root Device</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div> <!-- //tb_wrap -->
+                    </div><!-- //pop_tab_cont -->
+
+                    <!-- TAB 2 -->
+                    <div class="pop_tab_cont" id="pop_tab2">
+                        <div class="pop_tb_top common_clearfix">
+                            <div class="pop_tb_top_tit" th:text="#{w.t.selection(#{w.t.multi(#{w.image},#{w.type})})}">
+                                Select One Image Type
+                            </div>
+                        </div><!-- //pop_tb_top -->
+
+                        <div class="tb_wrap">
+                            <table class="tb_grid">
+                                <thead>
+                                <tr>
+                                    <th class="row_input"></th>
+                                    <th th:text="#{title.jqgrid.groupName}">Group</th>
+                                    <th>Flavor</th>
+                                    <th>vCPUs</th>
+                                    <th th:text="#{w.t.multi(#{w.memory},'(GiB)')}">Memory (GiB)</th>
+                                    <th th:text="#{w.t.multi(#{title.tab.instance},#{w.storage})}">Instance Storage</th>
+                                    <th th:text="#{w.t.multi(#{w.network},#{w.performance})}">Network Performance</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!--<tr>
+                                    <td><input type="checkbox" id="t2.nano" value="t2.nano"><label for="t2.nano"></label></td>
+                                    <td>General Purpose</td>
+                                    <td>t2.nano</td>
+                                    <td>1</td>
+                                    <td>0.5</td>
+                                    <td>EBS</td>
+                                    <td>Yes</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" id="t2.micro" value="t2.micro"><label for="t2.micro"></label></td>
+                                    <td>General Purpose</td>
+                                    <td>t2.micro</td>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>EBS</td>
+                                    <td>Yes</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" id="t2.small" value="t2.small"><label for="t2.small"></label></td>
+                                    <td>General Purpose</td>
+                                    <td>t2.small</td>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>EBS</td>
+                                    <td>Yes</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" id="t2.medium" value="t2.medium"><label for="t2.medium"></label></td>
+                                    <td>General Purpose</td>
+                                    <td>t2.medium</td>
+                                    <td>2</td>
+                                    <td>4</td>
+                                    <td>EBS</td>
+                                    <td>Yes</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" id="t2.large" value="t2.large"><label for="t2.large"></label></td>
+                                    <td>General Purpose</td>
+                                    <td>t2.large</td>
+                                    <td>2</td>
+                                    <td>8</td>
+                                    <td>EBS</td>
+                                    <td>Yes</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" id="t2.xlarge" value="t2.xlarge"><label for="t2.xlarge"></label></td>
+                                    <td>General Purpose</td>
+                                    <td>t2.xlarge</td>
+                                    <td>4</td>
+                                    <td>16</td>
+                                    <td>EBS</td>
+                                    <td>Yes</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" id="t2.2xlarge" value="t2.2xlarge"><label for="t2.2xlarge"></label></td>
+                                    <td>General Purpose</td>
+                                    <td>t2.2xlarge</td>
+                                    <td>8</td>
+                                    <td>32</td>
+                                    <td>EBS</td>
+                                    <td>Yes</td>
+                                </tr>-->
+                                </tbody>
+                            </table>
+                        </div><!-- //tb_wrap -->
+                    </div><!-- //pop_tab_cont -->
+
+                    <!-- TAB 3 -->
+                    <div class="pop_tab_cont" id="pop_tab3">
+                        <div class="pop_tb_top common_clearfix">
+                            <div class="pop_tb_top_tit" th:text="#{w.t.selection(#{w.security-group})}">Select One
+                                Security Group
+                            </div>
+                        </div><!-- //pop_tb_top -->
+
+                        <div class="tb_wrap">
+                            <table class="tb_grid">
+                                <thead>
+                                <tr>
+                                    <th class="row_input"></th>
+                                    <th th:text="#{title.jqgrid.groupId}">Group ID</th>
+                                    <th th:text="#{title.jqgrid.groupName}">Group Name</th>
+                                    <th th:text="#{title.jqgrid.description}">Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div><!-- //tb_wrap -->
+                    </div><!-- //pop_tab_cont -->
+
+                    <!-- TAB 4 -->
+                    <div class="pop_tab_cont" id="pop_tab4">
+                        <table class="tb_pop_data">
+                            <tr>
+                                <th th:text="#{w.t.multi(#{title.tab.instance},#{title.jqgrid.name})}">Instance Name
+                                </th>
+                                <td><input type="text" class="input_tb_text name"
+                                           placeholder="Input your instance name"></td>
+                            </tr>
+                            <tr>
+                                <th th:text="#{w.instances}">Instance Count</th>
+                                <td><input type="text" class="input_tb_text instanceCount"
+                                           placeholder="Input your instance count"></td>
+                            </tr>
+                            <tr>
+                                <th th:text="#{w.t.multi(#{w.network},'(VPC)')}">Network (VPC)</th>
+                                <td>
+                                    <div class="select_wrap">
+                                        <select id="network">
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th th:text="#{title.jqgrid.subnet}">Subnet</th>
+                                <td>
+                                    <div class="select_wrap">
+                                        <select id="subnet">
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th th:text="#{title.tab.keypair}">KeyPair</th>
+                                <td>
+                                    <div class="select_wrap">
+                                        <select id="keypair">
+                                            <option value="no">No KeyPair</option>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th th:text="#{w.detail-monitoring}">Detail Monitoring</th>
+                                <td>
+                                    <input type="radio" id="is_monitoring_false" name="monitoring" value="false"
+                                           checked="checked">
+                                    <label for="is_monitoring_false" th:text="#{w.disable}">False</label>
+                                    <input type="radio" id="is_monitoring_true" name="monitoring" value="true">
+                                    <label for="is_monitoring_true" th:text="#{w.enable}">True</label>
+                                </td>
+                            </tr>
+                            <!-- <tr>
+                                 <th>Subnet</th>
+                                 <td>
+                                     <div class="select_wrap">
+                                         <select>
+                                         </select>
+                                     </div>
+                                 </td>
+                             </tr>-->
+                        </table>
+                    </div><!-- //pop_tab_cont -->
+
+                    <!-- TAB 5 -->
+                    <div class="pop_tab_cont" id="pop_tab5">
+                        <table class="tb_pop_data">
+                            <tr>
+                                <th th:text="#{w.custom-script-load-from-file}">Load Customization Script from a file
+                                </th>
+                                <td><input type="file" placeholder="select file"></td>
+                            </tr>
+                            <tr>
+                                <th th:text="#{w.custom-script-write}">Create a custom script</th>
+                                <td>
+                                    <span>Content size: 0 bytes of 16.00 KB</span><!--콘텐츠 크기: 16.00 KB 중 0 바이트-->
+                                    <textarea maxlength="16384" style="width: 618px;height: 295px"></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="cont_tb_option">
+                            <input type="checkbox" id="base64_encoded">
+                            <label for="base64_encoded" th:text="#{s.t.already-exist('base64')}">Already base64
+                                encoded</label>
+                        </div>
+                    </div><!-- //pop_tab_cont -->
+
+                </div>
+                <div class="pop_btns">
+                    <!-- <button type="button" class="btn_prev"><span class="ico_arr">PREV</span></button> -->
+                    <button type="button" class="btn_action" th:text="#{w.create}" style="display: none">LAUNCH
+                        INSTANCE
+                    </button>
+                    <button type="button" class="btn_next"><span class="ico_arr" th:text="#{w.next}">NEXT</span>
+                    </button>
+                </div>
+            </div><!-- pop_body -->
+        </div><!-- pop_common -->
+    </div><!-- pop_wrap -->
+
+    <div class="pop_wrap" id="popupMonitoring">
+        <button type="button" class="btn_pop_close"><span class="ico_del"></span></button>
+        <div class="pop_common">
+            <div class="pop_tit">CPU</div>
+            <div class="pop_body pop_body_dark">
+                <div class="pop_cont">
+                    <div class="pop_monitoring_option_wrap">
+                        <div class="pop_monitoring_option">
+                            <div class="select_wrap">
+                                <label for="" th:text="#{w.statistics}">통계</label>
+                                <select id="detail_statistic">
+                                    <option value="AVERAGE" th:text="#{w.average}">평균</option>
+                                    <option value="MAXIMUM" th:text="#{w.max}">최대</option>
+                                    <option value="MINIMUM" th:text="#{w.min}">최소</option>
+                                    <option value="SUM" th:text="#{w.total}">전체</option>
+                                    <option value="SAMPLE_COUNT" th:text="#{w.sample-count}">샘플카운트</option>
+                                </select>
+                            </div>
+                            <div class="select_wrap" style="padding-left:68px">
+                                <label for="" th:text="#{w.temporal-coverage}">시간범위</label>
+                                <select id="detail_hour">
+                                    <option value="1" th:text="#{w.t.last-time('1',#{w.time})}">Last 1 Hour</option>
+                                    <option value="3" th:text="#{w.t.last-time('3',#{w.time})}">Last 3 Hours</option>
+                                    <option value="6" th:text="#{w.t.last-time('6',#{w.time})}">Last 6 Hours</option>
+                                    <option value="12" th:text="#{w.t.last-time('12',#{w.time})}">Last 12 Hours</option>
+                                    <option value="24" th:text="#{w.t.last-time('24', #{w.time})}">Last 24 Hours
+                                    </option>
+                                    <option value="72" th:text="#{w.t.last-time('3',#{w.day})}">Last 3 Days</option>
+                                    <option value="168" th:text="#{w.t.last-time('1',#{w.week})}">Last 1 Week</option>
+                                    <option value="332" th:text="#{w.t.last-time('2',#{w.week})}">Last 2 Weeks</option>
+                                </select>
+                            </div>
+                            <div class="select_wrap">
+                                <label for="" th:text="#{w.period}">기간</label>
+                                <select id="detail_interval">
+                                    <option value="60" th:text="#{w.t.minute('1')}">1분</option>
+                                    <option value="300" th:text="#{w.t.minute('5')}">5분</option>
+                                    <option value="600" th:text="#{w.t.minute('10')}">10분</option>
+                                    <option value="1800" th:text="#{w.t.minute('30')}">30분</option>
+                                </select>
+                            </div>
+                        </div><!-- //pop_monitoring_option -->
+                        <button type="button" class="btn_control"><span class="ico_refresh" th:title="#{w.reload}">Refresh</span>
+                        </button>
+                    </div><!-- pop_monitoring_option_wrap -->
+                    <div class="pop_monitoring_cont">
+                        <div id='detail' class="detail_monitoring_canvas"></div>
+                        <div class="detail_monitoring_loading">Loading...</div>
+                        <div class="detail_monitoring_nodata" style="display: none;">No Data</div>
+                    </div><!-- pop_monitoring_cont -->
+                </div><!-- pop_cont -->
+                <!--<div class="pop_btns">
+                    <button type="button" class="btn_action">CLOSE</button>
+                </div>-->
+            </div><!-- pop_body -->
+        </div><!-- popup -->
+    </div><!-- popup -->
+</div>
+
+<div layout:fragment="user.embedded.script" th:remove="tag">
+    <script type="text/javascript" th:inline="javascript">
+        var id = /*[[${param.id}]]*/;
+
+    </script>
+    <script type="text/javascript" th:src="@{/js/console/etri/server.js}"></script>
+    <script type="text/javascript" th:src="@{/js/console/etri/monitoring.js}"></script>
+    <script type="text/javascript" th:inline="javascript">
+        $(function () {
+            ServerUI.init();
+        });
+
+    </script>
+</div>
+</html>

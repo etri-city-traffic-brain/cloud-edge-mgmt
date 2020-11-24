@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.innogrid.uniq.coredb.mapper">
+
+	<resultMap id="credentialResultMap" type="CredentialInfo">
+		<result column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="type" property="type" />
+		<result column="region" property="region" />
+		<result column="domain" property="domain" />
+		<result column="url" property="url" />
+		<result column="tenant" property="tenant" />
+		<result column="access_id" property="accessId" />
+		<result column="access_token" property="accessToken" />
+		<result column="create_datetime" property="createdAt" />
+		<result column="duration_datetime" property="duration" />
+		<result column="project" property="projectId" />
+		<result column="subscription_id" property="subscriptionId" />
+		<result column="cloud_type" property="cloudType" />
+	</resultMap>
+
+	<sql id="credentialWhere">
+		<where>
+			<if test="id != null">
+				AND credential.id = #{id}
+			</if>
+			<if test="type != null">
+				AND credential.type = #{type}
+			</if>
+			<if test="accessId != null">
+				AND credential.access_id = #{accessId}
+			</if>
+			<if test="accessToken != null">
+				AND credential.access_token = #{accessToken}
+			</if>
+			<include refid="com.innogrid.uniq.coredb.columnWhere" />
+		</where>
+	</sql>
+
+	<sql id="credentialSQL">
+		SELECT
+		credential.id,
+		credential.name,
+		credential.type,
+		credential.cloud_type
+		<if test="nameOnly == null">
+			, credential.region,
+			credential.domain,
+			credential.url,
+			credential.tenant,
+			credential.access_id,
+			credential.access_token,
+			credential.create_datetime,
+			credential.duration_datetime,
+			credential.project,
+			credential.subscription_id
+		</if>
+		FROM cmp.cmp_credential as credential
+	</sql>
+
+	<select id="getCredentials" resultMap="credentialResultMap">
+		SELECT * FROM (
+		<include refid="credentialSQL" />
+		) AS credential
+		<include refid="credentialWhere" />
+		<include refid="com.innogrid.uniq.coredb.orderby" />
+		<include refid="com.innogrid.uniq.coredb.paging" />
+	</select>
+
+	<select id="getCredentialTotal" resultType="int">
+		SELECT COUNT(1) FROM (
+		<include refid="credentialSQL" />
+		) AS credential
+		<include refid="credentialWhere"/>
+	</select>
+
+	<insert id="createCredential" parameterType="CredentialInfo">
+		INSERT INTO cmp.cmp_credential (id, name, type, region, domain, url, tenant, access_id, access_token, duration_datetime, project, subscription_id, cloud_type)
+		VALUES (
+			#{id},
+			#{name},
+			#{type},
+			#{region},
+            #{domain},
+            #{url},
+            #{tenant},
+            #{accessId},
+            #{accessToken},
+            #{duration},
+            #{projectId},
+            #{subscriptionId},
+            #{cloudType}
+		)
+	</insert>
+
+	<update id="updateCredential" parameterType="CredentialInfo">
+		UPDATE cmp.cmp_credential
+		<set>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="type != null">
+				type = #{type},
+			</if>
+			<if test="region != null">
+				region = #{region},
+			</if>
+			<if test="domain != null">
+				domain = #{domain},
+			</if>
+			<if test="url != null">
+				url = #{url},
+			</if>
+			<if test="tenant != null">
+				tenant = #{tenant},
+			</if>
+			<if test="accessId != null">
+				access_id = #{accessId},
+			</if>
+			<if test="accessToken != null">
+				access_token = #{accessToken},
+			</if>
+			<if test="duration != null">
+				duration = #{duration},
+			</if>
+			<if test="projectId != null">
+				project = #{projectId},
+			</if>
+			<if test="subscriptionId != null">
+				subscription_id = #{subscriptionId},
+			</if>
+			<if test="cloudType != null">
+				cloud_type = #{cloudType},
+			</if>
+		</set>
+		<where>
+			<if test="id != null">
+				AND id = #{id}
+			</if>
+		</where>
+	</update>
+
+	<delete id="deleteCredential" parameterType="CredentialInfo">
+		DELETE FROM cmp.cmp_credential
+		<where>
+			<if test="id != null">
+				AND id = #{id}
+			</if>
+		</where>
+	</delete>
+</mapper>

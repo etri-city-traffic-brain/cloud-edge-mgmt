@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+  	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/main.layout">
+
+<h2 layout:fragment="leftSide_top_img">
+		<img th:src="@{/images/layout/h2_management.png/}" alt="Management"/>
+</h2>
+
+<div layout:fragment="top.location" class="cont_header">
+
+	<div class="cont_header_tit">
+		<h1 th:if="${#httpServletRequest.getRequestURI().startsWith('/public')}">엣지 서버
+		</h1>
+		<h1 th:if="${#httpServletRequest.getRequestURI().startsWith('/private')}"
+			th:text="#{w.t.multi(#{w.private},#{w.cloud})}">PRIVATE CLOUD
+		</h1>
+		<h1 th:if="${#httpServletRequest.getRequestURI().startsWith('/dashboard')}" th:text="#{w.dashboard}">
+			SERVICE
+		</h1>
+		<h2 th:if="${name}" th:text="${name}" class="current" id="test1">Openstack 1</h2>
+		<h2 th:unless="${name}" class="current" th:text="#{w.dashboard}" id="test2">DashBoard</h2>
+	</div><!-- //cont_header_tit -->
+</div><!-- //cont_header -->
+
+<nav layout:fragment="leftside.menu">
+	<ul class="header_nav">
+		<li class="haveChild"
+			th:classappend="${#httpServletRequest.getRequestURI().startsWith('/dashboard') ? 'on open':''}">
+			<a  th:text="#{w.dashboard}">Dashboard</a>
+			<ul>
+				<li class="haveChild" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/dashboard/service') ? 'on open':''}">
+					<li th:classappend="${#httpServletRequest.getRequestURI() == '/dashboard/service/total' ? 'on':''}">
+						<a th:href="@{/dashboard/service/total}" th:text="#{w.total}">Service Dashboard
+						</a>
+					</li>
+				</li>
+			</ul>
+		</li>
+
+		<li sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_CLOUD_READ', 'ROLE_CLOUD_WRITE')" class="haveChild" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/private') ? 'on open':''}"><a th:text="#{w.t.multi(#{w.private},#{w.cloud})}">Cloud</a>
+			<ul>
+				<th:block th:each="cloud, index : ${session.clouds}">
+					<th:block th:if="${cloud.type eq 'openstack'}">
+						<li sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_CLOUD_READ', 'ROLE_CLOUD_WRITE')" class="haveChild" th:classappend="${cloud.id eq id? 'on open':''}"><a href="#" th:text="${cloud.name}">Openstack</a>
+							<ul>
+								<li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/private/openstack/compute') and cloud.id eq id ? 'on':''}"><a th:href="@{/private/{type}/compute(type=${cloud.type}, id=${cloud.id})}" th:text="#{w.compute}">Compute</a></li>
+								<li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/private/openstack/volume') and cloud.id eq id  ? 'on':''}"><a th:href="@{/private/{type}/volume(type=${cloud.type}, id=${cloud.id})}" th:text="#{w.volume}">Volume</a></li>
+								<li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/private/openstack/network') and cloud.id eq id ? 'on':''}"><a th:href="@{/private/{type}/network(type=${cloud.type}, id=${cloud.id})}" th:text="#{w.network}">Network</a></li>
+								<li sec:authorize="hasAuthority('ROLE_ADMIN')" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/private/openstack/management') and cloud.id eq id ? 'on':''}"><a th:href="@{/private/{type}/management(type=${cloud.type}, id=${cloud.id})}" th:text="#{w.management}">Management</a></li>
+								<li sec:authorize="hasAuthority('ROLE_ADMIN')" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/private/openstack/meter') and cloud.id eq id ? 'on':''}"><a th:href="@{/private/{type}/meter(type=${cloud.type}, id=${cloud.id})}" th:text="#{w.usage2}">Metering</a></li>
+							</ul>
+						</li>
+					</th:block>
+				</th:block>
+			</ul>
+		</li>
+
+		</li>
+				<li sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_CLOUD_READ', 'ROLE_CLOUD_WRITE')" class="haveChild" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/public') ? 'on open':''}">
+					<a>엣지 서버</a>
+					<ul>
+
+						<li sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_CLOUD_READ', 'ROLE_CLOUD_WRITE')" class="haveChild"><a th:href="@{/edge/etri/compute}">ETRI_EDGE</a>
+						</li>
+						<li sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_CLOUD_READ', 'ROLE_CLOUD_WRITE')" class="haveChild"><a th:href="@{/edge/rexgen/compute}">REXGEN_EDGE</a>
+
+						</li>
+					</ul>
+
+	</ul>
+</nav>
+
+<div layout:fragment="layout.embedded.script" th:remove="tag">
+  <script type="text/javascript">
+
+	</script>
+</div>
+
+</html>

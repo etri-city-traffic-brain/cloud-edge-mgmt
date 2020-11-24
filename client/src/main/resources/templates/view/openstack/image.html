@@ -1,0 +1,255 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/openstack.layout">
+<div class="common_clearfix" layout:fragment="tit">
+    <div class="cont_current" th:text="#{w.compute}">compute</div>
+</div>
+<div class="cont_detail_top common_clearfix" layout:fragment="detail_tit">
+    <h4 class="detail_tit">TEMPLATE LIST</h4>
+    <div class="cont_top_action" sec:authorize="hasAnyAuthority('ROLE_ADMIN' ,'ROLE_CLOUD_WRITE')">
+        <!--            <button type="button" class="btn_action"><span class="ico_add">CREATE</span></button>-->
+        <button type="button" class="btn_action" id="create_image"><span class="ico_add"
+                                                                         th:text="#{w.create}">CREATE</span></button>
+    </div><!-- //cont_top_action -->
+</div>
+<div class="cont_body_top common_clearfix" layout:fragment="layout_tit">
+    <div class="cont_top_search">
+        <div class="cont_top_search_box">
+            <div class="select_wrap">
+                <select class="select_search">
+                    <option value="name" th:text="#{title.jqgrid.name}">Name</option>
+                    <option value="type" th:text="#{title.jqgrid.type}">Type</option>
+                    <option value="state" th:text="#{title.jqgrid.state}">State</option>
+                    <option value="visibility" th:text="#{title.jqgrid.visibility}">Visibility</option>
+                    <option value="isProtected" th:text="#{title.jqgrid.protected}">Protected</option>
+                    <option value="diskFormat" th:text="#{title.jqgrid.diskFormat}">Disk Format</option>
+                </select>
+            </div>
+            <input type="search" class="input_search">
+            <!--                <button type="submit" class="searchBtn"><span>Search</span></button>-->
+            <button type="submit" class="searchBtn"><span th:title="#{w.search}">Search</span></button>
+        </div><!-- //cont_top_search_box -->
+
+        <!--            <div class="cont_top_pagenation" id="pager1">-->
+        <!--                <button type="button" class="pagenation_btn prev"><span>Prev</span></button>-->
+        <!--                <div class="pagenation_current"><strong class="current">1</strong>/<span class="total">0</span></div>-->
+        <!--                <button type="button" class="pagenation_btn next"><span>Next</span></button>-->
+        <!--            </div>&lt;!&ndash; //cont_top_pagenation &ndash;&gt;-->
+
+        <!--            <button type="button" class="btn_control"><span class="ico_refresh">Refresh</span></button>-->
+        <button type="button" class="btn_control"><span class="ico_refresh" th:title="#{w.reload}">Refresh</span>
+        </button>
+    </div><!-- //cont_top_search -->
+</div>
+
+<div class="cont_body cont_list" layout:fragment="content.center">
+    <!--    <div class="cont_body_top common_clearfix">-->
+    <!--        <div class="cont_top_action" sec:authorize="hasAnyAuthority('ROLE_ADMIN' ,'ROLE_CLOUD_WRITE')">-->
+    <!--&lt;!&ndash;            <button type="button" class="btn_action"><span class="ico_add">CREATE</span></button>&ndash;&gt;-->
+    <!--            <button type="button" class="btn_action" id="create_image"><span class="ico_add" th:text="#{w.create}">CREATE</span></button>-->
+    <!--        </div>&lt;!&ndash; //cont_top_action &ndash;&gt;-->
+    <!--        <div class="cont_top_search">-->
+    <!--            <div class="cont_top_search_box">-->
+    <!--                <div class="select_wrap">-->
+    <!--                  <select class="select_search">-->
+    <!--                      <option value="name" th:text="#{title.jqgrid.name}">Name</option>-->
+    <!--                      <option value="type" th:text="#{title.jqgrid.type}">Type</option>-->
+    <!--                      <option value="state" th:text="#{title.jqgrid.state}">State</option>-->
+    <!--                      <option value="visibility" th:text="#{title.jqgrid.visibility}">Visibility</option>-->
+    <!--                      <option value="isProtected" th:text="#{title.jqgrid.protected}">Protected</option>-->
+    <!--                      <option value="diskFormat" th:text="#{title.jqgrid.diskFormat}">Disk Format</option>-->
+    <!--                  </select>-->
+    <!--                </div>-->
+    <!--                <input type="search" class="input_search">-->
+    <!--&lt;!&ndash;                <button type="submit" class="searchBtn"><span>Search</span></button>&ndash;&gt;-->
+    <!--                <button type="submit" class="searchBtn"><span th:title="#{w.search}">Search</span></button>-->
+    <!--            </div>&lt;!&ndash; //cont_top_search_box &ndash;&gt;-->
+
+    <!--&lt;!&ndash;            <div class="cont_top_pagenation" id="pager1">&ndash;&gt;-->
+    <!--&lt;!&ndash;                <button type="button" class="pagenation_btn prev"><span>Prev</span></button>&ndash;&gt;-->
+    <!--&lt;!&ndash;                <div class="pagenation_current"><strong class="current">1</strong>/<span class="total">0</span></div>&ndash;&gt;-->
+    <!--&lt;!&ndash;                <button type="button" class="pagenation_btn next"><span>Next</span></button>&ndash;&gt;-->
+    <!--&lt;!&ndash;            </div>&lt;!&ndash; //cont_top_pagenation &ndash;&gt;&ndash;&gt;-->
+
+    <!--&lt;!&ndash;            <button type="button" class="btn_control"><span class="ico_refresh">Refresh</span></button>&ndash;&gt;-->
+    <!--            <button type="button" class="btn_control"><span class="ico_refresh" th:title="#{w.reload}">Refresh</span></button>-->
+    <!--        </div>&lt;!&ndash; //cont_top_search &ndash;&gt;-->
+    <!--    </div>&lt;!&ndash; //cont_body_top &ndash;&gt;-->
+
+    <div class="tb_wrap">
+        <table class="tb_grid" id="image-grid">
+        </table>
+    </div><!-- //tb_wrap -->
+
+    <div class="cont_body_btm">
+        <div class="pagenation_wrap" id="pager1">
+            <div class="pagenation_inner">
+                <button type="button" class="pagenation_btn first"><span>First</span></button>
+                <button type="button" class="pagenation_btn prev"><span>Prev</span></button>
+                <div class="pagenation_current"><strong class="current">1 - 0</strong>of<span class="total">0</span>
+                </div>
+                <button type="button" class="pagenation_btn next"><span>Next</span></button>
+                <button type="button" class="pagenation_btn last"><span>Last</span></button>
+            </div>
+        </div>
+    </div><!-- //cont_body_btm -->
+</div><!-- //cont_list -->
+
+<div class="cont_body cont_detail" layout:fragment="content.right">
+    <div class="cont_detail_inner">
+        <div class="cont_detail_top common_clearfix">
+<!--            <div class="detail_label">-->
+<!--                &lt;!&ndash;                <button type="button" class="detail_label_btn"><span class="ico_close">Detail view</span></button>&ndash;&gt;-->
+<!--                <button type="button" class="detail_label_btn"><span class="ico_close"-->
+<!--                                                                     th:text="#{title.tab.detailView}">Detail view</span>-->
+<!--                </button>-->
+<!--            </div>-->
+            <!--            <h4 class="detail_tit">Instance Name</h4>-->
+            <h4 class="detail_tit" th:text="#{w.t.name(#{w.template})}">Template Name</h4>
+            <div class="detail_option">
+                <!--                <div class="detail_option_btns" sec:authorize="hasAnyAuthority('ROLE_ADMIN' ,'ROLE_CLOUD_WRITE')">-->
+                <!--                    <button type="button" class="detail_option_btn"><span class="ico_del">Delete</span></button>-->
+                <!--                    <button type="button" class="detail_option_btn"><span class="ico_start">Start</span></button>-->
+                <!--                    <button type="button" class="detail_option_btn"><span class="ico_setting">Setting</span></button>-->
+                <!--                    <button type="button" class="detail_option_btn"><span class="ico_stop">Stop</span></button>-->
+                <!--                </div>&lt;!&ndash; //detail_option_btns &ndash;&gt;-->
+                <div class="detail_option_action" sec:authorize="hasAnyAuthority('ROLE_ADMIN' ,'ROLE_CLOUD_WRITE')">
+                    <button type="button" class="detail_action_btn"><span>Action</span></button>
+                    <ul class="detail_action_list" id="detailAction">
+                        <li>
+                            <button type="button" th:title="#{w.delete}" th:text="#{w.delete}" id="image_delete">
+                                Delete
+                            </button>
+                        </li>
+                    </ul>
+                </div><!-- //detail_option_action -->
+            </div><!-- //detail_option -->
+        </div><!-- //cont_detail_top -->
+
+        <div class="cont_tab_wrap">
+            <div class="detail_tab">
+                <div class="inner">
+                    <!--                <a href="#" class="on"><h5 th:text="#{title.tab.detail}">Detail</h5></a>-->
+                    <a class="on"><h5 th:text="#{w.detail}">Detail</h5></a>
+                </div>
+            </div><!-- //detail_tab -->
+        </div>
+        <!-- TAB 1 -->
+        <div class="detail_cont" id="tab1">
+
+        </div><!-- //detail_cont -->
+    </div>
+</div><!-- cont_detail -->
+
+<div class="content_center content_extend" layout:fragment="content.extend" th:remove="all"></div>
+
+<div th:remove="tag" layout:fragment="page.popup">
+    <div class="pop_wrap" id="popupCreateImage" style="width:760px">
+        <button type="button" class="btn_pop_close"><span class="ico_del">Close</span></button>
+        <div class="pop_common">
+            <div class="pop_tit" th:text="#{w.t.create(#{w.template})}">Create Image</div>
+            <!--<div class="pop_tit" th:text="#{w.t.create(#{w.image})}">Create Image</div>-->
+            <div class="pop_body">
+                <div class="pop_cont">
+                    <table class="tb_pop_data">
+                        <tr>
+                            <th th:text="#{w.name}">Name</th>
+                            <td><input type='text' class='input_tb_text' name="name"></td>
+                        </tr>
+                        <tr>
+                            <th th:text="URL">URL</th>
+                            <td><input type='text' class='input_tb_text' name="url"></td>
+                        </tr>
+                        <tr>
+                            <th th:text="#{w.t.multi(#{w.disk},#{w.format})}">Format</th>
+                            <td>
+                                <div class="select_wrap">
+                                    <select name="format">
+                                        <option label="QCOW2 - QEMU 에뮬레이터 (Emulator)" value="qcow2">QCOW2 - QEMU 에뮬레이터
+                                            (Emulator)
+                                        </option>
+                                        <option label="ISO - 광학 디스크 이미지 (Optical Disk Image)" value="iso">ISO - 광학 디스크
+                                            이미지 (Optical Disk Image)
+                                        </option>
+                                        <option label="OVA - 오픈 가상 어플라이언스 (Open Virtual Appliance)" value="ova">OVA - 오픈
+                                            가상 어플라이언스 (Open Virtual Appliance)
+                                        </option>
+                                        <option label="PLOOP - Virtuozzo/Parallels Loopback Disk" value="ploop">PLOOP -
+                                            Virtuozzo/Parallels Loopback Disk
+                                        </option>
+                                        <option label="Raw" value="raw">Raw</option>
+                                        <option label="VDI - 가상 디스크 이미지 (Virtual Disk Image)" value="vdi">VDI - 가상 디스크
+                                            이미지 (Virtual Disk Image)
+                                        </option>
+                                        <option label="VHD - 가상 하드 디스크 (Virtual Hard Disk)" value="vhd">VHD - 가상 하드 디스크
+                                            (Virtual Hard Disk)
+                                        </option>
+                                        <option label="VMDK - 가상 머신 디스크 (Virtual Machine Disk)" value="vmdk">VMDK - 가상
+                                            머신 디스크 (Virtual Machine Disk)
+                                        </option>
+                                        <option label="AKI - Amazon 커널 이미지 (Kernel Image)" value="aki">AKI - Amazon 커널
+                                            이미지 (Kernel Image)
+                                        </option>
+                                        <option label="AMI - Amazon 머신 이미지 (Machine Image)" value="ami">AMI - Amazon 머신
+                                            이미지 (Machine Image)
+                                        </option>
+                                        <option label="ARI - Amazon 램디스크 이미지 (Ramdisk Image)" value="ari">ARI - Amazon
+                                            램디스크 이미지 (Ramdisk Image)
+                                        </option>
+                                        <option label="Docker" value="docker">Docker</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th th:text="#{w.t.multi(#{w.min},#{w.disk})} + ' (GB)'">Min Disk(GB)</th>
+                            <td><input type='number' class='input_tb_text' name="minDisk" min="0"></td>
+                        </tr>
+                        <tr>
+                            <th th:text="#{w.t.multi(#{w.min},#{w.memory})} + ' (MB)'">Min RAM(MB)</th>
+                            <td><input type='number' class='input_tb_text' name="minRam" min="0"></td>
+                        </tr>
+                        <tr>
+                            <th th:text="#{w.visibility}">가시성</th>
+                            <td>
+                                <input type="radio" id="public" name="visibility" value="public">
+                                <label for="public" th:text="#{w.public}">공용</label>
+                                <input type="radio" id="private" name="visibility" value="private">
+                                <label for="private" th:text="#{w.private-ko}">사설</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th th:text="#{w.protected}">보호됨</th>
+                            <td>
+                                <input type="radio" id="yes" name="protected" value="yes">
+                                <label for="yes" th:text="#{w.yes}">예</label>
+                                <input type="radio" id="no" name="protected" value="no">
+                                <label for="no" th:text="#{w.no}">아니오</label>
+                            </td>
+                        </tr>
+                    </table>
+                </div><!-- pop_cont -->
+                <div class="pop_btns">
+                    <button type="button" class="btn_action" th:text="#{w.create}">Create</button>
+                </div>
+            </div><!-- pop_body -->
+        </div><!-- popup -->
+    </div><!-- popup -->
+</div>
+
+<div layout:fragment="user.embedded.script" th:remove="tag">
+    <script type="text/javascript" th:inline="javascript">
+        var id = /*[[${param.id}]]*/;
+
+    </script>
+    <script type="text/javascript" th:src="@{/js/console/openstack/image.js}"></script>
+    <script type="text/javascript" th:inline="javascript">
+        $(function () {
+            ImageUI.init();
+        });
+
+    </script>
+</div>
+</html>

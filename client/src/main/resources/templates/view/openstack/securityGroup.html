@@ -1,0 +1,138 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/openstack.layout">
+<div class="common_clearfix" layout:fragment="tit">
+    <div class="cont_current" th:text="#{w.network}">network</div>
+</div>
+<div class="cont_detail_top common_clearfix" layout:fragment="detail_tit">
+    <h4 class="detail_tit">SECURITY GROUP LIST</h4>
+</div>
+<div class="cont_body_top common_clearfix" layout:fragment="layout_tit">
+    <div class="cont_top_search">
+        <div class="cont_top_search_box">
+            <div class="select_wrap">
+                <select class="select_search">
+                    <option value="name" th:text="#{title.jqgrid.name}">Name</option>
+                    <option value="id" th:text="#{title.jqgrid.id}">ID</option>
+                    <option value="description" th:text="#{title.jqgrid.description}">Description</option>
+                </select>
+            </div>
+            <input type="search" class="input_search">
+            <button type="submit" class="searchBtn"><span>Search</span></button>
+        </div><!-- //cont_top_search_box -->
+
+        <!--            <div class="cont_top_pagenation" id="pager1">-->
+        <!--                <button type="button" class="pagenation_btn prev"><span>Prev</span></button>-->
+        <!--                <div class="pagenation_current"><strong class="current">1</strong>/<span class="total">0</span></div>-->
+        <!--                <button type="button" class="pagenation_btn next"><span>Next</span></button>-->
+        <!--            </div>&lt;!&ndash; //cont_top_pagenation &ndash;&gt;-->
+
+        <button type="button" class="btn_control"><span class="ico_refresh">Refresh</span></button>
+    </div><!-- //cont_top_search -->
+</div>
+<div class="cont_body cont_list" layout:fragment="content.center">
+    <!--    <div class="cont_body_top common_clearfix">-->
+    <!--        <div class="cont_top_action" sec:authorize="hasAnyAuthority('ROLE_ADMIN' ,'ROLE_CLOUD_WRITE')">-->
+    <!--            <button type="button" class="btn_action"><span class="ico_add">CREATE</span></button>-->
+    <!--        </div>&lt;!&ndash; //cont_top_action &ndash;&gt;-->
+    <!--        <div class="cont_top_search">-->
+    <!--            <div class="cont_top_search_box">-->
+    <!--                <div class="select_wrap">-->
+    <!--                    <select class="select_search">-->
+    <!--                        <option value="name" th:text="#{title.jqgrid.name}">Name</option>-->
+    <!--                        <option value="id" th:text="#{title.jqgrid.id}">ID</option>-->
+    <!--                        <option value="description" th:text="#{title.jqgrid.description}">Description</option>-->
+    <!--                    </select>-->
+    <!--                </div>-->
+    <!--                <input type="search" class="input_search">-->
+    <!--                <button type="submit" class="searchBtn"><span>Search</span></button>-->
+    <!--            </div>&lt;!&ndash; //cont_top_search_box &ndash;&gt;-->
+
+    <!--            &lt;!&ndash;            <div class="cont_top_pagenation" id="pager1">&ndash;&gt;-->
+    <!--            &lt;!&ndash;                <button type="button" class="pagenation_btn prev"><span>Prev</span></button>&ndash;&gt;-->
+    <!--            &lt;!&ndash;                <div class="pagenation_current"><strong class="current">1</strong>/<span class="total">0</span></div>&ndash;&gt;-->
+    <!--            &lt;!&ndash;                <button type="button" class="pagenation_btn next"><span>Next</span></button>&ndash;&gt;-->
+    <!--            &lt;!&ndash;            </div>&lt;!&ndash; //cont_top_pagenation &ndash;&gt;&ndash;&gt;-->
+
+    <!--            <button type="button" class="btn_control"><span class="ico_refresh">Refresh</span></button>-->
+    <!--        </div>&lt;!&ndash; //cont_top_search &ndash;&gt;-->
+    <!--    </div>&lt;!&ndash; //cont_body_top &ndash;&gt;-->
+
+    <div class="tb_wrap">
+        <table class="tb_grid" id="securitygroup-grid">
+        </table>
+    </div><!-- //tb_wrap -->
+
+    <div class="cont_body_btm">
+        <div class="pagenation_wrap" id="pager1">
+            <div class="pagenation_inner">
+                <button type="button" class="pagenation_btn first"><span>First</span></button>
+                <button type="button" class="pagenation_btn prev"><span>Prev</span></button>
+                <div class="pagenation_current"><strong class="current">1 - 0</strong>of<span class="total">0</span>
+                </div>
+                <button type="button" class="pagenation_btn next"><span>Next</span></button>
+                <button type="button" class="pagenation_btn last"><span>Last</span></button>
+            </div>
+        </div>
+    </div><!-- //cont_body_btm -->
+</div><!-- //cont_list -->
+
+<div class="cont_body cont_detail" layout:fragment="content.right">
+    <div class="cont_detail_inner">
+        <div class="cont_detail_top common_clearfix">
+            <!--            <div class="detail_label">-->
+            <!--                <button type="button" class="detail_label_btn"><span class="ico_close" th:text="#{title.tab.detailView}" >Detail view</span></button>-->
+            <!--            </div>-->
+            <h4 class="detail_tit">SecurityGroup Name</h4>
+            <div class="detail_option">
+                <!--                <div class="detail_option_btns" sec:authorize="hasAnyAuthority('ROLE_ADMIN' ,'ROLE_CLOUD_WRITE')">-->
+                <!--                    <button type="button" class="detail_option_btn"><span class="ico_del">Delete</span></button>-->
+                <!--                    <button type="button" class="detail_option_btn"><span class="ico_start">Start</span></button>-->
+                <!--                    <button type="button" class="detail_option_btn"><span class="ico_setting">Setting</span></button>-->
+                <!--                    <button type="button" class="detail_option_btn"><span class="ico_stop">Stop</span></button>-->
+                <!--                </div>&lt;!&ndash; //detail_option_btns &ndash;&gt;-->
+                <!--                <div class="detail_option_action" sec:authorize="hasAnyAuthority('ROLE_ADMIN' ,'ROLE_CLOUD_WRITE')">-->
+                <!--                    <button type="button" class="detail_action_btn"><span>Action</span></button>-->
+                <!--                    <ul class="detail_action_list" id="detailAction">-->
+                <!--                        <li><button type="button">Action</button></li>-->
+                <!--                        <li><button type="button">Action</button></li>-->
+                <!--                        <li><button type="button">Action</button></li>-->
+                <!--                        <li><button type="button">Action</button></li>-->
+                <!--                        <li><button type="button">Action</button></li>-->
+                <!--                    </ul>-->
+                <!--                </div>&lt;!&ndash; //detail_option_action &ndash;&gt;-->
+            </div><!-- //detail_option -->
+        </div><!-- //cont_detail_top -->
+
+        <div class="cont_tab_wrap">
+            <div class="detail_tab">
+                <div class="inner">
+                    <a href="#" class="on"><h5 th:text="#{title.tab.detail}">Detail</h5></a>
+                </div>
+            </div><!-- //detail_tab -->
+        </div>
+        <!-- TAB 1 -->
+        <div class="detail_cont" id="tab1">
+
+        </div><!-- //detail_cont -->
+    </div>
+</div><!-- cont_detail -->
+
+<div class="content_center content_extend" layout:fragment="content.extend" th:remove="all"></div>
+
+<div layout:fragment="user.embedded.script" th:remove="tag">
+    <script type="text/javascript" th:inline="javascript">
+        var id = /*[[${param.id}]]*/;
+
+    </script>
+    <script type="text/javascript" th:src="@{/js/console/openstack/securityGroup.js}"></script>
+    <script type="text/javascript" th:inline="javascript">
+        $(function () {
+            SecurityGroupUI.init();
+        });
+
+    </script>
+</div>
+</html>

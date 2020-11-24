@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+	<settings>
+		<setting name="logImpl" value="LOG4J" />
+		<setting name="cacheEnabled" value="true"/>
+		<setting name="lazyLoadingEnabled" value="true" />
+		<setting name="multipleResultSetsEnabled" value="true" />
+		<setting name="useColumnLabel" value="true" />
+		<setting name="useGeneratedKeys" value="false" />
+		<setting name="defaultExecutorType" value="SIMPLE" />
+		<setting name="defaultStatementTimeout" value="100" />
+	</settings>
+
+	<typeAliases>
+        <typeAlias alias="UserInfo" type="com.innogrid.uniq.core.model.UserInfo"/>
+        <typeAlias alias="HistoryInfo" type="com.innogrid.uniq.core.model.HistoryInfo"/>
+        <typeAlias alias="CredentialInfo" type="com.innogrid.uniq.core.model.CredentialInfo"/>
+        <typeAlias alias="GroupInfo" type="com.innogrid.uniq.core.model.GroupInfo"/>
+        <typeAlias alias="RoleInfo" type="com.innogrid.uniq.core.model.RoleInfo"/>
+        <typeAlias alias="ProjectInfo" type="com.innogrid.uniq.core.model.ProjectInfo"/>
+        <typeAlias alias="PermissionInfo" type="com.innogrid.uniq.core.model.PermissionInfo"/>
+        <typeAlias alias="ServiceDashboardInfo" type="com.innogrid.uniq.core.model.ServiceDashboardInfo"/>
+        <typeAlias alias="ImageInfo" type="com.innogrid.uniq.core.model.ImageInfo"/>
+        <typeAlias alias="ImageDetailInfo" type="com.innogrid.uniq.core.model.ImageDetailInfo"/>
+        <typeAlias alias="ActionInfo" type="com.innogrid.uniq.core.model.ActionInfo"/>
+	</typeAliases>
+    
+</configuration>

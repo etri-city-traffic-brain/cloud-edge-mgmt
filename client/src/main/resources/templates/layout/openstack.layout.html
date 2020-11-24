@@ -1,0 +1,40 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/view.layout">
+
+
+    <div class="cont_wrap" layout:fragment="content" >
+        <div class="cont_body cont_list">
+            <div class="cont_detail_top common_clearfix" layout:fragment="detail_tit"></div>
+            <div class="cont_tab_wrap">
+                <div class="cont_tab">
+                    <div class="inner">
+                <a th:if="${#httpServletRequest.getRequestURI().startsWith('/private/openstack/compute')}" th:href="@{/private/openstack/compute/server(id=${param.id})}" th:classappend="${#httpServletRequest.getRequestURI() == '/private/openstack/compute' || #httpServletRequest.getRequestURI() == '/private/openstack/compute/server' ? 'on':''}"><h3 th:text="#{w.vm}">VM</h3></a>
+<!--                <a th:if="${#httpServletRequest.getRequestURI().startsWith('/private/openstack/compute')}" th:href="@{/private/openstack/compute/image(id=${param.id})}" th:classappend="${#httpServletRequest.getRequestURI() == '/private/openstack/compute/image' ? 'on':''}"><span th:text="#{title.tab.image}">Image</span></a>-->
+                <a th:if="${#httpServletRequest.getRequestURI().startsWith('/private/openstack/compute')}" th:href="@{/private/openstack/compute/image(id=${param.id})}" th:classappend="${#httpServletRequest.getRequestURI() == '/private/openstack/compute/image' ? 'on':''}"><span th:text="#{w.template}">Template</span></a>
+                <a th:if="${#httpServletRequest.getRequestURI().startsWith('/private/openstack/compute')}" th:href="@{/private/openstack/compute/keypair(id=${param.id})}" th:classappend="${#httpServletRequest.getRequestURI() == '/private/openstack/compute/keypair' ? 'on':''}"><span th:text="#{title.tab.keypair}">Key Pair</span></a>
+                <a th:if="${#httpServletRequest.getRequestURI().startsWith('/private/openstack/compute')}" th:href="@{/private/openstack/compute/flavor(id=${param.id})}" th:classappend="${#httpServletRequest.getRequestURI() == '/private/openstack/compute/flavor' ? 'on':''}"><span th:text="#{w.spec}">Spec</span></a>
+                <a th:if="${#httpServletRequest.getRequestURI().startsWith('/private/openstack/volume')}" th:href="@{/private/openstack/volume/volume(id=${param.id})}" th:classappend="${#httpServletRequest.getRequestURI() == '/private/openstack/volume' || #httpServletRequest.getRequestURI() == '/private/openstack/volume/volume' ? 'on':''}"><span th:text="#{title.tab.volume}">Volume</span></a>
+                <a th:if="${#httpServletRequest.getRequestURI().startsWith('/private/openstack/volume')}" th:href="@{/private/openstack/volume/backup(id=${param.id})}" th:classappend="${#httpServletRequest.getRequestURI() == '/private/openstack/volume/backup' ? 'on':''}"><span th:text="#{title.tab.backup}">Backup</span></a>
+                <a th:if="${#httpServletRequest.getRequestURI().startsWith('/private/openstack/volume')}" th:href="@{/private/openstack/volume/snapshot(id=${param.id})}" th:classappend="${#httpServletRequest.getRequestURI() == '/private/openstack/volume/snapshot' ? 'on':''}"><span th:text="#{title.tab.snapshot}">Snapshot</span></a>
+                <a th:if="${#httpServletRequest.getRequestURI().startsWith('/private/openstack/network')}" th:href="@{/private/openstack/network/network(id=${param.id})}" th:classappend="${#httpServletRequest.getRequestURI() == '/private/openstack/network' || #httpServletRequest.getRequestURI() == '/private/openstack/network/network' ? 'on':''}"><span th:text="#{title.tab.network}">Network</span></a>
+                <a th:if="${#httpServletRequest.getRequestURI().startsWith('/private/openstack/network')}" th:href="@{/private/openstack/network/router(id=${param.id})}" th:classappend="${#httpServletRequest.getRequestURI() == '/private/openstack/network/router' ? 'on':''}"><span th:text="#{title.tab.router}">Router</span></a>
+                <a th:if="${#httpServletRequest.getRequestURI().startsWith('/private/openstack/network')}" th:href="@{/private/openstack/network/securitygroup(id=${param.id})}" th:classappend="${#httpServletRequest.getRequestURI() == '/private/openstack/network/securitygroup' ? 'on':''}"><span th:text="#{title.tab.securityGroup}">Security Group</span></a>
+                <a th:if="${#httpServletRequest.getRequestURI().startsWith('/private/openstack/network')}" th:href="@{/private/openstack/network/floatingip(id=${param.id})}" th:classappend="${#httpServletRequest.getRequestURI() == '/private/openstack/network/floatingip' ? 'on':''}"><span >Floating IP</span></a>
+                <a th:if="${#httpServletRequest.getRequestURI().startsWith('/private/openstack/management')}" th:href="@{/private/openstack/management/project(id=${param.id})}" th:classappend="${#httpServletRequest.getRequestURI() == '/private/openstack/management' || #httpServletRequest.getRequestURI() == '/private/openstack/management/project' ? 'on':''}"><span th:text="#{title.tab.project}">Project</span></a>
+
+                <a th:if="${#httpServletRequest.getRequestURI().startsWith('/private/openstack/meter')}" th:href="@{/private/openstack/meter/server(id=${param.id})}" th:classappend="${#httpServletRequest.getRequestURI() == '/private/openstack/meter' || #httpServletRequest.getRequestURI() == '/private/openstack/meter/server' ? 'on':''}"><span th:text="#{title.tab.instance}">Instance</span></a>
+                    </div>
+                </div>
+                <div class="cont_body_top common_clearfix" layout:fragment="layout_tit"></div>
+            </div>
+            <div class="cont_body cont_list" layout:fragment="content.center"></div>
+        </div>
+        <!--        <div class="content &lt;!&ndash;detail_on&ndash;&gt;">-->
+        <!--            <div class="cont_body cont_list" layout:fragment="content.center"></div>-->
+        <div class="cont_body cont_detail" layout:fragment="content.right"></div>
+        <!--        </div>&lt;!&ndash; //content &ndash;&gt;-->
+    </div><!-- //cont_wrap -->
+</html>
