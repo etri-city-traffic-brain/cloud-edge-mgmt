@@ -1,6 +1,6 @@
 # cloud-edge-mgmt
 
-Gedge Management Dashboard
+UNIQ Management Dashboard
 
 ## 사전 환경
 
