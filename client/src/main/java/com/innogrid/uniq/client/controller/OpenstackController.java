@@ -3,6 +3,7 @@ package com.innogrid.uniq.client.controller;
 import com.innogrid.uniq.client.service.ApiService;
 import com.innogrid.uniq.client.service.OpenStackService;
 import com.innogrid.uniq.client.service.TokenService;
+import com.innogrid.uniq.client.util.CommonUtil;
 import com.innogrid.uniq.core.model.CredentialInfo;
 import com.innogrid.uniq.core.model.UserInfo;
 import com.innogrid.uniq.client.util.Pagination;
@@ -228,6 +229,10 @@ public class OpenstackController {
                                           @RequestParam(required = false) String q1) {
         UserInfo userInfo = (UserInfo) session.getAttribute("userInfo");
         String token = (String) session.getAttribute(TokenService.COOKIE_IN_TOKEN_NAME);
+//        String token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWRtaW5TeXN0ZW0iLCJ1c2VySWQiOiJjaXR5aHViMDciLCJuaWNrbmFtZSI6ImNpdHlodWIwNyIsImVtYWlsIjoiY2l0eWh1YjA3QHRlc3QuY29tIiwicm9sZSI6IkluZnJhX0FkbWluIiwiaWF0IjoxNTg5MDAzOTY5LCJleHAiOjE1ODkwMDc1NjksImF1ZCI6Im1nMk1pamFIb000ckMxak8wU1Y3IiwiaXNzIjoidXJuOmRhdGFodWI6Y2l0eWh1YjpzZWN1cml0eSJ9.WH9U0L_uBQR-NRo7z9IR_t-8Zi9Rp6znq5jSP7r5IQCcfuWqjItRenB0zsuzRrju3VvunfnHgiY1vqJVu8Ag_O70YDSM2zNXdn0l2erNaKePkM1tryHiy7a5DkQ68gUtrkk0d7tW9E5IQVvkb-OgFAWsCfzX4phsRebUbivbrLomnUupNPurJKWBcRC83URQHU4cJrGUh7Y-J-wNbMa1Y0w4kq4zKO4M12zOO8RetU5lHnKDLMx3o50O1WnBx95MhE2qIxF5bjwzx2RiDqkI98PgzMUcHRmYeUl_lJEHJU8n1nR_GONGRz8cMuNUZnzUB8QTSg2TVujidEvK5HuYGQ";
+
+        logger.info("userInfo = [{}] ", userInfo);
+        logger.info("token = [{}] ", token);
 
         Map<String, Object> params = new HashMap<>();
 

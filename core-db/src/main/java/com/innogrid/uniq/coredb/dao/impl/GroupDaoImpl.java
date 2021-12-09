@@ -4,6 +4,7 @@ import com.innogrid.uniq.core.model.GroupInfo;
 import com.innogrid.uniq.coredb.dao.GroupDao;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class GroupDaoImpl implements GroupDao {
 	private SqlSessionTemplate sqlSessionTemplate;
 
 	@Autowired
-	public void setSqlSessionTemplate(SqlSessionTemplate sqlSessionTemplate) {
+	public void setSqlSessionTemplate(@Qualifier("firstsqlSessionTemplate") SqlSessionTemplate sqlSessionTemplate) {
 		this.sqlSessionTemplate = sqlSessionTemplate;
 	}
 

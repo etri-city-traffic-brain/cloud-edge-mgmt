@@ -1,6 +1,7 @@
 package com.innogrid.uniq.apiopenstack.controller;
 
 import com.innogrid.uniq.apiopenstack.service.OpenStackService;
+import com.innogrid.uniq.core.model.CctvInfo;
 import com.innogrid.uniq.core.model.CredentialInfo;
 import com.innogrid.uniq.core.util.AES256Util;
 import com.innogrid.uniq.core.util.ObjectSerializer;
@@ -50,6 +51,7 @@ public class OpenStackController {
     public List<CredentialInfo> getCredentialOpenstack(@RequestHeader(value = "credential") String credential) {
 
         String type = "openstack";
+        logger.error("apiopenstack, openstackController, credential is ? : {}", credential);
         return openStackService.getCredential(credentialService.getCredentials(new HashMap<>()), type);
     }
 
@@ -74,6 +76,7 @@ public class OpenStackController {
             @RequestParam(required = false) String serverState,
             @RequestParam(required = false) Boolean webCheck
     ) {
+        logger.error("apiopenstack, openstackController, credential is ? : {}", credential);
         CredentialInfo credentialInfo = ObjectSerializer.deserializedData(aes256Util.decrypt(credential));
 
         logger.error("apiopenstack, openstackController, webCheck is ? : {}", webCheck);
@@ -1070,8 +1073,8 @@ public class OpenStackController {
 
         CredentialInfo credentialInfo = credentialService.getCredentialInfo(params);
 
-        JSONObject test = new JSONObject();
-        test.put("id", credentialInfo.getType());
+//        JSONObject test = new JSONObject();
+//        test.put("id", credentialInfo.getType());
 
         openStackService.deleteCredential(credentialInfo, project, id, credentialDao);
 
@@ -1079,5 +1082,25 @@ public class OpenStackController {
         return null;
         //삭제 성공 시 리턴 값이 필요 하다 하면
 //        return test;
+    }
+
+    @RequestMapping(value = "/cctvs", method = RequestMethod.GET)
+    public @ResponseBody
+    List<CctvInfo> getCctvs(
+                            @RequestParam(required = false) Integer page,
+                            @RequestParam(required = false) Integer rows,
+                            @RequestParam(defaultValue = "name") String sidx,
+                            @RequestParam(defaultValue = "asc") String sord,
+                            @RequestParam(required = false) String q0,
+                            @RequestParam(required = false) String q1) {
+
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("sidx", sidx);
+        params.put("sord", sord);
+        params.put("page", page);
+        params.put("rows", rows);
+
+        return openStackService.getCctvs(params);
     }
 }

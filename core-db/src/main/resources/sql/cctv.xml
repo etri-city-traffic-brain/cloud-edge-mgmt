@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.innogrid.uniq.coredb.mapper">
+
+	<resultMap id="cctvResultMap" type="CctvInfo">
+		<result column="cctv_id" property="cctv_id" />
+		<result column="cctv_parent_id" property="cctv_parent_id" />
+		<result column="cctv_cam_nm" property="cctv_cam_nm" />
+		<result column="cctv_ip" property="cctv_ip" />
+		<result column="cctv_login_id" property="cctv_login_id"/>
+		<result column="cctv_login_pw" property="cctv_login_pw" />
+		<result column="cctv_rtsp_url" property="cctv_rtsp_url" />
+		<result column="cctv_rtsp_port" property="cctv_rtsp_port" />
+		<result column="cctv_http_port" property="cctv_http_port" />
+		<result column="crsrd_id" property="crsrd_id" />
+		<result column="lght_use_yn" property="lght_use_yn" />
+		<result column="connect_svr" property="connect_svr" />
+	</resultMap>
+
+	<select id="getCctvs_connect_svr1" resultMap="cctvResultMap">
+		SELECT * FROM innogrid_db.CTB_CCTV_EQUIP_MST_test WHERE connect_svr="1";
+	</select>
+
+	<select id="getCctvTotal_connect_svr1" resultType="int">
+		SELECT count(*) FROM innogrid_db.CTB_CCTV_EQUIP_MST_test WHERE connect_svr="1";
+	</select>
+
+	<select id="getCctvs_connect_svr2" resultMap="cctvResultMap">
+		SELECT * FROM innogrid_db.CTB_CCTV_EQUIP_MST_test WHERE connect_svr="2";
+	</select>
+
+	<select id="getCctvTotal_connect_svr2" resultType="int">
+		SELECT count(*) FROM innogrid_db.CTB_CCTV_EQUIP_MST_test WHERE connect_svr="2";
+	</select>
+
+</mapper>

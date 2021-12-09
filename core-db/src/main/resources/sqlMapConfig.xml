@@ -26,6 +26,7 @@
         <typeAlias alias="ImageInfo" type="com.innogrid.uniq.core.model.ImageInfo"/>
         <typeAlias alias="ImageDetailInfo" type="com.innogrid.uniq.core.model.ImageDetailInfo"/>
         <typeAlias alias="ActionInfo" type="com.innogrid.uniq.core.model.ActionInfo"/>
+		<typeAlias alias="CctvInfo" type="com.innogrid.uniq.core.model.CctvInfo"/>
 	</typeAliases>
     
 </configuration>

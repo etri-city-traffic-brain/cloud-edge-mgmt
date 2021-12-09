@@ -1,5 +1,6 @@
 package com.innogrid.uniq.apiopenstack.service;
 
+import com.innogrid.uniq.core.model.CctvInfo;
 import com.innogrid.uniq.core.model.CredentialInfo;
 import com.innogrid.uniq.coredb.dao.CredentialDao;
 import com.innogrid.uniq.coreopenstack.model.*;
@@ -11,6 +12,7 @@ import org.openstack4j.model.storage.block.VolumeType;
 import java.net.MalformedURLException;
 
 import java.util.List;
+import java.util.Map;
 
 public interface OpenStackService {
     boolean validateCredential(CredentialInfo credentialInfo);
@@ -188,4 +190,6 @@ public interface OpenStackService {
     List<CredentialInfo> getCredential(List<CredentialInfo> list, String type);
 
     void deleteCredential(CredentialInfo info, String projectId, String credentialId, CredentialDao credentialDao);
+
+    List<CctvInfo> getCctvs(Map<String, Object> params);
 }

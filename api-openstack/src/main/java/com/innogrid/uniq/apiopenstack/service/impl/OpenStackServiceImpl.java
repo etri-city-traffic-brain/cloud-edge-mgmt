@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.innogrid.uniq.apiopenstack.service.OpenStackService;
 import com.innogrid.uniq.core.exception.UnAuthorizedException;
 import com.innogrid.uniq.core.exception.CredentialException;
+import com.innogrid.uniq.core.model.CctvInfo;
 import com.innogrid.uniq.core.model.CredentialInfo;
+import com.innogrid.uniq.coredb.dao.CctvDao;
 import com.innogrid.uniq.coredb.dao.CredentialDao;
 import com.innogrid.uniq.coreopenstack.model.*;
 import net.sf.json.JSONArray;
@@ -44,6 +46,7 @@ import org.openstack4j.model.storage.block.builder.VolumeBuilder;
 import org.openstack4j.openstack.OSFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -75,6 +78,9 @@ public class OpenStackServiceImpl implements OpenStackService {
         logger.error("info info info : '{}'", info);
         logger.error("getProjectId getProjectId getProjectId : '{}'", info.getProjectId());
         logger.error("projectId projectId projectId : '{}'", projectId);
+        logger.error("info.getAccessId() : '{}'", info.getAccessId());
+        logger.error("info.getAccessToken() : '{}'", info.getAccessToken());
+        logger.error("domainIdentifier : '{}'", domainIdentifier);
         OSClient os = null;
         try {
             if (info.getProjectId() == null) {
@@ -2901,8 +2907,13 @@ public class OpenStackServiceImpl implements OpenStackService {
         CredentialInfo credentialInfo = new CredentialInfo();
 
         List<CredentialInfo> open = new ArrayList<>();
+        logger.error("list : '{}'", list);
+        logger.error("type : '{}'", type);
+        logger.error("credentialInfo : '{}'", credentialInfo);
         for (int i = 0; i < list.size(); i++) {
             CredentialInfo info = list.get(i);
+            logger.error("info : '{}'", info.getType().equals(type));
+
             if (info.getType().equals(type)) {
                 credentialInfo.setId(list.get(i).getType());
                 credentialInfo.setName(list.get(i).getName());
@@ -2931,11 +2942,22 @@ public class OpenStackServiceImpl implements OpenStackService {
 
     @Override
     public void deleteCredential(CredentialInfo credentialInfo, String projectId, String credentialId, CredentialDao credentialDao) {
+        logger.error("credentialInfo : '{}'", credentialInfo);
         if (credentialInfo == null) throw new CredentialException();
         if (credentialInfo.getType().equals(credentialId)){
             credentialDao.deleteCredential(credentialInfo);
         }else{
             throw new NullPointerException();
         }
+    }
+
+    @Autowired
+    private CctvDao cctvDao;
+
+    @Override
+    public List<CctvInfo> getCctvs(Map<String, Object> params) {
+        List<CctvInfo> list = cctvDao.getCctvs(params);
+
+        return list;
     }
 }

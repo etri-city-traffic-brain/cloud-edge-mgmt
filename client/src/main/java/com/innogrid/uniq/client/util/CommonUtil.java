@@ -143,6 +143,7 @@ public final class CommonUtil {
 
     public static HttpHeaders getAuthHeaders(String credentialInfo, String token) {
         HttpHeaders headers = new HttpHeaders();
+         logger.error("credentialInfo : '{}'", credentialInfo);
         headers.set("credential", credentialInfo);
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON_UTF8));

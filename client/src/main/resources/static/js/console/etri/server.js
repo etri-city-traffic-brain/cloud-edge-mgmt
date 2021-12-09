@@ -27,33 +27,132 @@ var ServerUI = (function (options) {
             model: ServerModel
         }),
 
+        CctvModel = Backbone.Model.extend({
+            idAttribute: 'id',
+            urlRoot: '/cctv/cctvs',
+            defaults: {
+                cctv_id: '',
+                cctv_parent_id: '',
+                cctv_cam_nm: '',
+                cctv_ip: '',
+                cctv_login_id: '',
+                cctv_login_pw: '',
+                cctv_rtsp_url: '',
+                cctv_rtsp_port: '',
+                cctv_http_port: '',
+                crsrd_id: '',
+                lght_use_yn: '',
+                connect_svr: '',
+                id: null,
+            }
+        }),
+        CctvCollection = Backbone.Collection.extend({
+            model: CctvModel
+        }),
+
+        CctvDetailView = Backbone.View.extend({
+            el: "#tab1",
+            reset: function() {
+                this.collection.reset();
+                this.grid.setGridParam({
+                    datatype: "local",
+                    page: 1,
+                    url: ''
+                });
+                this.grid.clearGridData();
+            },
+            render: function(model) {
+                this.collection.reset();
+                this.grid.clearGridData();
+                this.grid.setGridParam({
+                    datatype: "json",
+                    page: 1,
+                    url: "/cctv/cctvs",
+                }).trigger("reloadGrid");
+            },
+            initialize: function () {
+                var self = this;
+
+                this.collection = new CctvCollection();
+                this.collection.on("add", function (model) {
+                    self.grid.addRowData(model.attributes.id, model.toJSON(), "first");
+                });
+                this.collection.on("remove", function(model) {
+                    self.grid.delRowData(model.get('id'));
+                });
+
+                this.gridId = "#cctv-grid";
+                this.grid = $(this.gridId).jqGrid({
+                    datatype: "local",
+                    jsonReader: {
+                        repeatitems: false,
+                        id: "cctv_id"
+                    },
+                    colNames: [
+                        jQuery.i18n.prop('title.jqgrid.cctvId'),
+                        jQuery.i18n.prop('title.jqgrid.cctvParentId'),
+                        jQuery.i18n.prop('title.jqgrid.cctvCamNm'),
+                        jQuery.i18n.prop('title.jqgrid.cctvIp'),
+                        jQuery.i18n.prop('title.jqgrid.cctvLoginId'),
+                        jQuery.i18n.prop('title.jqgrid.cctvLoginPw'),
+                        jQuery.i18n.prop('title.jqgrid.cctvRtspUrl'),
+                        jQuery.i18n.prop('title.jqgrid.cctvRtspPort'),
+                        jQuery.i18n.prop('title.jqgrid.cctvHttpPort'),
+                        jQuery.i18n.prop('title.jqgrid.crsrdId'),
+                        jQuery.i18n.prop('title.jqgrid.lghtUseYn'),
+                        jQuery.i18n.prop('title.jqgrid.connectSvr')
+                    ],
+                    colModel: [
+                        {name: 'cctv_id', admin: false, align: 'left'},
+                        {name: 'cctv_parent_id',align: 'left'},
+                        {name: 'cctv_cam_nm', align: 'left'},
+                        {name: 'cctv_ip', align: 'left'},
+                        {name: 'cctv_login_id', align: 'left'},
+                        {name: 'cctv_login_pw', align: 'left'},
+                        {name: 'cctv_rtsp_url', align: 'left'},
+                        {name: 'cctv_rtsp_port', align: 'left'},
+                        {name: 'cctv_http_port', align: 'left'},
+                        {name: 'crsrd_id', align: 'left'},
+                        {name: 'lght_use_yn', align: 'left'},
+                        {name: 'connect_svr', align: 'left'},
+                    ],
+                    altRows: true,
+                    sortname: "cctv_id",
+                    sortorder: "desc",
+                    loadonce: true,
+                    autowidth: true,
+                    width:910,
+                    gridComplete: function () {
+                        $(this).resetSize();
+                    },
+                    scrollOffset: 0,
+                    rowNum: setRowNum(10, self.gridId),
+                    loadtext: "",
+                    autoencode: true,
+                    loadComplete: function (data) {
+                        self.collection.reset(data.rows);
+                        data.gridId = self.gridId;
+                        data.getPageParam = function (data) {
+                            return {
+                                'q0': 'name',
+                                'q1': self.$el.find('.sub_search')
+                            }
+                        };
+                        data.rowNum = $(this).getGridParam("rowNum");
+                        data.reccount = $(this).getGridParam("reccount");
+                        $("#cctvpager").pager(data);
+                        // $("#cctv-grid tr:eq(1)").trigger('click');
+                    }
+                });
+            }
+        }),
+
         ServerView = Backbone.View.extend({
             el: ".cont_wrap",
             events: {
-                "click .cont_list .searchBtn": "search",
-                "keyup .cont_list .input_search": "searchEnter",
                 "click .cont_list .btn_control":"resetGrid",
                 "click .detail_label_btn":"clearDetail",
                 "click .detail_tab a": "detailView",
-                "click #server_start": "serverStart",
-                "click #server_stop": "serverStop",
-                "click #server_reboot": "serverReBoot",
-                "click #server_delete": "serverDelete",
-                "click #server_monitoring_enabled": "serverMonitoringEnabled",
-                "click #server_monitoring_disabled": "serverMonitoringDisabled",
-                "click #tab2 .cont_top_search" : "serverMonitoringReload",
-                "click #tab2 .detail_monitoring_tit button" : "serverDetailMonitoringDisplay",
-                "click #server_create": "create"
-            },
-            search: function() {
-                this.grid.search();
-                this.clearDetail();
-            },
-            searchEnter: function(e) {
-                if(e.keyCode == 13) {
-                    this.grid.search();
-                    this.clearDetail();
-                }
             },
             resetGrid: function() {
                 this.$el.find(".cont_list .input_search").val('');
@@ -75,217 +174,39 @@ var ServerUI = (function (options) {
             },
             clearDetail: function() {
                 modules.detailView.model.reset();
-                modules.detailHistoryView.reset();
                 this.closeDetail();
             },
             detailView: function() {
                 var m = this.currentSelRow();
                 if(m) {
                     var tabIndex = $('.detail_tab a.on').index();
-                    switch (tabIndex) {
-                        case 0 :
-                            modules.detailView.model.set(m.toJSON());
-                            break;
-                        case 1 :
-                            MonitoringUI.modules.loadingEfftect("on");
-                            MonitoringUI.modules.reload(m);
-                            break;
-                        case 2 :
-                            modules.detailHistoryView.render(m);
-                            break;
+                    if(tabIndex == 0){
+                        modules.cctvdetailview.render(m);
                     }
-
-                    /*if(tabIndex == 1) {
-                        modules.detailServerVolumeView.render(m);
+                    else if(tabIndex == 1) {
+                        // MonitoringUI.modules.loadingEfftect("on");
+                        // MonitoringUI.modules.reload();
                     } else if(tabIndex == 2) {
-                        modules.detailServerLogView.render(m);
-                    } else if(tabIndex == 3) {
-                        modules.detailServerConsoleView.render(m);
-                    } else if(tabIndex == 4) {
-                        modules.detailServerActionView.render(m);
-                    }*/
+                        // modules.detailHistoryView.reset();
+                    }
                 } else {
-                    var tabIndex = $('.detail_tab a.on').index();
-                    if(tabIndex == 1) {
-                        MonitoringUI.modules.loadingEfftect("on");
-                        MonitoringUI.modules.reload();
-                    } else if(tabIndex == 2) {
-                        modules.detailHistoryView.reset();
+                    var selRow = this.grid.getGridParam("selrow");
+                    if (!selRow) {
+                        return null;
+                    }else{
+                        var tabIndex = $('.detail_tab a.on').index();
+                        if(tabIndex == 0){
+                            modules.cctvdetailview.render(m);
+                        }
+                        else if(tabIndex == 1) {
+                        }
                     }
                 }
-            },
-            serverStart: function () {
-                // if(confirm("서버를 시작 하시겠습니까?")) {
-                if (confirm(i18n('s.t.would-like-to', 'w.start'))) {
-                    var m = modules.view.currentSelRow();
-                    if (!m) return;
-
-                    if (m.get('state') == "terminated") {
-                        // alert("서버 상태가 Terminated 는 시작 할 수 없습니다.");
-                        alert(i18n('s.t.can-not','Terminated','w.start'));
-                        return;
-                    }
-
-                    var model = new Backbone.Model({
-                        action: "START"
-                    });
-                    model.url = '/edge/etri/servers/' + m.get('id') + '/action?id=' + id;
-
-                    model.save(model.attributes, {
-                        success: function (model, response, options) {
-                            modules.view.collection.add(model, {merge: true});
-                        },
-                        error: function (model, response, options) {
-                            ValidationUtil.getServerError(response);
-                        }
-                    });
-                }
-            },
-            serverStop: function () {
-                // if(confirm("서버를 중지 하시겠습니까?")) {
-                if (confirm(i18n('s.t.would-like-to', 'w.stop'))) {
-                    var m = modules.view.currentSelRow();
-                    if (!m) return;
-
-                    if (m.get('state') == "terminated") {
-                        // alert("서버 상태가 Terminated 는 중지 할 수 없습니다.");
-                        alert(i18n('s.t.can-not','Terminated','w.stop'));
-                        return;
-                    }
-
-                    var model = new Backbone.Model({
-                        action: "STOP"
-                    });
-                    model.url = '/edge/etri/servers/' + m.get('id') + '/action?id=' + id;
-
-                    model.save(model.attributes, {
-                        success: function (model, response, options) {
-                            modules.view.collection.add(model, {merge: true});
-                        },
-                        error: function (model, response, options) {
-                            ValidationUtil.getServerError(response);
-                        }
-                    });
-                }
-            },
-            serverReBoot: function () {
-                // if(confirm("서버를 재시작 하시겠습니까?")) {
-                if (confirm(i18n('s.t.would-like-to', 'w.restart'))) {
-                    var m = modules.view.currentSelRow();
-                    if (!m) return;
-
-                    if (m.get('state') != "running") {
-                        // alert("재시작은 서버 상태가 Running 이어야 합니다.");
-                        alert(i18n('s.t.do-it-when','w.restart','Running'));
-                        return;
-                    }
-                    var model = new Backbone.Model({
-                        action: "REBOOT"
-                    });
-                    model.url = '/edge/etri/servers/' + m.get('id') + '/action?id=' + id;
-
-                    model.save(model.attributes, {
-                        success: function (model, response, options) {
-                            modules.view.collection.add(model, {merge: true});
-                        },
-                        error: function (model, response, options) {
-                            ValidationUtil.getServerError(response);
-                        }
-                    });
-                }
-            },
-            serverDelete: function () {
-                var self = this;
-                // if(confirm("서버를 삭제 하시겠습니까?")) {
-                if (confirm(i18n('s.t.would-like-to', 'w.delete'))) {
-                    var m = modules.view.currentSelRow();
-                    if (!m) return;
-
-                    if (m.get('state') == "terminated") {
-                        // alert("서버 상태가 Terminated 는 삭제 할 수 없습니다.");
-                        alert(i18n('s.t.can-not','Terminated','w.delete'));
-                        return;
-                    }
-
-                    var model = new Backbone.Model({
-                        action: "DELETE"
-                    });
-                    model.url = '/edge/etri/servers/' + m.get('id') + '/action?id=' + id;
-
-                    model.save(model.attributes, {
-                        success: function (model, response, options) {
-                            // modules.view.collection.add(model, {merge: true});
-                            modules.view.collection.findWhere({id:model.get('id')}).set({state:'shutting-down'});
-                            self.clearDetail();
-                        },
-                        error: function (model, response, options) {
-                            ValidationUtil.getServerError(response);
-                        }
-                    });
-                }
-            },
-            serverMonitoringEnabled: function () {
-                var self = this;
-                // if(confirm("세부 모니터링을 활성화 하시겠습니까?")) {
-                if (confirm(i18n('s.t.subject-would-like-to', 'w.detail-monitoring', 'w.enable'))) {
-                    var m = modules.view.currentSelRow();
-                    if (!m) return;
-
-                    var model = new Backbone.Model({
-                        action: "MONITORING"
-                    });
-                    model.url = '/edge/etri/servers/' + m.get('id') + '/action?id=' + id;
-
-                    model.save(model.attributes, {
-                        success: function (model, response, options) {
-                            modules.view.collection.add(model, {merge: true});
-                        },
-                        error: function (model, response, options) {
-                            ValidationUtil.getServerError(response);
-                        }
-                    });
-                }
-            },
-            serverMonitoringDisabled: function () {
-                var self = this;
-                // if(confirm("세부 모니터링을 비활성화 하시겠습니까?")) {
-                if (confirm(i18n('s.t.subject-would-like-to', 'w.detail-monitoring', 'w.disable'))) {
-                    var m = modules.view.currentSelRow();
-                    if (!m) return;
-
-                    var model = new Backbone.Model({
-                        action: "UNMONITORING"
-                    });
-                    model.url = '/edge/etri/servers/' + m.get('id') + '/action?id=' + id;
-
-                    model.save(model.attributes, {
-                        success: function (model, response, options) {
-                            modules.view.collection.add(model, {merge: true});
-                        },
-                        error: function (model, response, options) {
-                            ValidationUtil.getServerError(response);
-                        }
-                    });
-                }
-            },
-            create: function () {
-                modules.createView.open();
-            },
-            serverMonitoringReload:function(){
-                var m = this.currentSelRow();
-                if(m) {
-                    MonitoringUI.modules.loadingEfftect("on");
-                    MonitoringUI.modules.reload(m);
-                }
-            },
-            serverDetailMonitoringDisplay: function(e){
-                MonitoringDetailUI.modules.display($(e.currentTarget).parents().eq(1).find(".detail_monitoring_convas").attr("id"));
             },
             currentSelRow: function () {
                 var selRow = this.grid.getGridParam("selrow");
                 if (!selRow) {
-                    // alert("Server 정보가 선택되지 않았습니다.");
-                    alert(i18n('s.t.not-selected','w.server'));
+                    alert("Edge Server를 선택해주세요");
                     return null;
                 }
                 return this.collection.get(selRow);
@@ -295,7 +216,6 @@ var ServerUI = (function (options) {
                 this.gridId = "#server-grid";
                 this.grid = $(this.gridId).jqGrid({
                     datatype: "local",
-                    // url: '/edge/etri/servers?id=' + id,
                     data: [{host:'101.79.1.1.104/27',type:'CentOS 7.7',ip:'100.100.100.14/24',cpu:'80',memory:'128GB',disk:'3.6TB',state:'active',approTime:'2020-11-17 14:00:00'}],
                     jsonReader: {
                         repeatitems: false,
@@ -325,8 +245,29 @@ var ServerUI = (function (options) {
                     sortname: "createdAt",
                     sortorder: "desc",
                     loadonce: true,
-
                     autowidth: true,
+                    scrollOffset: 0,
+                    rowNum: setRowNum(15, self.gridId),
+                    loadtext: "",
+                    autoencode: true,
+                    onSelectRow: function (id) {
+                        var m = self.collection.get(id);
+                        var tabIndex = $('.detail_tab a.on').index();
+                        if(tabIndex == 0){
+                            modules.cctvdetailview.render(m);
+                        }
+                        else if(tabIndex == 1) {
+                            MonitoringUI.modules.loadingEfftect("on");
+                            MonitoringUI.modules.reload();
+                        } else if(tabIndex == 2) {
+                            modules.detailHistoryView.reset();
+                        }
+
+                        $('.content').addClass('detail_on');
+                        setTimeout(function() {
+                            self.grid.resetSize()
+                        }, options.gridReSizeTime);
+                    },
                 });
 
                 this.collection = new ServerCollection();
@@ -350,6 +291,7 @@ var ServerUI = (function (options) {
         init = function (isAdmin) {
             $("#test1").text("ETRI_EDGE")
             modules.view = new ServerView();
+            modules.cctvdetailview = new CctvDetailView();
         };
 
     return {

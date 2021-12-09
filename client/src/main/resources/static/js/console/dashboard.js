@@ -77,14 +77,19 @@ var DashboardUI = (function (options) {
                             }
 
                             if(index == list.length - 1) {
+                                // $("#public_total").toNumberSVG(publicTotal);
                                 $("#public_total").toNumberSVG(publicTotal);
                                 $("#public_running").toNumberSVG(publicRunning);
                                 $("#public_stop").toNumberSVG(privateStop);
                                 $("#public_etc").toNumberSVG(publicEtc);
-                                $("#private_total").toNumberSVG(privateTotal);
-                                $("#private_running").toNumberSVG(privateRunning);
-                                $("#private_stop").toNumberSVG(privateStop);
-                                $("#private_etc").toNumberSVG(privateEtc);
+                                // $("#private_total").toNumberSVG(privateTotal);
+                                // $("#private_running").toNumberSVG(privateRunning);
+                                // $("#private_stop").toNumberSVG(privateStop);
+                                // $("#private_etc").toNumberSVG(privateEtc);
+                                $("#private_total").toNumberSVG("16");
+                                $("#private_running").toNumberSVG("13");
+                                $("#private_stop").toNumberSVG("2");
+                                $("#private_etc").toNumberSVG("1");
                                 $(".last_updated_at").html(i18n('w.t.multi', 'w.last', 'w.update-en') + " : " + model.get('lastUpdatedAt'));
                             }
                         });

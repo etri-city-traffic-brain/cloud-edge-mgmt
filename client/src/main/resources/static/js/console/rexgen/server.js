@@ -1,31 +1,6 @@
-// var stateFormatter = function(cellVal, options, row) {
-//     if(options == null || options == "") {
-//         if(row.powerState != null && row.provisioningState != null){
-//             return row.powerState + " ("+row.provisioningState+")";
-//         } else if (row.powerState == null && row.provisioningState != null){
-//             return row.provisioningState;
-//         } else if (row.powerState != null && row.provisioningState == null){
-//             return row.powerState;
-//         } else {
-//             return "-";
-//         }
-//     } else {
-//         var state = "";
-//         if(row.powerState != null) {
-//             state = row.powerState;
-//         } else if (row.provisioningState != null) {
-//             state = row.provisioningState;
-//         } else {
-//             state = "";
-//         }
-//         return azureStateIconFormatter(state, options, row);
-//     }
-// }
-
 var ServerUI = (function (options) {
 
     var
-        ischeck=false,
         modules = {},
         ServerModel = Backbone.Model.extend({
             idAttribute: 'id',
@@ -49,38 +24,136 @@ var ServerUI = (function (options) {
             }
         }),
         ServerCollection = Backbone.Collection.extend({
-            url: '/edge/rexgen/servers?id=' + id,
             model: ServerModel
         }),
 
+        CctvModel = Backbone.Model.extend({
+            idAttribute: 'id',
+            urlRoot: '/cctv/cctvs',
+            defaults: {
+                cctv_id: '',
+                cctv_parent_id: '',
+                cctv_cam_nm: '',
+                cctv_ip: '',
+                cctv_login_id: '',
+                cctv_login_pw: '',
+                cctv_rtsp_url: '',
+                cctv_rtsp_port: '',
+                cctv_http_port: '',
+                crsrd_id: '',
+                lght_use_yn: '',
+                connect_svr: '',
+                id: null,
+            }
+        }),
+        CctvCollection = Backbone.Collection.extend({
+            model: CctvModel
+        }),
+
+        CctvDetailView = Backbone.View.extend({
+            el: "#tab1",
+            reset: function() {
+                this.collection.reset();
+                this.grid.setGridParam({
+                    datatype: "local",
+                    page: 1,
+                    url: ''
+                });
+                this.grid.clearGridData();
+            },
+            render: function(model) {
+                this.collection.reset();
+                this.grid.clearGridData();
+                this.grid.setGridParam({
+                    datatype: "json",
+                    page: 1,
+                    url: "/cctv/cctvs2",
+                }).trigger("reloadGrid");
+            },
+            initialize: function () {
+                var self = this;
+
+                this.collection = new CctvCollection();
+                this.collection.on("add", function (model) {
+                    self.grid.addRowData(model.attributes.id, model.toJSON(), "first");
+                });
+                this.collection.on("remove", function(model) {
+                    self.grid.delRowData(model.get('id'));
+                });
+
+                this.gridId = "#cctv-grid";
+                this.grid = $(this.gridId).jqGrid({
+                    datatype: "local",
+                    jsonReader: {
+                        repeatitems: false,
+                        id: "cctv_id"
+                    },
+                    colNames: [
+                        jQuery.i18n.prop('title.jqgrid.cctvId'),
+                        jQuery.i18n.prop('title.jqgrid.cctvParentId'),
+                        jQuery.i18n.prop('title.jqgrid.cctvCamNm'),
+                        jQuery.i18n.prop('title.jqgrid.cctvIp'),
+                        jQuery.i18n.prop('title.jqgrid.cctvLoginId'),
+                        jQuery.i18n.prop('title.jqgrid.cctvLoginPw'),
+                        jQuery.i18n.prop('title.jqgrid.cctvRtspUrl'),
+                        jQuery.i18n.prop('title.jqgrid.cctvRtspPort'),
+                        jQuery.i18n.prop('title.jqgrid.cctvHttpPort'),
+                        jQuery.i18n.prop('title.jqgrid.crsrdId'),
+                        jQuery.i18n.prop('title.jqgrid.lghtUseYn'),
+                        jQuery.i18n.prop('title.jqgrid.connectSvr')
+                    ],
+                    colModel: [
+                        {name: 'cctv_id', admin: false, align: 'left'},
+                        {name: 'cctv_parent_id',align: 'left'},
+                        {name: 'cctv_cam_nm', align: 'left'},
+                        {name: 'cctv_ip', align: 'left'},
+                        {name: 'cctv_login_id', align: 'left'},
+                        {name: 'cctv_login_pw', align: 'left'},
+                        {name: 'cctv_rtsp_url', align: 'left'},
+                        {name: 'cctv_rtsp_port', align: 'left'},
+                        {name: 'cctv_http_port', align: 'left'},
+                        {name: 'crsrd_id', align: 'left'},
+                        {name: 'lght_use_yn', align: 'left'},
+                        {name: 'connect_svr', align: 'left'},
+                    ],
+                    altRows: true,
+                    sortname: "cctv_id",
+                    sortorder: "desc",
+                    loadonce: true,
+                    autowidth: true,
+                    width:910,
+                    gridComplete: function () {
+                        $(this).resetSize();
+                    },
+                    // multiSort: true,
+                    scrollOffset: 0,
+                    rowNum: setRowNum(10, self.gridId),
+                    loadtext: "",
+                    autoencode: true,
+                    loadComplete: function (data) {
+                        self.collection.reset(data.rows);
+                        data.gridId = self.gridId;
+                        data.getPageParam = function (data) {
+                            return {
+                                'q0': 'name',
+                                'q1': self.$el.find('.sub_search')
+                            }
+                        };
+                        data.rowNum = $(this).getGridParam("rowNum");
+                        data.reccount = $(this).getGridParam("reccount");
+                        $("#cctvpager").pager(data);
+                        // $("#cctv-grid tr:eq(1)").trigger('click');
+                    }
+                });
+            }
+        }),
 
         ServerView = Backbone.View.extend({
             el: ".cont_wrap",
             events: {
-                "click .cont_list .searchBtn": "search",
-                "keyup .cont_list .input_search": "searchEnter",
                 "click .cont_list .btn_control":"resetGrid",
                 "click .detail_label_btn":"closeDetail",
                 "click .detail_tab a": "detailView",
-                "click #server_create": "serverCreate",
-                "click #server_start": "serverStart",
-                "click #server_stop": "serverStop",
-                "click #server_reboot": "serverReBoot",
-                "click #server_delete": "serverDelete",
-                "click #server_monitoring_enabled": "serverMonitoringEnabled",
-                "click #server_monitoring_disabled": "serverMonitoringDisabled",
-                "click #tab2 .cont_top_search" : "serverMonitoringReload",
-                "click #tab2 .detail_monitoring_tit button" : "serverDetailMonitoringDisplay",
-            },
-            search: function() {
-                this.grid.search();
-                this.clearDetail();
-            },
-            searchEnter: function(e) {
-                if(e.keyCode == 13) {
-                    this.grid.search();
-                    this.clearDetail();
-                }
             },
             resetGrid: function() {
                 this.$el.find(".cont_list .input_search").val('');
@@ -107,206 +180,33 @@ var ServerUI = (function (options) {
                 var m = this.currentSelRow();
                 if(m) {
                     var tabIndex = $('.detail_tab a.on').index();
-                    switch (tabIndex) {
-                        case 0 : modules.detailView.model.set(m.toJSON()); break;
-                        case 1 :
-                            MonitoringUI.modules.loadingEfftect("on");
-                            MonitoringUI.modules.reload(m);
-                            break;
-                        case 2 :
-                            modules.detailHistoryView.render(m);
-                            break;
+                    if(tabIndex == 0){
+                        modules.cctvdetailview.render(m);
                     }
-
-                } else {
-                    var tabIndex = $('.detail_tab a.on').index();
-                    if(tabIndex == 1) {
+                    else if(tabIndex == 1) {
                         MonitoringUI.modules.loadingEfftect("on");
                         MonitoringUI.modules.reload();
                     } else if(tabIndex == 2) {
                         modules.detailHistoryView.reset();
                     }
-                }
-            },
-            serverCreate : function(){
-                modules.createView.open();
-            },
-            serverStart: function () {
-                if(confirm("서버를 시작 하시겠습니까?")) {
-                    var m = modules.view.currentSelRow();
-                    if (!m) return;
-
-                    if(!(m.get('powerState') == "stopped" || m.get('powerState') == "deallocated")) {
-                        alert("서버 시작은 서버 상태가 Stopped 이어야 합니다.");
-                        return false;
+                } else {
+                    var selRow = this.grid.getGridParam("selrow");
+                    if (!selRow) {
+                        return null;
+                    }else{
+                        var tabIndex = $('.detail_tab a.on').index();
+                        if(tabIndex == 0){
+                            modules.cctvdetailview.render(m);
+                        }
+                        else if(tabIndex == 1) {
+                        }
                     }
-
-                    m.set({powerState: "starting", provisioningState: null});
-
-                    var model = new Backbone.Model({
-                        action: "START",
-                        serverId : m.get("id")
-                    });
-                    model.url = '/edge/rexgen/servers/' + btoa(m.get('id')) + '/action?id=' + id;
-
-                    model.save(model.attributes, {
-                        success: function (model, response, options) {
-                            modules.view.collection.add(model, {merge: true});
-                        },
-                        error: function (model, response, options) {
-                            ValidationUtil.getServerError(response);
-                        }
-                    });
                 }
-            },
-            serverStop: function () {
-                if(confirm("서버를 중지 하시겠습니까?")) {
-                    var m = modules.view.currentSelRow();
-                    if (!m) return;
-
-                    if(m.get('powerState') != "running") {
-                        alert("서버 중지는 서버 상태가 Running 이어야 합니다.");
-                        return false;
-                    }
-
-                    m.set({powerState: "deallocating", provisioningState: null});
-
-                    var model = new Backbone.Model({
-                        action: "STOP",
-                        serverId : m.get("id")
-                    });
-                    model.url = '/edge/rexgen/servers/' + btoa(m.get('id')) + '/action?id=' + id;
-
-                    model.save(model.attributes, {
-                        success: function (model, response, options) {
-                            modules.view.collection.add(model, {merge: true});
-                            sleep(1000);
-                            location.href = location.href;
-                        },
-                        error: function (model, response, options) {
-                            ValidationUtil.getServerError(response);
-                        }
-                    });
-                }
-            },
-            serverReBoot: function () {
-                if(confirm("서버를 재시작 하시겠습니까?")) {
-                    var m = modules.view.currentSelRow();
-                    if (!m) return;
-
-                    if(m.get('powerState') != "running") {
-                        alert("재시작은 서버 상태가 Running 이어야 합니다.");
-                        return false;
-                    }
-
-                    m.set({powerState: "stopping", provisioningState: null});
-
-                    var model = new Backbone.Model({
-                        action: "REBOOT",
-                        serverId : m.get("id")
-                    });
-                    model.url = '/edge/rexgen/servers/' + btoa(m.get('id')) + '/action?id=' + id;
-
-                    model.save(model.attributes, {
-                        success: function (model, response, options) {
-                            modules.view.collection.add(model, {merge: true});
-                        },
-                        error: function (model, response, options) {
-                            ValidationUtil.getServerError(response);
-                        }
-                    });
-                }
-            },
-            serverDelete: function () {
-                var self = this;
-                if(confirm("서버를 삭제 하시겠습니까?")) {
-                    var m = modules.view.currentSelRow();
-                    if (!m) return;
-
-                    m.set({powerState: "deallocating", provisioningState: null});
-
-                    var model = new Backbone.Model({
-                        action: "DELETE",
-                        serverId : m.get("id")
-                    });
-                    model.url = '/edge/rexgen/servers/' + btoa(m.get('id')) + '/action?id=' + id;
-
-                    showLoadingUI(true, i18n('s.t.please-wait'));
-                    model.save(model.attributes, {
-                        success: function (model, response, options) {
-                            modules.view.collection.remove(model, {merge: true});
-                            setTimeout(function() {
-                                showLoadingUI(false);
-                                self.clearDetail();
-                                location.reload();
-                            }, 500);
-                        },
-                        error: function (model, response, options) {
-                            setTimeout(function() {
-                                showLoadingUI(false);
-                                location.reload();
-                            }, 500);
-                            ValidationUtil.getServerError(response);
-                        }
-                    });
-                }
-            },
-            serverMonitoringEnabled: function () {
-                var self = this;
-                if(confirm("세부 모니터링을 활성화 하시겠습니까?")) {
-                    var m = modules.view.currentSelRow();
-                    if (!m) return;
-
-                    var model = new Backbone.Model({
-                        action: "MONITORING"
-                    });
-                    model.url = '/edge/rexgen/servers/' + m.get('id') + '/action?id=' + id;
-
-                    model.save(model.attributes, {
-                        success: function (model, response, options) {
-                            modules.view.collection.add(model, {merge: true});
-                        },
-                        error: function (model, response, options) {
-                            ValidationUtil.getServerError(response);
-                        }
-                    });
-                }
-            },
-            serverMonitoringDisabled: function () {
-                var self = this;
-                if(confirm("세부 모니터링을 비활성화 하시겠습니까?")) {
-                    var m = modules.view.currentSelRow();
-                    if (!m) return;
-
-                    var model = new Backbone.Model({
-                        action: "UNMONITORING"
-                    });
-                    model.url = '/edge/rexgen/servers/' + m.get('id') + '/action?id=' + id;
-
-                    model.save(model.attributes, {
-                        success: function (model, response, options) {
-                            modules.view.collection.add(model, {merge: true});
-                        },
-                        error: function (model, response, options) {
-                            ValidationUtil.getServerError(response);
-                        }
-                    });
-                }
-            },
-            serverMonitoringReload:function(){
-                var m = this.currentSelRow();
-                if(m) {
-                    MonitoringUI.modules.loadingEfftect("on");
-                    MonitoringUI.modules.reload(m);
-                }
-            },
-            serverDetailMonitoringDisplay: function(e){
-                MonitoringDetailUI.modules.display($(e.currentTarget).parents().eq(1).find(".detail_monitoring_convas").attr("id"));
             },
             currentSelRow: function () {
                 var selRow = this.grid.getGridParam("selrow");
                 if (!selRow) {
-                    alert("Server 정보가 선택되지 않았습니다.");
+                    alert("Edge Server를 선택해주세요");
                     return null;
                 }
                 return this.collection.get(selRow);
@@ -346,53 +246,29 @@ var ServerUI = (function (options) {
                     sortname: "name",
                     sortorder: "asc",
                     loadonce: true,
-                    // width:1618,
                     autowidth: true,
-                    // gridComplete: function () {
-                    //     $(this).resetSize();
-                    // },
-                    // // multiSort: true,
-                    // scrollOffset: 0,
-                    // rowNum: setRowNum(15, self.gridId),
-                    // loadtext: "",
-                    // autoencode: true,
-                    // onSelectRow: function (id) {
-                    //     var m = self.collection.get(id);
-                    //     var tabIndex = $('.detail_tab a.on').index();
-                    //     modules.detailView.model.set(m.toJSON());
-                    //     if(tabIndex === 1){
-                    //         MonitoringUI.modules.loadingEfftect("on");
-                    //         MonitoringUI.modules.reload(m);
-                    //     }  else if(tabIndex === 2) {
-                    //         modules.detailHistoryView.render(m);
-                    //     }
-                    //
-                    //     $('.content').addClass('detail_on');
-                    //     setTimeout(function() {
-                    //         self.grid.resetSize()
-                    //     }, options.gridReSizeTime);
-                    //
-                    //     if(modules.detailView.model.get('powerState') === "starting") {
-                    //         modules.detailView.$el.find(".server_id").css("display", "none");
-                    //     } else {
-                    //         modules.detailView.$el.find(".server_id").css("display", "");
-                    //     }
-                    // },
-                    // loadComplete: function (data) {
-                    //     self.collection.reset(data.rows);
-                    //     data.gridId = self.gridId;
-                    //     data.getPageParam = function (data) {
-                    //         return {
-                    //             'q0': $(".select_search option:selected").val(),
-                    //             'q1': $(".input_search").val()
-                    //         }
-                    //     };
-                    //     data.rowNum = $(this).getGridParam("rowNum");
-                    //     data.reccount = $(this).getGridParam("reccount");
-                    //     $("#pager1").pager(data);
-                    //     $("#server-grid tr:eq(1)").trigger('click');
-                    //
-                    // }
+                    scrollOffset: 0,
+                    rowNum: setRowNum(15, self.gridId),
+                    loadtext: "",
+                    autoencode: true,
+                    onSelectRow: function (id) {
+                        var m = self.collection.get(id);
+                        var tabIndex = $('.detail_tab a.on').index();
+                        if(tabIndex == 0){
+                            modules.cctvdetailview.render(m);
+                        }
+                        else if(tabIndex == 1) {
+                            MonitoringUI.modules.loadingEfftect("on");
+                            MonitoringUI.modules.reload();
+                        } else if(tabIndex == 2) {
+                            modules.detailHistoryView.reset();
+                        }
+
+                        $('.content').addClass('detail_on');
+                        setTimeout(function() {
+                            self.grid.resetSize()
+                        }, options.gridReSizeTime);
+                    },
                 });
 
                 this.collection = new ServerCollection();
@@ -416,6 +292,7 @@ var ServerUI = (function (options) {
         init = function (isAdmin) {
             $("#test1").text("REXGEN_EDGE")
             modules.view = new ServerView();
+            modules.cctvdetailview = new CctvDetailView();
 
         };
 

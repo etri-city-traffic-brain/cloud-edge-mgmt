@@ -31,7 +31,7 @@ public class GatewayApplication {
 
                 .route("openstack_path_route", r -> r.path("/openstack/**")
                         .filters(f -> f.stripPrefix(1))
-                        .uri("lb://dh-infra-openstack"))
+                        .uri("lb://uniq-openstack"))
 
 
                 .build();

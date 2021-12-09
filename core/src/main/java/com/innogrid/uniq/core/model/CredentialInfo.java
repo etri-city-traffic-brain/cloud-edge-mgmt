@@ -56,6 +56,7 @@ public class CredentialInfo implements Serializable {
         this.accessToken = info2.getAccessToken();
         this.subscriptionId = info2.getSubscriptionId();
         this.projectId = info2.getProjectId();
+        this.type = info2.getCspType();
     }
 
     public CredentialInfo(String id, String cloudType){

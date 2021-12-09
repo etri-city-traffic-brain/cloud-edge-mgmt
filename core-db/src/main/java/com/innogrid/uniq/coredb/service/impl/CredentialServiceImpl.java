@@ -74,6 +74,7 @@ public class CredentialServiceImpl implements CredentialService {
 
         list.add(new CredentialInfo("ETRI_EDGE","edge"));
         list.add(new CredentialInfo("REXGEN_EDGE","edge"));
+        logger.error("list : '{}'", list);
         return list;
     }
 

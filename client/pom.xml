@@ -181,7 +181,7 @@
                                 <jsSourceFile>jquery.cookie.js</jsSourceFile>
                                 <jsSourceFile>jquery.rcrumbs.js</jsSourceFile>
                                 <jsSourceFile>console/common.js</jsSourceFile>
-                                <jsSourceFile>console/credential.js</jsSourceFile>
+<!--                                <jsSourceFile>console/credential.js</jsSourceFile>-->
                                 <jsSourceFile>console/dashboard.js</jsSourceFile>
                                 <jsSourceFile>console/group.js</jsSourceFile>
                                 <jsSourceFile>console/history.js</jsSourceFile>
