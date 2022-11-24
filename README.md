@@ -1,6 +1,8 @@
 # cloud-edge-mgmt
 
 UNIQ Management Dashboard
+* 도시교통 브레인 시스템의 클라우드 인프라 및 엣지 서버 운영 관리를 위한 대시보드
+
 
 ## 사전 환경
 
