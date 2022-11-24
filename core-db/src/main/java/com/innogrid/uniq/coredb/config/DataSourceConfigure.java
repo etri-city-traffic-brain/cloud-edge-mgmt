@@ -22,9 +22,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 import java.io.IOException;
 
-/**
- * Created by choijinwook on 16. 8. 16.
- */
 @AutoConfigureBefore(DataSourceAutoConfiguration.class)
 @Configuration
 @EnableTransactionManagement
@@ -42,9 +39,9 @@ public class DataSourceConfigure {
     public DataSource dataSource() {
         DataSource dataSource = DataSourceBuilder.create()
                 .type(HikariDataSource.class)
-                .url("jdbc:postgresql://localhost:5432/")
-                .username("")
-                .password("")
+                .url("jdbc:postgresql://localhost:5432/database_example")
+                .username("username")
+                .password("password")
                 .build();
         return dataSource;
     }
@@ -59,9 +56,9 @@ public class DataSourceConfigure {
     public DataSource dataSource2() {
         DataSource dataSource2 = DataSourceBuilder.create()
                 .type(HikariDataSource.class)
-                .url("jdbc:mysql://101.79.1.111:3306/innogrid_db?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul")
-                .username("")
-                .password("")
+                .url("jdbc:mysql://127.0.0.1:3306/innogrid_db?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul")
+                .username("username")
+                .password("password")
                 .build();
         return dataSource2;
     }
