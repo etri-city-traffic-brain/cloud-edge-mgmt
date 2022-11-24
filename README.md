@@ -9,6 +9,9 @@ UNIQ Management Dashboard
   * 언어: java8+
   * 빌드 도구 : maven (https://maven.apache.org/download.cgi)
   * IDE :Intelij
+  
+  #### Database 설정 
+    * postgresql 및 mysql 설치 후 해당 내용 core-db -> DataSourceConfigure.java에 입력
 
   ### spring project setting 
 
@@ -28,6 +31,7 @@ UNIQ Management Dashboard
     root 선택후 clean -> complie -> install 순으로 update( 권장 )
 
   ### start project 
+        
   #### application 실행 
     * APIOpenstackApplication
     * ServiceRegistryApplication
