@@ -18,6 +18,7 @@ UNIQ Management Dashboard
     * (postgresql)cloud credential table
     ![image](https://user-images.githubusercontent.com/23303734/204425577-7b03da7a-8f0a-45dd-ab0d-a5e0a02c6dad.png)
     
+    
     * (mysql)edge server table
     ![image](https://user-images.githubusercontent.com/23303734/204425837-4990d451-7350-4ec4-9a04-8f01761fce1b.png)
 
@@ -49,7 +50,7 @@ UNIQ Management Dashboard
     
     ->  ClientApplication port를 통해 웹페이지에서 확인 가능
     
-* linux 환경 구성
+* linux 환경
 
   * java version 1.8.0 설치
 
