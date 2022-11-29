@@ -15,9 +15,9 @@ UNIQ Management Dashboard
   #### Database 설정 
     * postgresql 및 mysql 설치 후 해당 내용 core-db -> DataSourceConfigure.java에 입력
     
-    * (postgresql)cloud credential table  ///  (mysql)edge server table
+    * (postgresql)cloud credential table  
     ![image](https://user-images.githubusercontent.com/23303734/204425577-7b03da7a-8f0a-45dd-ab0d-a5e0a02c6dad.png)
-    
+    * (mysql)edge server table  
     ![image](https://user-images.githubusercontent.com/23303734/204425837-4990d451-7350-4ec4-9a04-8f01761fce1b.png)
 
   ### spring project setting 
@@ -59,19 +59,19 @@ UNIQ Management Dashboard
 
 ## 실행 화면
 
-* 로그인
+* 로그인  
 ![image](https://user-images.githubusercontent.com/23303734/204427476-c7501fc0-4ce5-4136-9b03-68d4acfcb0b2.png)
   
-* 대시보드
+* 대시보드  
 ![대시보드](https://user-images.githubusercontent.com/23303734/204427708-68bef427-2167-4787-ba8c-ccce5b2d2494.png)
 
-* 오픈스택 관리
+* 오픈스택 관리  
 ![image](https://user-images.githubusercontent.com/23303734/204427863-ec39ce4f-ce2e-4512-b0ef-feee9434ed3f.png)
 
-* 모니터링
+* 모니터링  
 ![모니터링](https://user-images.githubusercontent.com/23303734/204427770-77b054a7-c4d9-4bf6-9f85-e86fa663e4e4.png)
 
-* 엣지 단말 조회
+* 엣지 단말 조회  
 ![엣지](https://user-images.githubusercontent.com/23303734/204427777-d55100f5-98cf-4220-923a-fe49b4678291.png)
 
 
