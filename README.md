@@ -15,11 +15,9 @@ UNIQ Management Dashboard
   #### Database 설정 
     * postgresql 및 mysql 설치 후 해당 내용 core-db -> DataSourceConfigure.java에 입력
     
-    * (postgresql)cloud credential table
+    * (postgresql)cloud credential table  ///  (mysql)edge server table
     ![image](https://user-images.githubusercontent.com/23303734/204425577-7b03da7a-8f0a-45dd-ab0d-a5e0a02c6dad.png)
     
-    
-    * (mysql)edge server table
     ![image](https://user-images.githubusercontent.com/23303734/204425837-4990d451-7350-4ec4-9a04-8f01761fce1b.png)
 
   ### spring project setting 
