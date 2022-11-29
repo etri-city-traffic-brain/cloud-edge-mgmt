@@ -14,6 +14,9 @@ UNIQ Management Dashboard
   
   #### Database 설정 
     * postgresql 및 mysql 설치 후 해당 내용 core-db -> DataSourceConfigure.java에 입력
+    
+    ![image](https://user-images.githubusercontent.com/23303734/204425577-7b03da7a-8f0a-45dd-ab0d-a5e0a02c6dad.png)
+
 
   ### spring project setting 
 
