@@ -36,7 +36,7 @@ UNIQ Management Dashboard
   
   * code update 후 maven update 
   * maven update 
-    root 선택후 clean -> complie -> install 순으로 update( 권장 )
+    root 선택후 clean -> compile -> install 순으로 update( 권장 )
 
   ### start project 
         
