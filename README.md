@@ -54,7 +54,7 @@ UNIQ Management Dashboard
 
   #### application 실행
     * 각 모듈 jar 파일 생성 및 실행
-    * java -jar "모듈".jar
+    * "java -jar 모듈.jar" 명령어 실행
 
 
 ## 실행 화면
