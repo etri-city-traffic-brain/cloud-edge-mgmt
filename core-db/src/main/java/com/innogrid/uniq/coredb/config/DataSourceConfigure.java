@@ -39,9 +39,9 @@ public class DataSourceConfigure {
     public DataSource dataSource() {
         DataSource dataSource = DataSourceBuilder.create()
                 .type(HikariDataSource.class)
-                .url("jdbc:postgresql://localhost:5432/database_example")
-                .username("username")
-                .password("password")
+                .url("jdbc:postgresql://localhost:5432/infra_cmp")
+                .username("cityhub")
+                .password("cityhub")
                 .build();
         return dataSource;
     }
@@ -56,9 +56,9 @@ public class DataSourceConfigure {
     public DataSource dataSource2() {
         DataSource dataSource2 = DataSourceBuilder.create()
                 .type(HikariDataSource.class)
-                .url("jdbc:mysql://127.0.0.1:3306/innogrid_db?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul")
-                .username("username")
-                .password("password")
+                .url("jdbc:mysql://101.79.1.111:3306/innogrid_db?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul")
+                .username("uniq")
+                .password("uniq2020")
                 .build();
         return dataSource2;
     }
