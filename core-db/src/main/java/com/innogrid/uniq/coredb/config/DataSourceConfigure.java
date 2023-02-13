@@ -39,7 +39,7 @@ public class DataSourceConfigure {
     public DataSource dataSource() {
         DataSource dataSource = DataSourceBuilder.create()
                 .type(HikariDataSource.class)
-                .url("jdbc:postgresql://localhost:5432/infra_cmp")
+                .url("jdbc:postgresql://182.252.131.43:5432/infra_cmp")
                 .username("cityhub")
                 .password("cityhub")
                 .build();

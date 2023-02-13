@@ -29,7 +29,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Created by wss on 19. 4. 03.
+ * Created by ksh on 21. 4. 03.
  */
 @Controller
 @RequestMapping("/cctv")
