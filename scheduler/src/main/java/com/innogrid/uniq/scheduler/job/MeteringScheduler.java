@@ -60,4 +60,74 @@ public class MeteringScheduler {
     @Autowired
     private AES256Util aes256Util;
 
+
+    @Scheduled(fixedRateString = "${scheduler.metering.period}")
+    private void setMeteringServer () {
+
+        logger.info("MeteringServer Start");
+
+        List<CredentialInfo> credentialInfoList = credentialService.getCredentialsFromMemory();
+        Timestamp time = new Timestamp(new Date().getTime());
+
+        for(int i=0; i<credentialInfoList.size(); i++) {
+            CredentialInfo info = credentialInfoList.get(i);
+            logger.info("info = " + info);
+            MeterServerInfo meterServerInfo = new MeterServerInfo();
+            MeterServerAccumulateInfo meterServerAccumulateInfo = new MeterServerAccumulateInfo();
+
+            try {
+                if (info.getType().equals("openstack")) {
+                    UriComponentsBuilder url = UriComponentsBuilder.fromUriString(CommonProp.API_GATEWAY_URL);
+                    url.path(CommonProp.OPENSTACK_PATH_LOCAL + "/servers");
+                    logger.info("MeteringServer server Start");
+
+                    List<com.innogrid.uniq.coreopenstack.model.ServerInfo> serverInfos = restTemplate.exchange(url.build().encode().toUri(), HttpMethod.GET, new HttpEntity(CommonUtils.getAuthHeaders(aes256Util.encrypt(ObjectSerializer.serializedData(info)))), new ParameterizedTypeReference<List<com.innogrid.uniq.coreopenstack.model.ServerInfo>>() {
+                    }).getBody();
+
+                    for (com.innogrid.uniq.coreopenstack.model.ServerInfo serverInfo : serverInfos) {
+                        // MeterServer
+                        meterServerInfo.setCloudType(info.getCloudType());
+                        meterServerInfo.setCloudName(info.getType());
+                        meterServerInfo.setInstanceId(serverInfo.getId());
+                        meterServerInfo.setFlavorId(serverInfo.getFlavorName());
+                        meterServerInfo.setStatus(serverInfo.getState());
+
+
+//                        meterService.createMeterServer(meterServerInfo);
+
+                        // Meter Server Accumulate
+                        meterServerAccumulateInfo.setCredentialId(info.getId());
+                        meterServerAccumulateInfo.setCloudType(info.getCloudType());
+                        meterServerAccumulateInfo.setCloudName(info.getType());
+                        meterServerAccumulateInfo.setInstanceId(serverInfo.getId());
+                        meterServerAccumulateInfo.setInstanceName(serverInfo.getName());
+                        meterServerAccumulateInfo.setImageId(serverInfo.getImageId());
+                        meterServerAccumulateInfo.setFlavorId(serverInfo.getFlavorId());
+                        meterServerAccumulateInfo.setFlavorName(serverInfo.getFlavorName());
+                        meterServerAccumulateInfo.setFlavorVcpu(serverInfo.getCpu());
+                        meterServerAccumulateInfo.setFlavorRam(serverInfo.getMemory());
+                        meterServerAccumulateInfo.setFlavorDisk(serverInfo.getDisk());
+
+                        meterServerAccumulateInfo.setMeterEndTime(time);
+                        meterServerAccumulateInfo.setUpdatedAt(time);
+                        meterServerAccumulateInfo.setCloudTarget(info.getUrl());
+
+                        int idCount = meterService.getMeterServerAccumulateIDCount(meterServerAccumulateInfo);
+
+                        if (idCount > 0) {
+                            meterServerAccumulateInfo.setMeterDuration(duration/1000);
+                            meterService.updateMeterServerAccumulate(meterServerAccumulateInfo);
+                        } else {
+                            meterServerAccumulateInfo.setCreatedAt(time);
+                            meterServerAccumulateInfo.setMeterStartTime(time);
+                            meterService.createMeterServerAccumulate(meterServerAccumulateInfo);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                logger.error("MeteringServer Scheduler Target : {}, Error : {}", info, e.getMessage());
+            }
+        }
+    }
+
 }
