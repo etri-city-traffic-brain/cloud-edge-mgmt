@@ -8,8 +8,8 @@ public class CommonProp {
 
     public static String API_GATEWAY_URL;
 //    @Value("${apigateway.url}")
-//    @Value("${apigateway_local.url}")
-    @Value("http://127.0.0.1:9001")
+    @Value("${apigateway_local.url}")
+//    @Value("http://127.0.0.1:9001")
     public void setApiGatewayUrl(String apiUrl) {
         API_GATEWAY_URL = apiUrl;
     }
