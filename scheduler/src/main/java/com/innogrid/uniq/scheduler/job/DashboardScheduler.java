@@ -67,7 +67,6 @@ public class DashboardScheduler {
 
                     ResourceInfo resourceInfo = restTemplate.exchange(url.build().encode().toUri(), HttpMethod.GET, new HttpEntity(CommonUtils.getAuthHeaders(aes256Util.encrypt(ObjectSerializer.serializedData(info)))), new ParameterizedTypeReference<ResourceInfo>() {
                     }).getBody();
-
                     dashboardInfo.setId(info.getId());
                     dashboardInfo.setType(info.getType());
                     dashboardInfo.setTotalServer(resourceInfo.getServers());

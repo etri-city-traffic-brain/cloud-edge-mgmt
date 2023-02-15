@@ -55,6 +55,13 @@ public class MeterServiceImpl implements MeterService {
     }
 
     @Override
+    public int getMeterServerIDCount(MeterServerInfo info) {
+        int idCnt = meterDao.getMeterServerIDCount(info);
+
+        return idCnt;
+    }
+
+    @Override
     public List<MeterServerAccumulateInfo> getMeterServerAccumulates(Map<String, Object> params) {
         List<MeterServerAccumulateInfo> list = meterDao.getMeterServerAccumulates(params);
 

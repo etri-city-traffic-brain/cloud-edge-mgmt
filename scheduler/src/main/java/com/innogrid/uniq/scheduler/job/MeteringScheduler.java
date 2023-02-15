@@ -23,7 +23,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -83,22 +82,31 @@ public class MeteringScheduler {
 
                     List<com.innogrid.uniq.coreopenstack.model.ServerInfo> serverInfos = restTemplate.exchange(url.build().encode().toUri(), HttpMethod.GET, new HttpEntity(CommonUtils.getAuthHeaders(aes256Util.encrypt(ObjectSerializer.serializedData(info)))), new ParameterizedTypeReference<List<com.innogrid.uniq.coreopenstack.model.ServerInfo>>() {
                     }).getBody();
-
+                    logger.info("serverInfos : {}", serverInfos);
                     for (com.innogrid.uniq.coreopenstack.model.ServerInfo serverInfo : serverInfos) {
+                        UriComponentsBuilder url2 = UriComponentsBuilder.fromUriString(CommonProp.API_GATEWAY_URL);
+                        url2.path(CommonProp.OPENSTACK_PATH_LOCAL + "/servers/"+serverInfo.getId());
+
+                        List<com.innogrid.uniq.coreopenstack.model.ServerInfo> temp_serverInfo = restTemplate.exchange(url.build().encode().toUri(), HttpMethod.GET, new HttpEntity(CommonUtils.getAuthHeaders(aes256Util.encrypt(ObjectSerializer.serializedData(info)))), new ParameterizedTypeReference<List<com.innogrid.uniq.coreopenstack.model.ServerInfo>>() {
+                        }).getBody();
+                        logger.info("temp_serverInfo : {}", temp_serverInfo);
                         // MeterServer
+                        logger.info("test MeterServer");
                         meterServerInfo.setCloudType(info.getCloudType());
                         meterServerInfo.setCloudName(info.getType());
                         meterServerInfo.setInstanceId(serverInfo.getId());
                         meterServerInfo.setFlavorId(serverInfo.getFlavorName());
-                        meterServerInfo.setStatus(serverInfo.getState());
+                        meterServerInfo.setStatus(serverInfo.getState2());
 
 
-//                        meterService.createMeterServer(meterServerInfo);
+
 
                         // Meter Server Accumulate
                         meterServerAccumulateInfo.setCredentialId(info.getId());
-                        meterServerAccumulateInfo.setCloudType(info.getCloudType());
-                        meterServerAccumulateInfo.setCloudName(info.getType());
+//                        meterServerAccumulateInfo.setCloudType(info.getCloudType());
+                        meterServerAccumulateInfo.setCloudType(info.getType());
+//                        meterServerAccumulateInfo.setCloudName(info.getType());
+                        meterServerAccumulateInfo.setCloudName(info.getName());
                         meterServerAccumulateInfo.setInstanceId(serverInfo.getId());
                         meterServerAccumulateInfo.setInstanceName(serverInfo.getName());
                         meterServerAccumulateInfo.setImageId(serverInfo.getImageId());
@@ -107,13 +115,14 @@ public class MeteringScheduler {
                         meterServerAccumulateInfo.setFlavorVcpu(serverInfo.getCpu());
                         meterServerAccumulateInfo.setFlavorRam(serverInfo.getMemory());
                         meterServerAccumulateInfo.setFlavorDisk(serverInfo.getDisk());
-
+                        meterServerAccumulateInfo.setProjectId(serverInfo.getProjectId());
                         meterServerAccumulateInfo.setMeterEndTime(time);
                         meterServerAccumulateInfo.setUpdatedAt(time);
                         meterServerAccumulateInfo.setCloudTarget(info.getUrl());
+                        meterServerAccumulateInfo.setState(serverInfo.getState());
 
                         int idCount = meterService.getMeterServerAccumulateIDCount(meterServerAccumulateInfo);
-
+                        int idCount2 = meterService.getMeterServerIDCount(meterServerInfo);
                         if (idCount > 0) {
                             meterServerAccumulateInfo.setMeterDuration(duration/1000);
                             meterService.updateMeterServerAccumulate(meterServerAccumulateInfo);
@@ -121,6 +130,12 @@ public class MeteringScheduler {
                             meterServerAccumulateInfo.setCreatedAt(time);
                             meterServerAccumulateInfo.setMeterStartTime(time);
                             meterService.createMeterServerAccumulate(meterServerAccumulateInfo);
+                        }
+                        if (idCount2 > 0) {
+                            meterService.updateMeterServer(meterServerInfo);
+                        } else {
+                            meterServerInfo.setCreatedAt(time);
+                            meterService.createMeterServer(meterServerInfo);
                         }
                     }
                 }
