@@ -8,6 +8,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * Created by kkm on 15. 4. 24.
@@ -95,11 +96,13 @@ public class ServiceDashboardInfo implements Serializable {
     }
 
     public ServiceDashboardInfo(String id){
+        Timestamp time = new Timestamp(new Date().getTime());
+
         this.id = id;
         this.totalServer = 1;
         this.runningServer = 1;
         this.etcServer = 0;
         this.stoppedServer = 0;
-        this.lastUpdatedAt = Timestamp.valueOf("2020-11-17 10:02:110");
+        this.lastUpdatedAt = time;
     }
 }
