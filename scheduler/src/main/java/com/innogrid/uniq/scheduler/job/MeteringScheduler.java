@@ -9,6 +9,7 @@ import com.innogrid.uniq.coredb.service.CredentialService;
 import com.innogrid.uniq.coredb.service.DashboardService;
 import com.innogrid.uniq.coredb.service.MeterService;
 import com.innogrid.uniq.coredb.service.UserService;
+import com.innogrid.uniq.coreopenstack.model.ServerInfo;
 import com.innogrid.uniq.scheduler.common.CommonProp;
 import com.innogrid.uniq.scheduler.common.CommonUtils;
 import fi.evident.dalesbred.Transactional;
@@ -70,7 +71,6 @@ public class MeteringScheduler {
 
         for(int i=0; i<credentialInfoList.size(); i++) {
             CredentialInfo info = credentialInfoList.get(i);
-            logger.info("info = " + info);
             MeterServerInfo meterServerInfo = new MeterServerInfo();
             MeterServerAccumulateInfo meterServerAccumulateInfo = new MeterServerAccumulateInfo();
 
@@ -80,18 +80,11 @@ public class MeteringScheduler {
                     url.path(CommonProp.OPENSTACK_PATH_LOCAL + "/servers");
                     logger.info("MeteringServer server Start");
 
-                    List<com.innogrid.uniq.coreopenstack.model.ServerInfo> serverInfos = restTemplate.exchange(url.build().encode().toUri(), HttpMethod.GET, new HttpEntity(CommonUtils.getAuthHeaders(aes256Util.encrypt(ObjectSerializer.serializedData(info)))), new ParameterizedTypeReference<List<com.innogrid.uniq.coreopenstack.model.ServerInfo>>() {
-                    }).getBody();
-                    logger.info("serverInfos : {}", serverInfos);
-                    for (com.innogrid.uniq.coreopenstack.model.ServerInfo serverInfo : serverInfos) {
-                        UriComponentsBuilder url2 = UriComponentsBuilder.fromUriString(CommonProp.API_GATEWAY_URL);
-                        url2.path(CommonProp.OPENSTACK_PATH_LOCAL + "/servers/"+serverInfo.getId());
+                    List<ServerInfo> serverInfos = restTemplate.exchange(url.build().encode().toUri(), HttpMethod.GET, new HttpEntity(CommonUtils.getAuthHeaders(aes256Util.encrypt(ObjectSerializer.serializedData(info)))), new ParameterizedTypeReference<List<ServerInfo>>(){}).getBody();
 
-                        List<com.innogrid.uniq.coreopenstack.model.ServerInfo> temp_serverInfo = restTemplate.exchange(url.build().encode().toUri(), HttpMethod.GET, new HttpEntity(CommonUtils.getAuthHeaders(aes256Util.encrypt(ObjectSerializer.serializedData(info)))), new ParameterizedTypeReference<List<com.innogrid.uniq.coreopenstack.model.ServerInfo>>() {
-                        }).getBody();
-                        logger.info("temp_serverInfo : {}", temp_serverInfo);
+                    for (ServerInfo serverInfo : serverInfos) {
+                        logger.info("info.getId = " + serverInfo.getId());
                         // MeterServer
-                        logger.info("test MeterServer");
                         meterServerInfo.setCloudType(info.getCloudType());
                         meterServerInfo.setCloudName(info.getType());
                         meterServerInfo.setInstanceId(serverInfo.getId());
