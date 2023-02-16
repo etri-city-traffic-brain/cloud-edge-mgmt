@@ -46,6 +46,11 @@ public class MeterDaoImpl implements MeterDao {
 	}
 
 	@Override
+	public int getMeterServerIDCount(MeterServerInfo info) {
+		return this.sqlSessionTemplate.selectOne("getMeterServerIDCount", info);
+	}
+
+	@Override
 	public List<MeterServerAccumulateInfo> getMeterServerAccumulates(Map<String, Object> params) {
 		return this.sqlSessionTemplate.selectList("getMeterServerAccumulate", params);
 	}

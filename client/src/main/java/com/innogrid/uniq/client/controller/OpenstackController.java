@@ -264,6 +264,10 @@ public class OpenstackController {
                 Function<ServerInfo, String> sortState = info -> info.getState();
                 Pagination.sort(list, sortState, sord);
                 break;
+            case "state2":
+                Function<ServerInfo, String> sortState2 = info -> info.getState2();
+                Pagination.sort(list, sortState2, sord);
+                break;
             case "imageName":
                 Function<ServerInfo, String> sortImageName = info -> info.getImageName();
                 Pagination.sort(list, sortImageName, sord);

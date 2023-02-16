@@ -55,7 +55,9 @@ public class ServerInfo2 implements Serializable {
     private Boolean volumeCreated;
     private String test1;
     private String test2;
-//    private String projectId;
+    private String projectId;
+    private String flavorId;
+    private String state2;
 //    private String projectName;
 //    private List<String> volumes;
 //    private List<AddressInfo> addresses;
@@ -75,7 +77,8 @@ public class ServerInfo2 implements Serializable {
         this.id = server.getId();
 //        this.host = server.getHost();
         this.name = server.getName();
-
+        this.state2 = server.getStatus().value();
+        this.projectId = server.getTenantId();
         this.state = checkState(server.getStatus().value());
 
         this.imageId = server.getImageId();
@@ -90,6 +93,7 @@ public class ServerInfo2 implements Serializable {
             this.cpu = server.getFlavor().getVcpus();
             this.memory = server.getFlavor().getRam();
             this.disk = server.getFlavor().getDisk();
+            this.flavorId = server.getFlavorId();
         }
 //        this.metaData = server.getMetadata();
 
