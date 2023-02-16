@@ -21,6 +21,8 @@ public interface MeterDao {
 
     int createMeterServer(MeterServerInfo info);
 
+    int getMeterServerIDCount(MeterServerInfo info);
+
     List<MeterServerAccumulateInfo> getMeterServerAccumulates(Map<String, Object> params);
 
     MeterServerAccumulateInfo getMeterServerAccumulate(Map<String, Object> params);

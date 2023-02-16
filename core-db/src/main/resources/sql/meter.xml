@@ -101,7 +101,7 @@
 		<include refid="com.innogrid.uniq.coredb.paging" />
 	</select>
 
-	<select id="getMeterServerIdCount" resultType="int">
+	<select id="getMeterServerIDCount" resultType="int">
         SELECT COUNT(1) FROM cmp.cmp_meter_instance WHERE instance_id = #{instanceId}
     </select>
 
@@ -116,7 +116,7 @@
 			create_datetime
 		)
 		VALUES (
-			nextval('meter_instance_id_seq'),
+			nextval('cmp.meter_instance_id_seq'),
 			#{instanceId},
 			#{flavorId},
             #{status},
@@ -133,16 +133,16 @@
 				instance_id = #{instanceId},
 			</if>
 			<if test="flavorId != null">
-				flavorId = #{flavorId},
+				flavor_id = #{flavorId},
 			</if>
 			<if test="status != null">
 				status = #{status},
 			</if>
 			<if test="cloudType != null">
-				cloudType = #{cloudType},
+				cloud_type = #{cloudType},
 			</if>
 			<if test="cloudName != null">
-				cloudName = #{cloudName},
+				cloud_name = #{cloudName},
 			</if>
 			<if test="createdAt != null">
 				create_datetime = CURRENT_TIMESTAMP,
@@ -232,7 +232,7 @@
 			cloud_target
 		)
 		VALUES (
-			nextval('meter_instance_accumulate_id_seq'),
+			nextval('cmp.meter_instance_accumulate_id_seq'),
 			#{credentialId},
 			#{cloudType},
             #{cloudName},

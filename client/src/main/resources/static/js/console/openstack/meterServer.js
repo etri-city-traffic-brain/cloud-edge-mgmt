@@ -159,18 +159,18 @@ var MeterServerUI = (function (options) {
                     loadtext: "",
                     autoencode: true,
                     onSelectRow: function (id) {
-                        // var m = self.collection.get(id);
-                        // // if ($("#detailBtn").hasClass("selected")) {
-                        // var tabIndex = $('.detail_tab a.on').index();
-                        // modules.detailView.model.set(m.toJSON());
-                        // if(tabIndex == 1) {
-                        //     modules.detailServerView.render(m);
+                        var m = self.collection.get(id);
+                        // if ($("#detailBtn").hasClass("selected")) {
+                        var tabIndex = $('.detail_tab a.on').index();
+                        modules.detailView.model.set(m.toJSON());
+                        if(tabIndex == 1) {
+                            modules.detailServerView.render(m);
+                        }
                         // }
-                        // // }
-                        // $('.content').addClass('detail_on');
-                        // setTimeout(function() {
-                        //     self.grid.resetSize()
-                        // }, options.gridReSizeTime);
+                        $('.content').addClass('detail_on');
+                        setTimeout(function() {
+                            self.grid.resetSize()
+                        }, options.gridReSizeTime);
                     },
                     loadComplete: function (data) {
                         self.collection.reset(data.rows);

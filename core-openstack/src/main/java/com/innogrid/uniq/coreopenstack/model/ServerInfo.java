@@ -46,7 +46,7 @@ public class ServerInfo implements Serializable {
     private Map<String, String> metaData;
     private String keyName;
     private String taskState;
-
+    private String state2;
     public ServerInfo() {
     }
 

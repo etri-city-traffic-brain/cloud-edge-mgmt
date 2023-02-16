@@ -24,7 +24,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -90,14 +89,17 @@ public class MeteringScheduler {
                         meterServerInfo.setCloudName(info.getType());
                         meterServerInfo.setInstanceId(serverInfo.getId());
                         meterServerInfo.setFlavorId(serverInfo.getFlavorName());
-                        meterServerInfo.setStatus(serverInfo.getState());
+                        meterServerInfo.setStatus(serverInfo.getState2());
 
-//                        meterService.createMeterServer(meterServerInfo);
+
+
 
                         // Meter Server Accumulate
                         meterServerAccumulateInfo.setCredentialId(info.getId());
-                        meterServerAccumulateInfo.setCloudType(info.getCloudType());
-                        meterServerAccumulateInfo.setCloudName(info.getType());
+//                        meterServerAccumulateInfo.setCloudType(info.getCloudType());
+                        meterServerAccumulateInfo.setCloudType(info.getType());
+//                        meterServerAccumulateInfo.setCloudName(info.getType());
+                        meterServerAccumulateInfo.setCloudName(info.getName());
                         meterServerAccumulateInfo.setInstanceId(serverInfo.getId());
                         meterServerAccumulateInfo.setInstanceName(serverInfo.getName());
                         meterServerAccumulateInfo.setImageId(serverInfo.getImageId());
@@ -106,24 +108,27 @@ public class MeteringScheduler {
                         meterServerAccumulateInfo.setFlavorVcpu(serverInfo.getCpu());
                         meterServerAccumulateInfo.setFlavorRam(serverInfo.getMemory());
                         meterServerAccumulateInfo.setFlavorDisk(serverInfo.getDisk());
-
+                        meterServerAccumulateInfo.setProjectId(serverInfo.getProjectId());
                         meterServerAccumulateInfo.setMeterEndTime(time);
                         meterServerAccumulateInfo.setUpdatedAt(time);
                         meterServerAccumulateInfo.setCloudTarget(info.getUrl());
-
-                        logger.info("meterServerAccumulateInfo = " + meterServerAccumulateInfo);
+                        meterServerAccumulateInfo.setState(serverInfo.getState());
 
                         int idCount = meterService.getMeterServerAccumulateIDCount(meterServerAccumulateInfo);
-
+                        int idCount2 = meterService.getMeterServerIDCount(meterServerInfo);
                         if (idCount > 0) {
-                            logger.info("idCount > 0 = " + idCount);
                             meterServerAccumulateInfo.setMeterDuration(duration/1000);
                             meterService.updateMeterServerAccumulate(meterServerAccumulateInfo);
                         } else {
-                            logger.info("idCount < 0 = " + idCount);
                             meterServerAccumulateInfo.setCreatedAt(time);
                             meterServerAccumulateInfo.setMeterStartTime(time);
                             meterService.createMeterServerAccumulate(meterServerAccumulateInfo);
+                        }
+                        if (idCount2 > 0) {
+                            meterService.updateMeterServer(meterServerInfo);
+                        } else {
+                            meterServerInfo.setCreatedAt(time);
+                            meterService.createMeterServer(meterServerInfo);
                         }
                     }
                 }
