@@ -102,7 +102,9 @@ public class OpenStackServiceImpl implements OpenStackService {
     @Override
     public List<ServerInfo> getServers(String cloudId, Map<String, Object> params, UserInfo reqInfo, String token) {
         logger.info("[{}] Get Servers", CommonUtil.getUserUUID());
+        logger.info("reqInfo = " + reqInfo);
         com.innogrid.uniq.core.model.ProjectInfo projectInfo = getProjectByGroupId(cloudId, reqInfo.getGroupId());
+        logger.info("projectInfo = ");
 
         UriComponentsBuilder url = UriComponentsBuilder.fromUriString(apiUrl);
 //        UriComponentsBuilder url = UriComponentsBuilder.fromUriString(apiUrl_public);
@@ -110,6 +112,7 @@ public class OpenStackServiceImpl implements OpenStackService {
 //        url.path(API_PATH_public + "/servers");
 
         if(projectInfo != null) {
+
             url.queryParam("project", projectInfo.getProjectId());
         }
 

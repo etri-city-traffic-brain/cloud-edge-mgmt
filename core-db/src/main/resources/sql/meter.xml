@@ -33,6 +33,7 @@
 		<result column="create_datetime" property="createdAt" />
 		<result column="update_datetime" property="updatedAt" />
 		<result column="cloud_target" property="cloudTarget" />
+		<result column="billing" property="billing" />
 	</resultMap>
 
 	<sql id="meterServerWhere">
@@ -184,7 +185,8 @@
 			meter_instance_accumulate.meter_end_datetime,
 			meter_instance_accumulate.create_datetime,
 			meter_instance_accumulate.update_datetime,
-			meter_instance_accumulate.cloud_target
+			meter_instance_accumulate.cloud_target,
+			meter_instance_accumulate.billing
 		FROM cmp.cmp_meter_instance_accumulate as meter_instance_accumulate
     </sql>
 
@@ -229,7 +231,8 @@
 			meter_end_datetime,
 			create_datetime,
 			update_datetime,
-			cloud_target
+			cloud_target,
+			billing
 		)
 		VALUES (
 			nextval('cmp.meter_instance_accumulate_id_seq'),
@@ -250,7 +253,8 @@
             #{meterEndTime},
             #{createdAt},
             #{updatedAt},
-            #{cloudTarget}
+            #{cloudTarget},
+            #{billing}
 		)
 	</insert>
 
