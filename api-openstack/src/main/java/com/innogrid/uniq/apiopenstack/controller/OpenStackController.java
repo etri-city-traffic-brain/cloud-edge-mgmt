@@ -22,14 +22,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.Principal;
+import java.sql.Time;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1106,6 +1109,9 @@ public class OpenStackController {
                             @RequestParam(required = false) String q0,
                             @RequestParam(required = false) String q1) {
 
+        System.out.println("#@!#!@#!@#!@#@!RR!#F!#$@D!D#@");
+
+
         Map<String, Object> params = new HashMap<>();
 
         params.put("sidx", sidx);
@@ -1119,12 +1125,14 @@ public class OpenStackController {
     // cpu 사용량 => 현재 usage_idle 로 설정되어있어 보완 필요
     @RequestMapping(value = {"/monitoring/cpu_usage"}, method = RequestMethod.GET)
     @ResponseBody
-    public JSONArray getCpuUsageMonitoringData(HttpServletRequest request, Principal principal, HttpSession session, Model model) {
+    public JSONArray getCpuUsageMonitoringData(HttpServletRequest request, HttpServletResponse response, Principal principal, HttpSession session, Model model) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
         HttpUtils htppUtils = new HttpUtils();
 
         String url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid";
         String method = "POST";
         String result = "";
+        String Time_range = request.getParameter("range") == null ? "5m" : request.getParameter("range");
         HttpURLConnection conn = null;
 
         //HttpURLConnection 객체 생성
@@ -1132,7 +1140,7 @@ public class OpenStackController {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid\") |> range(start: -1m) |> filter(fn: (r) => " +
+            String str = "from(bucket: \"innogrid\") |> range(start: - "+ Time_range +") |> filter(fn: (r) => " +
                     "r[\"_measurement\"] == \"cpu\") |> filter(fn: (r) => r[\"cpu\"] == \"cpu-total\") " +
                     "|> filter(fn: (r) => r[\"_field\"] == \"usage_idle\") |> yield(name: \"mean\")";
 
@@ -1166,12 +1174,14 @@ public class OpenStackController {
     // memory 사용량
     @RequestMapping(value = {"/monitoring/mem_usage"}, method = RequestMethod.GET)
     @ResponseBody
-    public JSONArray getMemUsageMonitoringData(HttpServletRequest request, Principal principal, HttpSession session, Model model) {
+    public JSONArray getMemUsageMonitoringData(HttpServletRequest request, HttpServletResponse response, Principal principal, HttpSession session, Model model) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
         HttpUtils htppUtils = new HttpUtils();
 
         String url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid";
         String method = "POST";
         String result = "";
+        String Time_range = request.getParameter("range") == null ? "5m" : request.getParameter("range");
         HttpURLConnection conn = null;
 
         //HttpURLConnection 객체 생성
@@ -1179,7 +1189,7 @@ public class OpenStackController {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid\") |> range(start: -1m) |> filter(fn: (r) => r[\"_measurement\"] == \"mem\") |> filter(fn: (r) => r[\"_field\"] == \"used_percent\") |> yield(name: \"mean\")";
+            String str = "from(bucket: \"innogrid\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"mem\") |> filter(fn: (r) => r[\"_field\"] == \"used_percent\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -1211,12 +1221,15 @@ public class OpenStackController {
     // memory 총량
     @RequestMapping(value = {"/monitoring/mem_total"}, method = RequestMethod.GET)
     @ResponseBody
-    public JSONArray getMemTotalMonitoringData(HttpServletRequest request, Principal principal, HttpSession session, Model model) {
+    public JSONArray getMemTotalMonitoringData(HttpServletRequest request, HttpServletResponse response, Principal principal, HttpSession session, Model model) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
         HttpUtils htppUtils = new HttpUtils();
 
         String url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid";
         String method = "POST";
         String result = "";
+        String Time_range = request.getParameter("range") == null ? "5m" : request.getParameter("range");
+
         HttpURLConnection conn = null;
 
         //HttpURLConnection 객체 생성
@@ -1224,7 +1237,7 @@ public class OpenStackController {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid\") |> range(start: -1m) |> filter(fn: (r) => r[\"_measurement\"] == \"mem\") |> filter(fn: (r) => r[\"_field\"] == \"total\") |> yield(name: \"mean\")";
+            String str = "from(bucket: \"innogrid\") |> range(start: -" + Time_range + ")|> filter(fn: (r) => r[\"_measurement\"] == \"mem\") |> filter(fn: (r) => r[\"_field\"] == \"total\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -1256,12 +1269,14 @@ public class OpenStackController {
     // disk 사용량
     @RequestMapping(value = {"/monitoring/disk_usage"}, method = RequestMethod.GET)
     @ResponseBody
-    public JSONArray getDiskUsageMonitoringData(HttpServletRequest request, Principal principal, HttpSession session, Model model) {
+    public JSONArray getDiskUsageMonitoringData(HttpServletRequest request, HttpServletResponse response, Principal principal, HttpSession session, Model model) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
         HttpUtils htppUtils = new HttpUtils();
 
         String url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid";
         String method = "POST";
         String result = "";
+        String Time_range = request.getParameter("range") == null ? "5m" : request.getParameter("range");
         HttpURLConnection conn = null;
 
         //HttpURLConnection 객체 생성
@@ -1269,7 +1284,7 @@ public class OpenStackController {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid\") |> range(start: -1m) |> filter(fn: (r) => r[\"_measurement\"] == \"disk\") |> filter(fn: (r) => r[\"_field\"] == \"used_percent\") |> filter(fn: (r) => r[\"device\"] == \"100.100.100.100:/share\") |> yield(name: \"mean\")";
+            String str = "from(bucket: \"innogrid\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"disk\") |> filter(fn: (r) => r[\"_field\"] == \"used_percent\") |> filter(fn: (r) => r[\"device\"] == \"100.100.100.100:/share\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -1302,12 +1317,14 @@ public class OpenStackController {
     // disk 총량
     @RequestMapping(value = {"/monitoring/disk_total"}, method = RequestMethod.GET)
     @ResponseBody
-    public JSONArray getDiskTotalMonitoringData(HttpServletRequest request, Principal principal, HttpSession session, Model model) {
+    public JSONArray getDiskTotalMonitoringData(HttpServletRequest request, HttpServletResponse response, Principal principal, HttpSession session, Model model) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
         HttpUtils htppUtils = new HttpUtils();
 
         String url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid";
         String method = "POST";
         String result = "";
+        String Time_range = request.getParameter("range") == null ? "5m" : request.getParameter("range");
         HttpURLConnection conn = null;
 
         //HttpURLConnection 객체 생성
@@ -1315,7 +1332,7 @@ public class OpenStackController {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid\") |> range(start: -1m) |> filter(fn: (r) => r[\"_measurement\"] == \"disk\") |> filter(fn: (r) => r[\"_field\"] == \"total\") |> filter(fn: (r) => r[\"device\"] == \"100.100.100.100:/share\") |> yield(name: \"mean\")";
+            String str = "from(bucket: \"innogrid\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"disk\") |> filter(fn: (r) => r[\"_field\"] == \"total\") |> filter(fn: (r) => r[\"device\"] == \"100.100.100.100:/share\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -1348,12 +1365,15 @@ public class OpenStackController {
     // diskio writes_bytes 정보
     @RequestMapping(value = {"/monitoring/diskio_wb"}, method = RequestMethod.GET)
     @ResponseBody
-    public JSONArray getDiskIoMonitoringData(HttpServletRequest request, Principal principal, HttpSession session, Model model) {
+    public JSONArray getDiskIoWriteMonitoringData(HttpServletRequest request, HttpServletResponse response, Principal principal, HttpSession session, Model model) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
         HttpUtils htppUtils = new HttpUtils();
 
         String url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid";
         String method = "POST";
         String result = "";
+        String Time_range = request.getParameter("range") == null ? "5m" : request.getParameter("range");
         HttpURLConnection conn = null;
 
         //HttpURLConnection 객체 생성
@@ -1361,7 +1381,7 @@ public class OpenStackController {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid\") |> range(start: -1m) |> filter(fn: (r) => r[\"_measurement\"] == \"diskio\") |> filter(fn: (r) => r[\"_field\"] == \"write_bytes\") |> filter(fn: (r) => r[\"host\"] == \"dev.etri.re.kr\") |> filter(fn: (r) => r[\"name\"] == \"sda\") |> yield(name: \"mean\")";
+            String str = "from(bucket: \"innogrid\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"diskio\") |> filter(fn: (r) => r[\"_field\"] == \"write_bytes\") |> filter(fn: (r) => r[\"host\"] == \"dev.etri.re.kr\") |> filter(fn: (r) => r[\"name\"] == \"sda\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -1386,6 +1406,103 @@ public class OpenStackController {
             data.put("now", "" + (result.split("sda")[i]).split(",")[(result.split("sda")[i]).split(",").length - 5]);
             data.put("value", "" + (result.split("sda")[i]).split(",")[(result.split("sda")[i]).split(",").length - 4]);
 
+            array.add(data);
+        }
+        return array;
+    }
+
+    @RequestMapping(value = {"/monitoring/diskio_rb"}, method = RequestMethod.GET)
+    @ResponseBody
+    public JSONArray getDiskIoReadMonitoringData(HttpServletRequest request, HttpServletResponse response, Principal principal, HttpSession session, Model model, CorsRegistry registry) {
+        registry.addMapping("/**").allowedOrigins("*");
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        HttpUtils htppUtils = new HttpUtils();
+
+        String url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid";
+        String method = "POST";
+        String result = "";
+        String Time_range = request.getParameter("range") == null ? "5m" : request.getParameter("range");
+        HttpURLConnection conn = null;
+
+        //HttpURLConnection 객체 생성
+        conn = htppUtils.getHttpURLConnection(url, method);
+//        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
+        conn.setDoOutput(true);
+        try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
+            String str = "from(bucket: \"innogrid\") |> range(start: " + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"diskio\") |> filter(fn: (r) => r[\"_field\"] == \"read_bytes\") |> filter(fn: (r) => r[\"host\"] == \"dev.etri.re.kr\") |> filter(fn: (r) => r[\"name\"] == \"sda\") |> yield(name: \"mean\")";
+
+            dataOutputStream.write(str.getBytes());
+            dataOutputStream.flush();
+
+            result = htppUtils.getHttpRespons(conn);
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        System.out.println("GET = " + result);
+
+        JSONArray array = new JSONArray();
+
+        for(int i=0; i< result.split("sda").length; i++) {
+            JSONObject data = new JSONObject();
+            data.put("name", "sda");
+            data.put("host", "" + (result.split("sda")[i]).split(",")[(result.split("sda")[i]).split(",").length - 1]);
+            data.put("start", "" + (result.split("sda")[i]).split(",")[(result.split("sda")[i]).split(",").length - 7]);
+            data.put("end", "" + (result.split("sda")[i]).split(",")[(result.split("sda")[i]).split(",").length - 6]);
+            data.put("now", "" + (result.split("sda")[i]).split(",")[(result.split("sda")[i]).split(",").length - 5]);
+            data.put("value", "" + (result.split("sda")[i]).split(",")[(result.split("sda")[i]).split(",").length - 4]);
+
+            array.add(data);
+        }
+        return array;
+    }
+
+    @RequestMapping(value = {"/monitoring/cpu_core"}, method = RequestMethod.GET)
+    @ResponseBody
+    public JSONArray getCpuCoreMonitoringData(HttpServletRequest request, HttpServletResponse response, Principal principal, HttpSession session, Model model) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        HttpUtils htppUtils = new HttpUtils();
+
+        String url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid";
+        String method = "POST";
+        String result = "";
+        String Time_range = request.getParameter("range") == null ? "5m" : request.getParameter("range");
+        HttpURLConnection conn = null;
+
+        //HttpURLConnection 객체 생성
+        conn = htppUtils.getHttpURLConnection(url, method);
+//        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
+        conn.setDoOutput(true);
+        try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
+            String str = "from(bucket: \"innogrid\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => " +
+                    "r[\"_measurement\"] == \"system\") |> filter(fn: (r) => r[\"_field\"] == \"n_cpus\") " +
+                    "|> filter(fn: (r) => r[\"host\"] == \"dev.etri.re.kr\") |> yield(name: \"mean\")";
+
+            dataOutputStream.write(str.getBytes());
+            dataOutputStream.flush();
+
+            result = htppUtils.getHttpRespons(conn);
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        System.out.println("GET = " + result);
+
+        JSONArray array = new JSONArray();
+
+        for(int i=0; i< result.split("dev.etri.re.kr").length; i++) {
+            JSONObject data = new JSONObject();
+            data.put("name", "" + (result.split("dev.etri.re.kr")[i]).split(",")[(result.split("dev.etri.re.kr")[i]).split(",").length - 1]);
+            data.put("host", "dev.etri.re.kr");
+            data.put("start", "" + (result.split("dev.etri.re.kr")[i]).split(",")[(result.split("dev.etri.re.kr")[i]).split(",").length - 6]);
+            data.put("end", "" + (result.split("dev.etri.re.kr")[i]).split(",")[(result.split("dev.etri.re.kr")[i]).split(",").length - 5]);
+            data.put("now", "" + (result.split("dev.etri.re.kr")[i]).split(",")[(result.split("dev.etri.re.kr")[i]).split(",").length - 4]);
+            data.put("value", "" + (result.split("dev.etri.re.kr")[i]).split(",")[(result.split("dev.etri.re.kr")[i]).split(",").length - 3]);
             array.add(data);
         }
         return array;
@@ -1465,6 +1582,4 @@ public class OpenStackController {
             return sb;
         }
     }
-
-
 }
