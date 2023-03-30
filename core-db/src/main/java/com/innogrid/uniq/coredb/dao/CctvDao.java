@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author wss
- * @date 2019.4.03
+ * @author ksh
+ * @date 2021.4.03
  * @brief
  */
 public interface CctvDao {

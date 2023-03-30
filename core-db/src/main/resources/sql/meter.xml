@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.innogrid.uniq.coredb.mapper">
+
+	<resultMap id="meterServerResultMap" type="MeterServerInfo">
+		<result column="id" property="id" />
+		<result column="instance_id" property="instanceId" />
+		<result column="flavor_id" property="flavorId" />
+		<result column="status" property="status" />
+		<result column="cloud_type" property="cloudType" />
+		<result column="cloud_name" property="cloudName" />
+		<result column="create_datetime" property="createdAt" />
+	</resultMap>
+
+	<resultMap id="meterServerAccumulateResultMap" type="MeterServerAccumulateInfo">
+		<result column="id" property="id" />
+		<result column="credential_id" property="credentialId" />
+		<result column="cloud_type" property="cloudType" />
+		<result column="cloud_name" property="cloudName" />
+		<result column="project_id" property="projectId" />
+		<result column="instance_id" property="instanceId" />
+		<result column="instance_name" property="instanceName" />
+		<result column="image_id" property="imageId" />
+		<result column="flavor_id" property="flavorId" />
+		<result column="flavor_name" property="flavorName" />
+		<result column="flavor_vcpu" property="flavorVcpu" />
+		<result column="flavor_ram" property="flavorRam" />
+		<result column="flavor_disk" property="flavorDisk" />
+		<result column="meter_duration" property="meterDuration" />
+		<result column="meter_start_datetime" property="meterStartTime" />
+		<result column="meter_end_datetime" property="meterEndTime" />
+		<result column="create_datetime" property="createdAt" />
+		<result column="update_datetime" property="updatedAt" />
+		<result column="cloud_target" property="cloudTarget" />
+	</resultMap>
+
+	<sql id="meterServerWhere">
+		<where>
+			<if test="id != null">
+				AND id = #{id}
+			</if>
+			<if test="instanceId != null">
+				AND instance_id = #{instanceId}
+			</if>
+			<if test="cloudType != null">
+				AND cloud_type = #{cloudType}
+			</if>
+			<if test="cloudName != null">
+				AND cloud_name = #{cloudName}
+			</if>
+			<include refid="com.innogrid.uniq.coredb.columnWhere" />
+		</where>
+	</sql>
+
+	<sql id="meterServerAccumulateWhere">
+		<where>
+			<if test="id != null">
+				AND id = #{id}
+			</if>
+			<if test="instanceId != null">
+				AND instance_id = #{instanceId}
+			</if>
+			<if test="cloudType != null">
+				AND cloud_type = #{cloudType}
+			</if>
+			<if test="cloudName != null">
+				AND cloud_name = #{cloudName}
+			</if>
+			<if test=" flavorId != null">
+				AND flavor_id = #{flavorId}
+			</if>
+			<if test="credentialId != null">
+				AND credential_id = #{credentialId}
+			</if>
+			<if test="cloudTarget != null">
+				AND cloud_target = #{cloudTarget}
+			</if>
+			<include refid="com.innogrid.uniq.coredb.columnWhere" />
+		</where>
+	</sql>
+
+	<sql id="meterServerSQL">
+		SELECT
+			meter_instance.id,
+			meter_instance.instance_id,
+			meter_instance.flavor_id,
+			meter_instance.status,
+			meter_instance.cloud_type,
+			meter_instance.cloud_name,
+			meter_instance.create_datetime
+		FROM cmp.cmp_meter_instance as meter_instance
+    </sql>
+
+	<select id="getMeterServer" resultMap="meterServerResultMap">
+		SELECT * FROM (
+		<include refid="meterServerSQL" />
+		) AS d
+		<include refid="meterServerWhere" />
+		<include refid="com.innogrid.uniq.coredb.orderby" />
+		<include refid="com.innogrid.uniq.coredb.paging" />
+	</select>
+
+	<select id="getMeterServerIDCount" resultType="int">
+        SELECT COUNT(1) FROM cmp.cmp_meter_instance WHERE instance_id = #{instanceId}
+    </select>
+
+	<insert id="createMeterServer" parameterType="MeterServerInfo">
+		INSERT INTO cmp.cmp_meter_instance (
+			id,
+			instance_id,
+			flavor_id,
+			status,
+			cloud_type,
+			cloud_name,
+			create_datetime
+		)
+		VALUES (
+			nextval('cmp.meter_instance_id_seq'),
+			#{instanceId},
+			#{flavorId},
+            #{status},
+			#{cloudType},
+            #{cloudName},
+            CURRENT_TIMESTAMP
+		)
+	</insert>
+
+	<update id="updateMeterServer" parameterType="MeterServerInfo">
+		UPDATE cmp.cmp_meter_instance
+		<set>
+			<if test="instanceId != null">
+				instance_id = #{instanceId},
+			</if>
+			<if test="flavorId != null">
+				flavor_id = #{flavorId},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="cloudType != null">
+				cloud_type = #{cloudType},
+			</if>
+			<if test="cloudName != null">
+				cloud_name = #{cloudName},
+			</if>
+			<if test="createdAt != null">
+				create_datetime = CURRENT_TIMESTAMP,
+			</if>
+		</set>
+		<where>
+			<if test="instanceId != null">
+				AND instance_id = #{instanceId}
+			</if>
+		</where>
+	</update>
+
+	<delete id="deleteMeterServer" parameterType="MeterServerInfo">
+		DELETE FROM cmp.cmp_meter_instance
+		<where>
+			<if test="instanceId != null">
+				AND instance_id = #{instanceId}
+			</if>
+		</where>
+	</delete>
+
+	<sql id="meterServerAccumulateSQL">
+		SELECT
+			meter_instance_accumulate.id,
+			meter_instance_accumulate.credential_id,
+			meter_instance_accumulate.cloud_type,
+			meter_instance_accumulate.cloud_name,
+			meter_instance_accumulate.project_id,
+			meter_instance_accumulate.instance_id,
+			meter_instance_accumulate.instance_name,
+			meter_instance_accumulate.image_id,
+			meter_instance_accumulate.flavor_id,
+			meter_instance_accumulate.flavor_name,
+			meter_instance_accumulate.flavor_vcpu,
+			meter_instance_accumulate.flavor_ram,
+			meter_instance_accumulate.flavor_disk,
+			meter_instance_accumulate.meter_duration,
+			meter_instance_accumulate.meter_start_datetime,
+			meter_instance_accumulate.meter_end_datetime,
+			meter_instance_accumulate.create_datetime,
+			meter_instance_accumulate.update_datetime,
+			meter_instance_accumulate.cloud_target
+		FROM cmp.cmp_meter_instance_accumulate as meter_instance_accumulate
+    </sql>
+
+	<select id="getMeterServerAccumulate" resultMap="meterServerAccumulateResultMap">
+		SELECT * FROM (
+		<include refid="meterServerAccumulateSQL" />
+		) AS d
+		<include refid="meterServerAccumulateWhere" />
+		<include refid="com.innogrid.uniq.coredb.orderby" />
+		<include refid="com.innogrid.uniq.coredb.paging" />
+	</select>
+
+	<select id="getMeterServerAccumulateIDCount" resultType="int">
+		SELECT COUNT(1) FROM cmp.cmp_meter_instance_accumulate
+		<where>
+			<if test="instanceId != null">
+				AND instance_id = #{instanceId}
+			</if>
+			<if test="flavorId != null">
+				AND flavor_id = #{flavorId}
+			</if>
+		</where>
+	</select>
+
+	<insert id="createMeterServerAccumulate" parameterType="MeterServerAccumulateInfo">
+		INSERT INTO cmp.cmp_meter_instance_accumulate (
+			id,
+			credential_id,
+			cloud_type,
+			cloud_name,
+			project_id,
+			instance_id,
+			instance_name,
+			image_id,
+			flavor_id,
+			flavor_name,
+			flavor_vcpu,
+			flavor_ram,
+			flavor_disk,
+			meter_duration,
+			meter_start_datetime,
+			meter_end_datetime,
+			create_datetime,
+			update_datetime,
+			cloud_target
+		)
+		VALUES (
+			nextval('cmp.meter_instance_accumulate_id_seq'),
+			#{credentialId},
+			#{cloudType},
+            #{cloudName},
+            #{projectId},
+			#{instanceId},
+			#{instanceName},
+            #{imageId},
+            #{flavorId},
+            #{flavorName},
+            #{flavorVcpu},
+            #{flavorRam},
+            #{flavorDisk},
+            #{meterDuration},
+            #{meterStartTime},
+            #{meterEndTime},
+            #{createdAt},
+            #{updatedAt},
+            #{cloudTarget}
+		)
+	</insert>
+
+	<update id="updateMeterServerAccumulate" parameterType="MeterServerAccumulateInfo">
+		UPDATE cmp.cmp_meter_instance_accumulate
+		<set>
+			<if test="meterEndTime != null">
+				meter_end_datetime = #{meterEndTime},
+			</if>
+			<if test="updatedAt != null">
+				update_datetime = #{updatedAt},
+			</if>
+			<if test="meterDuration != null">
+				meter_duration = meter_duration + #{meterDuration},
+			</if>
+		</set>
+		<where>
+			<if test="instanceId != null">
+				AND instance_id = #{instanceId}
+			</if>
+			<if test="flavorId != null">
+				AND flavor_id = #{flavorId}
+			</if>
+		</where>
+	</update>
+
+	<delete id="deleteMeterServerAccumulate" parameterType="MeterServerAccumulateInfo">
+		DELETE FROM cmp.cmp_meter_instance_accumulate
+		<where>
+			<if test="instanceId != null">
+				AND instance_id = #{instanceId}
+			</if>
+			<if test="flavorId != null">
+				AND flavor_id = #{flavorId}
+			</if>
+		</where>
+	</delete>
+
+</mapper>

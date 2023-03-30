@@ -122,7 +122,7 @@ public class OpenStackServiceImpl implements OpenStackService {
         logger.info("credentialInfo = [{}] ", credentialInfo);
         url.queryParam("webCheck", true);
 
-        List<ServerInfo> lists = restTemplate.exchange(url.build().encode().toUri(), HttpMethod.GET, new HttpEntity(CommonUtil.getAuthHeaders(aes256Util.encrypt(ObjectSerializer.serializedData(credentialInfo)), token)), new ParameterizedTypeReference<List<ServerInfo>>(){}).getBody();
+         List<ServerInfo> lists = restTemplate.exchange(url.build().encode().toUri(), HttpMethod.GET, new HttpEntity(CommonUtil.getAuthHeaders(aes256Util.encrypt(ObjectSerializer.serializedData(credentialInfo)), token)), new ParameterizedTypeReference<List<ServerInfo>>(){}).getBody();
 
         logger.info("[{}] OpenStack Credential : ", CommonUtil.getAuthHeaders(aes256Util.encrypt(ObjectSerializer.serializedData(credentialInfo)), token));
         logger.info("[{}] Get Servers Complete", CommonUtil.getUserUUID());

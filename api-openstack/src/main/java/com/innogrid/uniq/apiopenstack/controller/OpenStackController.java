@@ -3,10 +3,13 @@ package com.innogrid.uniq.apiopenstack.controller;
 import com.innogrid.uniq.apiopenstack.service.OpenStackService;
 import com.innogrid.uniq.core.model.CctvInfo;
 import com.innogrid.uniq.core.model.CredentialInfo;
+import com.innogrid.uniq.core.model.MeterServerAccumulateInfo;
+import com.innogrid.uniq.core.model.MeterServerInfo;
 import com.innogrid.uniq.core.util.AES256Util;
 import com.innogrid.uniq.core.util.ObjectSerializer;
 import com.innogrid.uniq.coredb.dao.CredentialDao;
 import com.innogrid.uniq.coredb.service.CredentialService;
+import com.innogrid.uniq.coredb.service.MeterService;
 import com.innogrid.uniq.coreopenstack.model.*;
 import org.json.simple.JSONArray;
 import org.json.JSONException;
@@ -51,6 +54,8 @@ public class OpenStackController {
     @Autowired
     private OpenStackService openStackService;
 
+    @Autowired
+    private MeterService meterService;
 
     @Autowired
     private CredentialService credentialService;
@@ -1013,6 +1018,33 @@ public class OpenStackController {
         openStackService.deallocateFloatingIp(credentialInfo, project, floatingIpId);
     }
 
+    @RequestMapping(value = "/meter/servers", method = RequestMethod.GET)
+    @ResponseBody
+    public List<MeterServerAccumulateInfo> getMeterServerAccumulateInfos(
+            @RequestHeader(value = "credential") String credential
+    ) {
+
+        CredentialInfo credentialInfo = ObjectSerializer.deserializedData(aes256Util.decrypt(credential));
+
+        return meterService.getMeterServerAccumulates(new HashMap<String, Object>(){{
+            put("cloudTarget", credentialInfo.getUrl());
+        }});
+    }
+
+    @RequestMapping(value = "/meter/servers/{serverId}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<MeterServerInfo> getMeterServerInfos(
+            @RequestHeader(value = "credential") String credential,
+            @PathVariable(value = "serverId") String serverId
+    ) {
+
+        CredentialInfo credentialInfo = ObjectSerializer.deserializedData(aes256Util.decrypt(credential));
+
+        return meterService.getMeterServers(new HashMap<String, Object>(){{
+            put("cloudTarget", credentialInfo.getUrl());
+            put("instanceId", serverId);
+        }});
+    }
 
     @RequestMapping(value = "/validate", method = RequestMethod.GET)
     @ResponseBody

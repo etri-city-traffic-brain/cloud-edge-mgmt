@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.innogrid.uniq.client.service.ApiService;
 import com.innogrid.uniq.client.util.CommonUtil;
 import com.innogrid.uniq.core.model.CredentialInfo;
+import com.innogrid.uniq.core.model.MeterServerAccumulateInfo;
+import com.innogrid.uniq.core.model.MeterServerInfo;
 import com.innogrid.uniq.core.model.ProjectInfo;
 import com.innogrid.uniq.core.util.AES256Util;
 import com.innogrid.uniq.core.util.ObjectSerializer;
@@ -175,7 +177,39 @@ public class ApiServiceImpl implements ApiService {
         return list;
     }
 
+    @Override
+    public List<MeterServerInfo> getMeterServers(String cloudId, String serverId, String token) {
 
+        CredentialInfo credentialInfo = credentialService.getCredentialsFromMemoryById(cloudId);
+        List<MeterServerInfo> list = null;
+
+         if(credentialInfo.getType().equals("openstack")) {
+            UriComponentsBuilder url = UriComponentsBuilder.fromUriString(apiUrl + OpenStackServiceImpl.API_PATH);
+            url.path("/meter/servers/{id}");
+
+            list = restTemplate.exchange(url.buildAndExpand(serverId).toUri(), HttpMethod.GET, new HttpEntity(CommonUtil.getAuthHeaders(aes256Util.encrypt(ObjectSerializer.serializedData(credentialInfo)), token)), new ParameterizedTypeReference<List<MeterServerInfo>>(){}).getBody();
+        }
+
+        if(list == null) return new ArrayList<>();
+
+        return list;
+    }
+
+    @Override
+    public List<MeterServerAccumulateInfo> getMeterServerAccumulates(String cloudId, String token) {
+
+        CredentialInfo credentialInfo = credentialService.getCredentialsFromMemoryById(cloudId);
+        List<MeterServerAccumulateInfo> list = null;
+        if(credentialInfo.getType().equals("openstack")) {
+            UriComponentsBuilder url = UriComponentsBuilder.fromUriString(apiUrl + OpenStackServiceImpl.API_PATH);
+            url.path("/meter/servers");
+
+            list = restTemplate.exchange(url.build().encode().toUri(), HttpMethod.GET, new HttpEntity(CommonUtil.getAuthHeaders(aes256Util.encrypt(ObjectSerializer.serializedData(credentialInfo)), token)), new ParameterizedTypeReference<List<MeterServerAccumulateInfo>>(){}).getBody();
+        }
+        if(list == null) return new ArrayList<>();
+
+        return list;
+    }
 
     @Override
     public boolean getCredentialsCheck(List<CredentialInfo> list, String type){

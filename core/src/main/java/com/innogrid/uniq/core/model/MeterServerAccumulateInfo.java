@@ -27,6 +27,7 @@ public class MeterServerAccumulateInfo implements Serializable {
 	private String imageId;
 	private String flavorId;
 	private String flavorName;
+	private String State;
 	private int flavorVcpu;
 	private int flavorRam;
 	private int flavorDisk;

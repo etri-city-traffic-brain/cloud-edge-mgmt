@@ -5,6 +5,8 @@ import com.innogrid.uniq.client.service.OpenStackService;
 import com.innogrid.uniq.client.service.TokenService;
 import com.innogrid.uniq.client.util.CommonUtil;
 import com.innogrid.uniq.core.model.CredentialInfo;
+import com.innogrid.uniq.core.model.MeterServerAccumulateInfo;
+import com.innogrid.uniq.core.model.MeterServerInfo;
 import com.innogrid.uniq.core.model.UserInfo;
 import com.innogrid.uniq.client.util.Pagination;
 import com.innogrid.uniq.coreopenstack.model.*;
@@ -261,6 +263,10 @@ public class OpenstackController {
             case "state":
                 Function<ServerInfo, String> sortState = info -> info.getState();
                 Pagination.sort(list, sortState, sord);
+                break;
+            case "state2":
+                Function<ServerInfo, String> sortState2 = info -> info.getState2();
+                Pagination.sort(list, sortState2, sord);
                 break;
             case "imageName":
                 Function<ServerInfo, String> sortImageName = info -> info.getImageName();
@@ -1540,6 +1546,140 @@ public class OpenstackController {
         return new ServerInfo();
     }
 
+    /**
+     * @param page    current page value
+     * @param rows    column list's count
+     * @param sidx    sort standard
+     * @param sord    asc or desc
+     * @param q0      search condition
+     * @param q1      search value
+     * @return Map<String   ,       Object> (page, total, rows, network List)
+     * @brief Meter Server List View
+     */
+    @Secured({"ROLE_ADMIN", "ROLE_CLOUD_READ", "ROLE_CLOUD_WRITE"})
+    @RequestMapping(value = "/meter/servers", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> getMeterServerAccumulates(@RequestHeader(value = "referer", required = false) final String referer,
+                                                         HttpSession session,
+                                                         @RequestParam(value = "id") String cloudId,
+                                                         @RequestParam(required = false) Integer page,
+                                                         @RequestParam(required = false) Integer rows,
+                                                         @RequestParam(defaultValue = "id") String sidx,
+                                                         @RequestParam(defaultValue = "asc") String sord,
+                                                         @RequestParam(required = false) String q0,
+                                                         @RequestParam(required = false) String q1) {
+        String token = (String) session.getAttribute(TokenService.COOKIE_IN_TOKEN_NAME);
+
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("sidx", sidx);
+        params.put("sord", sord);
+        params.put("q0", StringUtils.trimWhitespace(q0));
+        params.put("q1", StringUtils.trimWhitespace(q1));
+        params.put("page", page);
+        params.put("rows", rows);
+        params.put("credentialId", cloudId);
+
+        List<MeterServerAccumulateInfo> list = apiService.getMeterServerAccumulates(cloudId, token);
+        Function<MeterServerAccumulateInfo, String> sort;
+
+        switch(sidx) {
+            case "instanceId":
+                sort = info -> info.getInstanceId();
+                Pagination.sort(list, sort, sord);
+                break;
+            case "instanceName":
+                sort = info -> info.getInstanceName();
+                Pagination.sort(list, sort, sord);
+                break;
+            case "flavorName":
+                sort = info -> info.getFlavorName();
+                Pagination.sort(list, sort, sord);
+                break;
+            case "meterStartTime":
+                Function<MeterServerAccumulateInfo, Timestamp> sortStartTime = info -> info.getMeterStartTime();
+                Pagination.sort(list, sortStartTime, sord);
+                break;
+            case "meterEndTime":
+                Function<MeterServerAccumulateInfo, Timestamp> sortEndTime = info -> info.getMeterEndTime();
+                Pagination.sort(list, sortEndTime, sord);
+                break;
+            case "meterDuration":
+                Function<MeterServerAccumulateInfo, Integer> sortDuration = info -> info.getMeterDuration();
+                Pagination.sort(list, sortDuration, sord);
+                break;
+            default:
+                sort = info -> info.getId();
+                Pagination.sort(list, sort, sord);
+                break;
+        }
+
+        return Pagination.getPagination(page, list.size(), rows, list);
+    }
+
+    /**
+     * @param page    current page value
+     * @param rows    column list's count
+     * @param sidx    sort standard
+     * @param sord    asc or desc
+     * @param q0      search condition
+     * @param q1      search value
+     * @return Map<String   ,       Object> (page, total, rows, network List)
+     * @brief Meter Server List View
+     */
+    @Secured({"ROLE_ADMIN", "ROLE_CLOUD_READ", "ROLE_CLOUD_WRITE"})
+    @RequestMapping(value = "/meter/servers/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> getMeterServer(@RequestHeader(value = "referer", required = false) final String referer,
+                                              HttpSession session,
+                                              @RequestParam(value = "id") String cloudId,
+                                              @RequestParam(required = false) Integer page,
+                                              @RequestParam(required = false) Integer rows,
+                                              @RequestParam(defaultValue = "id") String sidx,
+                                              @RequestParam(defaultValue = "asc") String sord,
+                                              @RequestParam(required = false) String q0,
+                                              @RequestParam(required = false) String q1,
+                                              @PathVariable(value = "id") String serverId) {
+        String token = (String) session.getAttribute(TokenService.COOKIE_IN_TOKEN_NAME);
+
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("sidx", sidx);
+        params.put("sord", sord);
+        params.put("q0", StringUtils.trimWhitespace(q0));
+        params.put("q1", StringUtils.trimWhitespace(q1));
+        params.put("page", page);
+        params.put("rows", rows);
+        params.put("instanceId", serverId);
+
+        List<MeterServerInfo> list = apiService.getMeterServers(cloudId, serverId, token);
+        Function<MeterServerInfo, String> sort;
+
+        switch(sidx) {
+            case "instanceId":
+                sort = info -> info.getInstanceId();
+                Pagination.sort(list, sort, sord);
+                break;
+            case "flavorId":
+                sort = info -> info.getFlavorId();
+                Pagination.sort(list, sort, sord);
+                break;
+            case "status":
+                sort = info -> info.getStatus();
+                Pagination.sort(list, sort, sord);
+                break;
+            case "createdAt":
+                Function<MeterServerInfo, Timestamp> sortCreatedAt = info -> info.getCreatedAt();
+                Pagination.sort(list, sortCreatedAt, sord);
+                break;
+            default:
+                sort = info -> info.getId();
+                Pagination.sort(list, sort, sord);
+                break;
+        }
+
+        return Pagination.getPagination(page, list.size(), rows, list);
+    }
 
     /**
      * @param cloudId cloudId

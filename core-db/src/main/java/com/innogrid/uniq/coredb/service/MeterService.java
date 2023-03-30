@@ -48,6 +48,15 @@ public interface MeterService {
     public int createMeterServer(MeterServerInfo info);
 
     /**
+     * @param info MeterServer 개수 정보 조회에 대한 파라미터
+     * @return int MeterServer ID 개수
+     * @author ssa
+     * @date 2023.2.15
+     * @brief MeterServer ID 개수 조회
+     */
+    public int getMeterServerIDCount(MeterServerInfo info);
+
+    /**
      * @author kkm
      * @date 2019.5.30
      * @param params MeterServerAccumulateInfo 목록 정보 조회에 대한 파라미터
