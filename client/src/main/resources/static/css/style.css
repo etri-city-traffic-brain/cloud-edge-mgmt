@@ -1614,6 +1614,27 @@ button span.ico_minus {
     display: none;
 }
 
+.detail_cont#tab2>div {
+    float: left;
+    text-align: center;
+    width: 540px;
+    height: 270px;
+    border: 1px solid lightgrey;
+    margin: 1px;
+}
+
+.detail_cont#tab2>div button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.detail_cont#tab2>div>div:first-child {
+    position: relative;
+    padding-bottom: 10px;
+    top: 5px;
+    left: 5px;
+}
+
 .cont_credentials {
     position: relative;
     z-index: 1;
