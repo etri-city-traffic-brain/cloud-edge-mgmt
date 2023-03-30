@@ -1009,6 +1009,7 @@ public class OpenStackController {
             @RequestHeader(value = "credential") String credential
     ) {
 
+        logger.error("/meter/servers credential ? : {}", credential);
         CredentialInfo credentialInfo = ObjectSerializer.deserializedData(aes256Util.decrypt(credential));
 
         return meterService.getMeterServerAccumulates(new HashMap<String, Object>(){{
