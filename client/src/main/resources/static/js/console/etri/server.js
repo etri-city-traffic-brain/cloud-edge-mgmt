@@ -290,7 +290,7 @@ var ServerUI = (function (options) {
         }),
         init = function (isAdmin) {
             $("#test1").text("ETRI_EDGE")
-            modules.view = new ServerView();
+            modules.serverView = new ServerView();
             modules.cctvdetailview = new CctvDetailView();
         };
 
