@@ -45,4 +45,5 @@ public class MeterServerAccumulateInfo implements Serializable {
 	@JsonDeserialize(using = JsonDateDeserializer.class)
 	private Timestamp updatedAt;
 	private String cloudTarget;
+	private int billing;
 }

@@ -14,7 +14,8 @@ var MeterServerUI = (function (options) {
                 instanceName: '',
                 meterDuration: '',
                 meterStartTime: '',
-                meterEndTime: ''
+                meterEndTime: '',
+                billing: ''
             }
         }),
         MeterServerCollection = Backbone.Collection.extend({
@@ -35,7 +36,7 @@ var MeterServerUI = (function (options) {
         MeterServerDetailView = Backbone.View.extend({
             el: "#tab1",
             model: new MeterServerModel(),
-            template: _.template('<div class="detail_data">\n    <table class="tb_data">\n        <tr>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.instanceId\') }}</th>\n            <td>{{= instanceId }}</td>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.instanceName\') }}</th>\n            <td>{{= instanceName }}</td>\n        </tr>\n        <tr>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.flavorId\') }}</th>\n            <td>{{= flavorId }}</td>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.spec\') }}</th>\n            <td>{{= flavorName }}</td>\n        </tr>\n        <tr>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.measureStartDate\') }}</th>\n            <td>{{= meterStartTime }}</td>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.measureEndDate\') }}</th>\n            <td>{{= meterEndTime }}</td>\n        </tr>\n        <tr>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.usageTime\') }}</th>\n            <td>{{= meterDuration }}</td>\n            <th></th>\n            <td></td>\n        </tr>\n    </table>\n</div><!-- //detail_data -->'),
+            template: _.template('<div class="detail_data">\n    <table class="tb_data">\n        <tr>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.instanceId\') }}</th>\n            <td>{{= instanceId }}</td>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.instanceName\') }}</th>\n            <td>{{= instanceName }}</td>\n        </tr>\n        <tr>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.flavorId\') }}</th>\n            <td>{{= flavorId }}</td>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.spec\') }}</th>\n            <td>{{= flavorName }}</td>\n        </tr>\n        <tr>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.measureStartDate\') }}</th>\n            <td>{{= meterStartTime }}</td>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.measureEndDate\') }}</th>\n            <td>{{= meterEndTime }}</td>\n        </tr>\n        <tr>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.usageTime\') }}</th>\n            <td>{{= meterDuration }}</td>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.billing\') }}</th>\n            <td>{{= billing }}원</td>\n        </tr>\n    </table>\n</div><!-- //detail_data -->'),
             initialize: function () {
                 var self = this;
                 this.model.on('change', function(model) {
@@ -131,6 +132,7 @@ var MeterServerUI = (function (options) {
                         jQuery.i18n.prop('title.jqgrid.measureStartDate'),
                         jQuery.i18n.prop('title.jqgrid.measureEndDate'),
                         jQuery.i18n.prop('title.jqgrid.usageTime'),
+                        jQuery.i18n.prop('title.jqgrid.billing'),
                         jQuery.i18n.prop('title.jqgrid.projectID'),
                         jQuery.i18n.prop('title.jqgrid.id')
                     ],
@@ -142,6 +144,10 @@ var MeterServerUI = (function (options) {
                         {name: 'meterStartTime'},
                         {name: 'meterEndTime'},
                         {name: 'meterDuration', formatter: dateFormatter, sorttype: 'integer'},
+                        // {name: 'billing', formatter: fn_numberFormat},
+                        {name: 'billing', sorttype:'integer', formatter:function (cellVal, options, row) {
+                                return cellVal + "원";
+                            }},
                         {name: 'projectId', hidden: true},
                         {name: 'id', hidden: true}
                     ],

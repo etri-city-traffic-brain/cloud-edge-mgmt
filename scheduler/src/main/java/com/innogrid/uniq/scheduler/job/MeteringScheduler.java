@@ -68,6 +68,7 @@ public class MeteringScheduler {
 
         List<CredentialInfo> credentialInfoList = credentialService.getCredentialsFromMemory();
         Timestamp time = new Timestamp(new Date().getTime());
+        int billing_value = 0;
 
         for(int i=0; i<credentialInfoList.size(); i++) {
             CredentialInfo info = credentialInfoList.get(i);
@@ -83,16 +84,23 @@ public class MeteringScheduler {
                     List<ServerInfo> serverInfos = restTemplate.exchange(url.build().encode().toUri(), HttpMethod.GET, new HttpEntity(CommonUtils.getAuthHeaders(aes256Util.encrypt(ObjectSerializer.serializedData(info)))), new ParameterizedTypeReference<List<ServerInfo>>(){}).getBody();
 
                     for (ServerInfo serverInfo : serverInfos) {
+                        int billing_cpu = serverInfo.getCpu()*11000;
+                        int billing_memory = (serverInfo.getMemory()/100)*1500 ;
+                        int billing_disk = serverInfo.getDisk();
                         logger.info("info.getId = " + serverInfo.getId());
+                        logger.info("info.getId.projectId = " + info.getProjectId());
+                        logger.info("billing_cpu = " + billing_cpu);
+                        logger.info("billing_memory = " + billing_memory);
+                        logger.info("serverInfo.getMemory() = " + serverInfo.getMemory());
+
+                        billing_value = billing_cpu + billing_memory;
+
                         // MeterServer
                         meterServerInfo.setCloudType(info.getCloudType());
                         meterServerInfo.setCloudName(info.getType());
                         meterServerInfo.setInstanceId(serverInfo.getId());
                         meterServerInfo.setFlavorId(serverInfo.getFlavorName());
                         meterServerInfo.setStatus(serverInfo.getState2());
-
-
-
 
                         // Meter Server Accumulate
                         meterServerAccumulateInfo.setCredentialId(info.getId());
@@ -113,6 +121,7 @@ public class MeteringScheduler {
                         meterServerAccumulateInfo.setUpdatedAt(time);
                         meterServerAccumulateInfo.setCloudTarget(info.getUrl());
                         meterServerAccumulateInfo.setState(serverInfo.getState());
+                        meterServerAccumulateInfo.setBilling(billing_value);
 
                         int idCount = meterService.getMeterServerAccumulateIDCount(meterServerAccumulateInfo);
                         int idCount2 = meterService.getMeterServerIDCount(meterServerInfo);

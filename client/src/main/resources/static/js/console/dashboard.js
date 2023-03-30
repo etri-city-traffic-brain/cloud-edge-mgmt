@@ -252,14 +252,20 @@ var DashboardUI = (function (options) {
             initialize: function () {
                 var self = this;
                 self.collection = new ServiceDashboardCollection();
+                // alert("aaa");
 
                 self.credentialCollection.fetch({
                     success: function (collection, response, options) {
                         var publics = [];
 
                         _.each(collection.models, function (model) {
+
                             if (model.get('cloudType') == 'private') {
-                                publics.push(model.get('name'));
+                                // publics.push(model.get('name'));
+                                console.log(model)
+                                console.log(model.get('name'))
+                                console.log(model.get('projectId'))
+                                publics.push(model.get('projectId'));
                             }
                         });
 

@@ -1079,6 +1079,9 @@ public class OpenstackController {
         UserInfo userInfo = (UserInfo) session.getAttribute("userInfo");
         String token = (String) session.getAttribute(TokenService.COOKIE_IN_TOKEN_NAME);
 
+        logger.debug("cloudId : {} ", cloudId);
+        logger.debug("userInfo : {} ", userInfo);
+        logger.debug("token : {} ", token);
         Map<String, Object> params = new HashMap<>();
 
         params.put("sidx", sidx);
@@ -1607,6 +1610,10 @@ public class OpenstackController {
             case "meterDuration":
                 Function<MeterServerAccumulateInfo, Integer> sortDuration = info -> info.getMeterDuration();
                 Pagination.sort(list, sortDuration, sord);
+                break;
+            case "billing":
+                Function<MeterServerAccumulateInfo, Integer> sortbilling = info -> info.getBilling();
+                Pagination.sort(list, sortbilling, sord);
                 break;
             default:
                 sort = info -> info.getId();
