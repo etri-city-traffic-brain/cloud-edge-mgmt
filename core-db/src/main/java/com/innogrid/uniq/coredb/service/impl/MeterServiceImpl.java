@@ -1,5 +1,6 @@
 package com.innogrid.uniq.coredb.service.impl;
 
+import com.innogrid.uniq.core.model.MeterServerAccumulateBillingInfo;
 import com.innogrid.uniq.core.model.MeterServerAccumulateInfo;
 import com.innogrid.uniq.core.model.MeterServerInfo;
 import com.innogrid.uniq.coredb.dao.MeterDao;
@@ -64,6 +65,14 @@ public class MeterServiceImpl implements MeterService {
     @Override
     public List<MeterServerAccumulateInfo> getMeterServerAccumulates(Map<String, Object> params) {
         List<MeterServerAccumulateInfo> list = meterDao.getMeterServerAccumulates(params);
+
+        if(list == null) return new ArrayList<>();
+        return list;
+    }
+
+    @Override
+    public List<MeterServerAccumulateBillingInfo> getMeterServerBillingAccumulateInfos(Map<String, Object> params) {
+        List<MeterServerAccumulateBillingInfo> list = meterDao.getMeterServerBillingAccumulates(params);
 
         if(list == null) return new ArrayList<>();
         return list;

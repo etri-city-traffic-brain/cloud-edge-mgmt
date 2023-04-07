@@ -1,16 +1,15 @@
 package com.innogrid.uniq.apiopenstack.controller;
 
 import com.innogrid.uniq.apiopenstack.service.OpenStackService;
-import com.innogrid.uniq.core.model.CctvInfo;
-import com.innogrid.uniq.core.model.CredentialInfo;
-import com.innogrid.uniq.core.model.MeterServerAccumulateInfo;
-import com.innogrid.uniq.core.model.MeterServerInfo;
+import com.innogrid.uniq.core.model.*;
 import com.innogrid.uniq.core.util.AES256Util;
 import com.innogrid.uniq.core.util.ObjectSerializer;
 import com.innogrid.uniq.coredb.dao.CredentialDao;
 import com.innogrid.uniq.coredb.service.CredentialService;
 import com.innogrid.uniq.coredb.service.MeterService;
 import com.innogrid.uniq.coreopenstack.model.*;
+import com.innogrid.uniq.coreopenstack.model.ImageInfo;
+import com.innogrid.uniq.coreopenstack.model.ProjectInfo;
 import org.json.simple.JSONArray;
 import org.json.JSONException;
 import org.json.simple.JSONObject;
@@ -1028,6 +1027,20 @@ public class OpenStackController {
         CredentialInfo credentialInfo = ObjectSerializer.deserializedData(aes256Util.decrypt(credential));
 
         return meterService.getMeterServerAccumulates(new HashMap<String, Object>(){{
+            put("cloudTarget", credentialInfo.getUrl());
+        }});
+    }
+
+    @RequestMapping(value = "/meter/servers/billing", method = RequestMethod.GET)
+    @ResponseBody
+    public List<MeterServerAccumulateBillingInfo> getMeterServerBillingAccumulateInfos(
+            @RequestHeader(value = "credential") String credential
+    ) {
+
+        logger.error("/meter/servers/billing credential ? : {}", credential);
+        CredentialInfo credentialInfo = ObjectSerializer.deserializedData(aes256Util.decrypt(credential));
+
+        return meterService.getMeterServerBillingAccumulateInfos(new HashMap<String, Object>(){{
             put("cloudTarget", credentialInfo.getUrl());
         }});
     }

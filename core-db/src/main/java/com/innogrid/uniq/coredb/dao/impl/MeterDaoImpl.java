@@ -1,5 +1,6 @@
 package com.innogrid.uniq.coredb.dao.impl;
 
+import com.innogrid.uniq.core.model.MeterServerAccumulateBillingInfo;
 import com.innogrid.uniq.core.model.MeterServerAccumulateInfo;
 import com.innogrid.uniq.core.model.MeterServerInfo;
 import com.innogrid.uniq.coredb.dao.MeterDao;
@@ -53,6 +54,11 @@ public class MeterDaoImpl implements MeterDao {
 	@Override
 	public List<MeterServerAccumulateInfo> getMeterServerAccumulates(Map<String, Object> params) {
 		return this.sqlSessionTemplate.selectList("getMeterServerAccumulate", params);
+	}
+
+	@Override
+	public List<MeterServerAccumulateBillingInfo> getMeterServerBillingAccumulates(Map<String, Object> params) {
+		return this.sqlSessionTemplate.selectList("getMeterBillingServerAccumulate", params);
 	}
 
 	@Override

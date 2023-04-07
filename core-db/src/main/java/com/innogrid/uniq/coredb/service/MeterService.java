@@ -1,5 +1,6 @@
 package com.innogrid.uniq.coredb.service;
 
+import com.innogrid.uniq.core.model.MeterServerAccumulateBillingInfo;
 import com.innogrid.uniq.core.model.MeterServerAccumulateInfo;
 import com.innogrid.uniq.core.model.MeterServerInfo;
 
@@ -63,6 +64,9 @@ public interface MeterService {
      * @brief User 조회
      */
     public List<MeterServerAccumulateInfo> getMeterServerAccumulates(Map<String, Object> params);
+
+    public List<MeterServerAccumulateBillingInfo> getMeterServerBillingAccumulateInfos(Map<String, Object> params);
+
 
     /**
      * @author kkm
