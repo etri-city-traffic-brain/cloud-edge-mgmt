@@ -1,5 +1,6 @@
 package com.innogrid.uniq.coredb.dao;
 
+import com.innogrid.uniq.core.model.MeterServerAccumulateBillingInfo;
 import com.innogrid.uniq.core.model.MeterServerAccumulateInfo;
 import com.innogrid.uniq.core.model.MeterServerInfo;
 
@@ -24,6 +25,8 @@ public interface MeterDao {
     int getMeterServerIDCount(MeterServerInfo info);
 
     List<MeterServerAccumulateInfo> getMeterServerAccumulates(Map<String, Object> params);
+
+    List<MeterServerAccumulateBillingInfo> getMeterServerBillingAccumulates(Map<String, Object> params);
 
     MeterServerAccumulateInfo getMeterServerAccumulate(Map<String, Object> params);
 

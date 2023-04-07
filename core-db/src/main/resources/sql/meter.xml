@@ -36,6 +36,18 @@
 		<result column="billing" property="billing" />
 	</resultMap>
 
+	<resultMap id="meterBillingServerAccumulateResultMap" type="MeterServerAccumulateBillingInfo">
+		<result column="id" property="id" />
+		<result column="instance_id" property="instanceId" />
+		<result column="instance_name" property="instanceName" />
+		<result column="flavor_name" property="flavorName" />
+		<result column="flavor_vcpu" property="flavorVcpu" />
+		<result column="flavor_ram" property="flavorRam" />
+		<result column="flavor_disk" property="flavorDisk" />
+		<result column="meter_duration" property="meterDuration" />
+		<result column="billing" property="billing" />
+	</resultMap>
+
 	<sql id="meterServerWhere">
 		<where>
 			<if test="id != null">
@@ -190,11 +202,34 @@
 		FROM cmp.cmp_meter_instance_accumulate as meter_instance_accumulate
     </sql>
 
+	<sql id="meterBillingServerAccumulateSQL">
+		SELECT
+		meter_instance_accumulate.id,
+		meter_instance_accumulate.instance_id,
+		meter_instance_accumulate.instance_name,
+		meter_instance_accumulate.flavor_name,
+		meter_instance_accumulate.flavor_vcpu,
+		meter_instance_accumulate.flavor_ram,
+		meter_instance_accumulate.flavor_disk,
+		meter_instance_accumulate.meter_duration,
+		meter_instance_accumulate.billing
+		FROM cmp.cmp_meter_instance_accumulate as meter_instance_accumulate
+	</sql>
+
 	<select id="getMeterServerAccumulate" resultMap="meterServerAccumulateResultMap">
 		SELECT * FROM (
 		<include refid="meterServerAccumulateSQL" />
 		) AS d
 		<include refid="meterServerAccumulateWhere" />
+		<include refid="com.innogrid.uniq.coredb.orderby" />
+		<include refid="com.innogrid.uniq.coredb.paging" />
+	</select>
+
+	<select id="getMeterBillingServerAccumulate" resultMap="meterBillingServerAccumulateResultMap">
+		SELECT * FROM (
+		<include refid="meterBillingServerAccumulateSQL" />
+		) AS d
+<!--		<include refid="meterServerAccumulateWhere" />-->
 		<include refid="com.innogrid.uniq.coredb.orderby" />
 		<include refid="com.innogrid.uniq.coredb.paging" />
 	</select>
