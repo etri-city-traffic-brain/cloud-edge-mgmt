@@ -527,6 +527,15 @@ body {
     margin-left: 3px
 }
 
+.btn_confirm {
+    height: 30px;
+    width: 50px;
+    padding: 0 7px;
+    border: 1px solid #0996a5;
+    border-radius: 3px;
+    background: #0996a5;
+    color: #fff;
+}
 .btn_action {
     height: 24px;
     padding: 0 7px;
@@ -844,8 +853,12 @@ button .ico_add,
 .tb_wrap div {
     box-sizing: content-box;
 }
+.pop_cont .ui-jqgrid .ui-jqgrid-hdiv {
+    width: 595px;
+}
 .tb_wrap > .ui-jqgrid,
 .tb_wrap .ui-jqgrid-hdiv {
+    width: 100%;
     border-radius: 0 !important;
 }
 .tb_wrap .ui-jqgrid .loading {
@@ -857,31 +870,33 @@ button .ico_add,
 
 .tb_wrap .tb_grid {
     width: 100%;
-    border-spacing: 0
+    border-spacing: 0;
 }
-
 .tb_wrap .tb_grid,
 .ui-jqgrid .ui-jqgrid-htable {
     font-weight: 300;
     border-collapse: collapse;
-    border-right: 0 hidden
+    border-right: 0 hidden;
 }
 .ui-jqgrid .ui-jqgrid-btable {
-    border-top: 0 hidden
+    border-top: 0 hidden;
 }
 .ui-jqgrid .ui-jqgrid-bdiv {
     height: auto !important;
-    min-height: 156px;
-    max-height: 783px
+    /*min-height: 156px;*/
+    max-height: 783px;
 }
 .cont_detail .ui-jqgrid .ui-jqgrid-bdiv {
-    max-height: 666px
+    max-height: 666px;
 }
 
 .tb_grid thead th {
     color: #fbfbfb !important;
     background : #2B303E !important;
 }
+/*.tb_grid .ui-jqgrid-btable {*/
+/*    width: 615px;*/
+/*}*/
 .tb_grid thead th,
 .ui-jqgrid .ui-jqgrid-htable thead th {
     height: 36px;
@@ -909,15 +924,28 @@ button .ico_add,
     /*background: #e6ebef;*/
     /*color: #1f2434*/
 /*}*/
+.pop_cont .tb_grid {
+    padding: 26px 26px 0 0;
+}
+.pop_cont .ui-jqgrid-view  {
+    height: 120px;
+}
+.pop_cont .ui-jqgrid-view .ui-jqgrid-hdiv ui-state-default ui-corner-top {
+    width: 595px;
+}
+.pop_cont .ui-jqgrid ui-jqgrid-btable {
+    width:  595px;
+}
 .pop_cont .tb_grid thead th,
 .pop_cont .ui-jqgrid-htable thead th {
-    height: 40px
+    height: 40px;
 }
 .pop_cont .tb_grid thead th,
 .pop_cont .ui-jqgrid-htable thead th,
 .pop_cont .tb_grid thead th,
 .pop_cont .ui-jqgrid .ui-jqgrid-hbox {
     border-color: #51607e !important;
+    height: 40px;
 }
 .tb_wrap .tb_grid tbody tr td {
     height: 36px;
@@ -1608,6 +1636,7 @@ button span.ico_minus {
     left: 0;
     bottom: 0
 }
+
 .detail_cont {
     position: relative;
     height: 100%;
@@ -2715,11 +2744,15 @@ button span.ico_minus {
     position: absolute;
     z-index: 9999;
     top: 130px;
-    left: 0;
+    left: 0 ;
     right: 0;
     margin: 0 auto;
     width: 760px;
     display: none
+}
+.tb_wrap .pop_wrap {
+    position: fixed;
+    left: 190px;
 }
 .pop_wrap:before {
     content: ' ';
@@ -2740,6 +2773,22 @@ button span.ico_minus {
     border: 0;
     background: transparent;
 }
+.pop_billing_di {
+    text-align: center;
+    padding: 0 0 8px 0;
+}
+.pop_a {
+    text-align: right;
+}
+.pop_a a {
+    font-size: 13px;
+    color: black;
+    background-color: #FFFFFF;
+}
+.pop_a .billing_text {
+    font-size: 15px;
+    padding: 5px 10px 5px 10px;
+}
 .pop_common {
     padding: 4px;
     border-radius: 2px;
@@ -2752,6 +2801,11 @@ button span.ico_minus {
     font-size: 15px;
     text-transform: uppercase;
     font-weight: 300
+}
+.pop_billing_tit {
+    color: #FFFFFF;
+    font-size: 20px;
+    padding: 5px 0px 5px 15px;
 }
 .pop_body {
     border: 1px solid #0996a5;
@@ -3049,7 +3103,7 @@ button span.ico_minus {
 .pop_cont .tb_grid {
     border-left: 0 hidden;
     border-right: 0 hidden;
-    border-bottom: 1px double #51607e
+    border-bottom: 1px double #51607e;
 }
 
 .pop_tab_cont .tb_wrap {
