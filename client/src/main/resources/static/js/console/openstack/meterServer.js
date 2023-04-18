@@ -16,7 +16,10 @@ var MeterServerUI = (function (options) {
                 meterDuration: '',
                 meterStartTime: '',
                 meterEndTime: '',
-                billing: ''
+                billing: '',
+                flavorVcpu: '',
+                flavorRam: '',
+                flavorDisk: '',
             }
         }),
         MeterServerCollection = Backbone.Collection.extend({
@@ -176,7 +179,10 @@ var MeterServerUI = (function (options) {
                         jQuery.i18n.prop('title.jqgrid.billing'),
                         '청구서 확인',
                         jQuery.i18n.prop('title.jqgrid.projectID'),
-                        jQuery.i18n.prop('title.jqgrid.id')
+                        jQuery.i18n.prop('title.jqgrid.id'),
+                        'CPU',
+                        'Memory',
+                        'Volume'
                     ],
                     colModel: [
                         {name: 'instanceName'},
@@ -190,9 +196,12 @@ var MeterServerUI = (function (options) {
                         {name: 'billing', sorttype:'integer', formatter:function (cellVal, options, row) {
                                 return cellVal + "원";
                             }},
-                        {name:'btn1', index:'btn1', width:80, align: "center", formatter:formatOpt1, sortable: false},
+                        {name:'btn_confirm', index:'btn1', width:80, align: "center", formatter:formatOpt1, sortable: false},
                         {name: 'projectId', hidden: true},
-                        {name: 'id', hidden: true}
+                        {name: 'id', hidden: true},
+                        {name: 'flavorVcpu', hidden: true},
+                        {name: 'flavorRam', hidden: true},
+                        {name: 'flavorDisk', hidden: true},
                     ],
                     altRows: true,
                     sortname: "id",
@@ -204,7 +213,7 @@ var MeterServerUI = (function (options) {
                     },
                     // multiSort: true,
                     scrollOffset: 0,
-                    rowNum: setRowNum(15, self.gridId),
+                    rowNum: setRowNum(15, this.gridId),
                     loadtext: "",
                     autoencode: true,
                     onSelectRow: function (id) {
@@ -246,9 +255,9 @@ var MeterServerUI = (function (options) {
                     var idx = rowObject.idx;
 
                     // str += "<div class=\"btn-group\">";
-                    str += "<button id='btn"+row_id+"' type='button' class='btn1 btn-default btn-sm'>확인</button>"
+                    str += "<button id='btn"+row_id+"' type='button' class='btn1'>확인</button>"
                     // str += "</div>";
-                    str += "<script>$('#btn"+row_id+"').click(function(){ var row_id = "+row_id+"; console.log("+row_id+"); });</script>";
+                    str += "<script>$('#btn"+row_id+"').click(function(){ var row_id = "+row_id+";});</script>";
 
                     return str;
                 };
@@ -272,14 +281,17 @@ var MeterServerUI = (function (options) {
             model: new BillingModel(),
             el : "#pop_billing",
             events : {
-                "click .pop_billing_di .pop_btn": "close",
+                "click .btn_confirm": "close",
                 "click .btn_pop_close": "close"
             },
             initialize: function (billingData) {
                 var self = this;
                 // console.log(billingData);
-                this.gridId = '#meterServer-popGrid';
-                this.grid = $(this.gridId).jqGrid({
+                this.gridId = '#meterServer-popGrid1';
+                var grid1 = $('#meterServer-popGrid1');
+                var grid2 = $('#meterServer-popGrid2');
+                // this.grid = $('#meterServer-popGrid').jqGrid({
+                this.grid1 = grid1.jqGrid({
                     datatype: "json",
                     url: '/private/openstack/meter/servers?id=' + id,
                     jsonReader: {
@@ -289,29 +301,63 @@ var MeterServerUI = (function (options) {
                     colNames: [
                         'ID',
                         '인스턴스 이름',
-                        '인스턴스 ID'
+                        '인스턴스 ID',
+                        '사양',
                     ],
                     colModel: [
-                        {name: 'id'},
+                        {name: 'id', hidden: true},
                         {name: 'instanceName'},
-                        {name: 'instanceId'},
+                        {name: 'instanceId', width: '305px'},
+                        {name: 'flavorName'},
                     ],
-
+                    width: 'auto',
+                    gridComplete: function () {
+                        $(this).resetSize();
+                    },
+                });
+                this.grid2 = grid2.jqGrid({
+                    datatype: "json",
+                    url: '/private/openstack/meter/servers?id=' + id,
+                    jsonReader: {
+                        repeatitems: false,
+                        id: "id"
+                    },
+                    colNames: [
+                        'ID',
+                        '사용 시간',
+                        'CPU',
+                        'Memory',
+                        'Volume',
+                    ],
+                    colModel: [
+                        {name: 'id', hidden: true},
+                        {name: 'meterDuration', formatter: dateFormatter, sorttype: 'integer'},
+                        {name: 'flavorVcpu'},
+                        {name: 'flavorRam' },
+                        {name: 'flavorDisk'},
+                    ],
+                    width: 'auto',
                     gridComplete: function () {
                         $(this).resetSize();
                     },
                 });
             },
             show : function (rowId, billingData) {
-                // var gridData = this;
                 var gridData = billingData.filter(data => data.id === rowId);
-                this.grid.setGridParam({
+                this.grid1.setGridParam({
+                    datatype: "local",
+                    page: 1,
+                    data: gridData,
+                }).trigger("reloadGrid");
+                this.grid2.setGridParam({
                     datatype: "local",
                     page: 1,
                     data: gridData,
                 }).trigger("reloadGrid");
                 $myPlugin.setPopupCenter(this.el);
                 this.$el.fadeIn(100);
+                var billingText = document.querySelector('.billing_text');
+                billingText.textContent = gridData[0].billing;
             },
             close : function(){
                 this.$el.fadeOut(100);
