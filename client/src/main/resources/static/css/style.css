@@ -193,7 +193,7 @@ body {
 .header {
     display: table-cell;
     width: 250px;
-    background: #0076FF;
+    background: #2f3955;
     font-size: 14px
 }
 .header_tit {
@@ -235,7 +235,7 @@ body {
     height: 36px;
     border-radius: 50%;
     overflow: hidden;
-    background: #00a19c url(../images/header_user_profile_bg.png) no-repeat center center;
+    background: #626778 url(../images/header_user_profile_bg.png) no-repeat center center;
     vertical-align: middle
 }
 .header_user_profile img {
@@ -262,7 +262,7 @@ body {
     padding: 5px 15px 5px 60px;
     font-size: 13px;
     text-transform: none;
-    background-color: #2b9ef6;
+    background-color: #3c486a;
     border-color: #fff;
 }
 .header_nav ul ul li > a {
@@ -279,18 +279,18 @@ body {
 }
 
 .header_nav ul > li:first-child {
-    padding-top: 6px;
     color:#FFFFFF;
 }
 .header_nav ul > li:last-child:not(.open) {
-    padding-bottom: 6px;
-    background-color: #2b9ef6;
+    background-color: #3c486a;
 }
-
-
+.header_nav li.haveChild > a {
+    background: #1f263f;
+}
+.header_nav li.haveChild.open > a,
 .header_nav li.haveChild.open > ul {
     display: block;
-    background-color: #2b9ef6;
+    background-color: #3c486a;
 }
 .header_nav > li.open > a::before {
     content: '';
@@ -311,7 +311,7 @@ body {
     background: #0798a8
 }
 .header_nav > li.haveChild.open > a {
-    background: #0085FF
+    background: #1f263f;
 }
 .header_nav > li.on > a,
 .header_nav > li:hover > a {
@@ -320,7 +320,7 @@ body {
 .header_nav ul li.on > a,
 .header_nav ul li:hover {
     color: #bacdd9;
-    background-color: #2b9ef6 ;
+    background-color: #637a90;
 
 }
 .header_nav > li.haveChild.open > a:after {
