@@ -56,7 +56,7 @@ body {
     display: table-cell;
     width: 100%;
     /*height: 100%;*/
-    background: #fff;
+    background: #141A30FF;
     vertical-align: top;
     padding: 10px
 }
@@ -158,9 +158,9 @@ body {
 }
 .cont_body {
     position: relative;
-    border: 1px solid #ddd;
+    border: 1px solid #373f5a;
     border-radius: 4px;
-    background: #fff
+    background: #141A30FF
 }
 .cont_body.cont_list {
 
@@ -182,10 +182,10 @@ body {
     z-index: 101;
     height: 42px;
     margin-top: -1px;
-    border-top: 1px solid #ecedee;
-    border-bottom: 1px solid #ecedee;
+    border-top: 1px solid #2e364f;
+    border-bottom: 1px solid #2e364f;
     /*background: #e9eff3;*/
-    color: #3a3d3c
+    color: #6c7286;
 }
 
 
@@ -492,11 +492,11 @@ body {
     height: 27px;
     line-height: 27px;
     margin-left: 1px;
-    border: 1px solid #ddd;
+    border: 1px solid #3c435b;
     border-bottom: 0;
     border-radius: 3px 3px 0 0;
-    background: #fff;
-    color: #555555;
+    background: #3c435b;
+    color: #6c7286;
     text-decoration: none;
     text-align: center;
     vertical-align: top
@@ -505,7 +505,7 @@ body {
 .detail_tab .on {
     color: #fff;
     border: 0 none;
-    background: #0996a5
+    background: #009cad
 }
 
 /*************************************** CONTENT LIST ***************************************/
@@ -541,7 +541,7 @@ body {
     padding: 0 7px;
     border: 1px solid #0996a5;
     border-radius: 3px;
-    background: #fff;
+    background: #202842;
     color: #0996a5
 }
 .btn_action.st2 {
@@ -614,7 +614,9 @@ button .ico_add,
 }
 
 .detail_cont .cont_top_search .cont_top_search_box input {
-    width: 200px
+    width: 200px;
+    background: #202842;
+    color: #7e828e;
 }
 
 .cont_top_action .select_wrap {
@@ -662,7 +664,7 @@ button .ico_add,
     height: 28px;
     border: 1px solid #b9b9b9;
     border-radius: 3px;
-    background: #fff
+    background: #202842;
 }
 .btn_control span {
     display: block;
@@ -680,9 +682,9 @@ button .ico_add,
     position: relative;
     z-index: 999;
     height: 28px;
-    border: 1px solid #b9b9b9;
+    border: 1px solid #373f5a;
     border-radius: 3px;
-    background: #fff
+    background: #202842;
 }
 .cont_top_search .select_wrap {
     float: left;
@@ -692,7 +694,7 @@ button .ico_add,
     text-transform: uppercase
 }
 .detail_on .cont_list .cont_top_search .select_wrap {
-    max-width: 200px
+    max-width: 200px;
 }
 .cont_top_search_box .select_wrap select {
     width: 100%;
@@ -785,9 +787,9 @@ button .ico_add,
     width: 25px;
     height: 25px;
     margin: 0 3px 0 2px;
-    border: 1px solid #eee;
+    border: 1px solid #373f5a;
     border-radius: 2px;
-    background: #f8f8f8
+    background: #202842;
 }
 .pagenation_wrap .pagenation_btn:hover {
     border-color: #0996a5
@@ -900,17 +902,17 @@ button .ico_add,
 .tb_grid thead th,
 .ui-jqgrid .ui-jqgrid-htable thead th {
     height: 36px;
-    background: #fbfbfb;
-    border-right: 1px solid #eee;
-    color: #555;
+    background: #202842;
+    border: 1px solid #373f5a;
+    color: #cfd0d4;
     font-weight: 300;
     text-overflow: ellipsis
 }
 .tb_grid thead th,
 .ui-jqgrid .ui-jqgrid-hbox {
-    background: #fbfbfb;
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
+    background: #202842;
+    border-top: 1px solid #373f5a;
+    border-bottom: 1px solid #373f5a;
 }
 .tb_wrap .ui-jqgrid .ui-jqgrid-htable th.ui-th-column {
     /*border-right: 1px solid #00b6c2;*/
@@ -929,6 +931,7 @@ button .ico_add,
 }
 .pop_cont .ui-jqgrid-view  {
     height: 120px;
+    background: #202842;
 }
 .pop_cont .ui-jqgrid-view .ui-jqgrid-hdiv ui-state-default ui-corner-top {
     width: 595px;
@@ -950,11 +953,11 @@ button .ico_add,
 .tb_wrap .tb_grid tbody tr td {
     height: 36px;
     text-align: center;
-    border-right: 1px solid #ecedee;
-    border-bottom: 1px solid #ecedee;
+    border-right: 1px solid #2e364f;
+    border-bottom: 1px solid #2e364f;
     text-overflow: ellipsis;
     position: relative;
-    color: #9C9EA5;
+    color: #6c7286;
 }
 
 .tb_wrap .tb_grid tbody tr:hover td,
@@ -1151,8 +1154,8 @@ button .ico_add,
     position: relative;
     z-index: 1000;
     padding: 4px 5px 4px 12px;
-    border-bottom: 1px solid #ddd;
-    color: #555;
+    border-bottom: 1px solid #373f5a;
+    color: #dddddd;
 }
 
 .detail_label {
@@ -1203,14 +1206,14 @@ button .ico_add,
     float: left;
     width: 30px;
     height: 28px;
-    border: 0;
-    border-left: 1px solid #098a98;
-    background: #0996a5
+    /*border: 0 #098a98;*/
+    border: 1px solid #098a98;
+    background: #098a98;
 }
 .detail_option_btn:first-child {
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
-    border-left: 0
+    /*border-left: 0*/
 }
 .detail_option_btn:last-child {
     border-top-right-radius: 3px;
@@ -1402,19 +1405,19 @@ button span.ico_minus {
     width: 125px;
     height: 35px;
     padding: 0 10px;
-    border: 1px solid #eee;
-    background: #f7f9fa;
-    color: #0a2348;
+    border: 1px solid #2e364f;
+    background: #202842;
+    color: #dddddd;
     text-transform: uppercase;
     text-align: left;
     word-break: break-all;
 }
 .tb_data td {
     padding: 0 10px;
-    border: 1px solid #eee;;
-    background: #fff;
+    border: 1px solid #2e364f;;
+    background: #202842;
     text-align: left;
-    color: #667285;
+    color: #6c7286;
     word-break: break-all;
 }
 
@@ -1648,7 +1651,7 @@ button span.ico_minus {
     text-align: center;
     width: 540px;
     height: 270px;
-    border: 1px solid lightgrey;
+    border: 1px solid #373f5a;
     margin: 1px;
 }
 
@@ -2782,12 +2785,13 @@ button span.ico_minus {
 }
 .pop_a a {
     font-size: 13px;
-    color: black;
-    background-color: #FFFFFF;
+    color: #7e828e;
+    background-color: #202842;
 }
 .pop_a .billing_text {
     font-size: 15px;
     padding: 5px 10px 5px 10px;
+    color: #bfc1c9;
 }
 .pop_common {
     padding: 4px;
@@ -2809,7 +2813,7 @@ button span.ico_minus {
 }
 .pop_body {
     border: 1px solid #0996a5;
-    background: #fff
+    background: #202842;
 }
 .pop_btns {
     position: relative;
@@ -3269,7 +3273,7 @@ button span.ico_minus {
 }
 .pop_tb_top .cont_top_search .cont_top_search_box input {
     width: 250px;
-    background: #f3f5f9
+    background: #202842;
 }
 .pop_create_selectbox {
     position: relative;
