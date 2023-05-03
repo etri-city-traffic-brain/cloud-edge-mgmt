@@ -10,7 +10,7 @@ article,aside,details,figcaption,figure,footer,header,main,menu,nav,section,summ
 html, body {height: 100%}
 html {font-size:12px}
 body, h1,h2,h3,h4,h5,h6 {font-family:'Roboto', 'Noto', sans-serif, sans-serif;}
-body {font-size:1rem; color:#000000; background:#0076FF }
+body {font-size:1rem; color:#BABABA; background:#0076FF }
 ul, li {list-style: none}
 button {cursor: pointer; outline: transparent}
 a {text-decoration:none;color:#ffffff}
@@ -93,7 +93,7 @@ body {
     border: 0;
     background: transparent url(../images/header_user_btn_arr2.png) no-repeat right 14px;
     font-size: 13px;
-    color: #fff;
+    color: #BABABA;
     text-align: left;
     /*letter-spacing: 1px;*/
     white-space: nowrap;
@@ -217,7 +217,7 @@ body {
 
 .header_cont {
     padding: 12px 18px;
-    background: #0076FF;
+    background: #0079E6;
     color: #FFFFFF;
     font-size: 12px;
     font-weight: 200
@@ -1879,9 +1879,9 @@ button span.ico_minus {
     height: 500px;
     margin: 0 10px 10px 0;
     margin-bottom: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #2A324C;
     border-radius: 3px;
-    background: #fff
+    background: #202842
 }
 .content .dashboard_panel.b2 {
     width: 1015px
@@ -1896,10 +1896,10 @@ button span.ico_minus {
     line-height: 36px;
     padding: 0 10px;
     border-radius: 3px 3px 0 0;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #2A324C;
     font-size: 14px;
     text-transform: uppercase;
-    background: #fbfbfb
+    background: #202846;
 }
 .dashboard_tit .date {
     position: absolute;
@@ -1933,7 +1933,7 @@ button span.ico_minus {
     width: 100%;
     height: 30px;
     line-height: 30px;
-    color: #555;
+    color: #BABABA;
     text-transform: uppercase;
 }
 .dashboard_subcont {
@@ -1942,14 +1942,14 @@ button span.ico_minus {
     right: 0;
     bottom: 0;
     left: 0;
-    border-top: 1px double #919191;
-    border-bottom: 1px solid #919191
+    border-top: 1px double #62687D;
+    border-bottom: 1px solid #62687D
 }
 .dashboard_panel .boxcont {
-    border-left: 1px solid #e5ecf1;
-    border-right: 1px solid #e5ecf1;
-    border-top: 1px solid #b9b9b9;
-    border-bottom: 1px solid #b9b9b9
+    border-left: 1px solid #363E59;
+    border-right: 1px solid #363E59;
+    border-top: 1px solid #62687D;
+    border-bottom: 1px solid #62687D;
 }
 
 .dashboard_panel .swiper-container {
@@ -2007,11 +2007,11 @@ button span.ico_minus {
     background-color: #62ac0a
 }
 .boxcont .dashboard_circle {
-    background-color: #fff;
+    background-color: #202842;
     color: #32b8f0
 }
 .boxcont .dashboard_circle .circle {
-    border: 6px solid #f0f4f7;
+    border: 6px solid #373F5A;
     border-radius: 50%
 }
 .dashboard_circle .circle {
@@ -2070,7 +2070,7 @@ button span.ico_minus {
     right: 0;
     height: 120px;
     padding-top: 13px;
-    border-top: 1px solid #e5ecf1;
+    border-top: 1px solid #363E59;
     text-transform: uppercase;
 }
 .dashboard_circle_info li {
@@ -2113,7 +2113,6 @@ button span.ico_minus {
     height: 22px
 }
 .boxcont .dashboard_circle_info .name {
-    color: #50617e;
     font-size: 14px;
     line-height: 12px
 }
@@ -2139,7 +2138,7 @@ button span.ico_minus {
     right: 70px;
     height: 37px;
     padding-left: 8px;
-    border-bottom: 1px solid #e5ecf1
+    border-bottom: 1px solid #62687D;
 }
 .dashboard_subcont_tab .tabs_inner {
     position: absolute;
@@ -2157,7 +2156,7 @@ button span.ico_minus {
     border: 0;
     border-bottom: 3px solid transparent;
     background: transparent;
-    color: #777;
+    color: #BABABA;
     text-transform: uppercase;
     transition: border-bottom .2s;
 }
@@ -2188,7 +2187,7 @@ button span.ico_minus {
     right: 100%;
     bottom: 1px;
     width: 20px;
-    background: -webkit-linear-gradient(right, #fff, rgba(255,255,255,0));
+    background: -webkit-linear-gradient(right, #202842, rgba(255,255,255,0));
     background: -o-linear-gradient(right, #fff, rgba(255,255,255,0));
     background: linear-gradient(right, #fff, rgba(255,255,255,0));
 }
@@ -2197,9 +2196,9 @@ button span.ico_minus {
     width: 35px;
     height: 37px;
     border: 0;
-    border-left: 1px solid #e5ecf1;
-    border-bottom: 1px solid #e5ecf1;
-    background: #fff;
+    border-left: 1px solid #62687D;
+    border-bottom: 1px solid #62687D;
+    background: #202842;
 }
 .dashboard_subcont_tab .btns button span {
     display: block;
