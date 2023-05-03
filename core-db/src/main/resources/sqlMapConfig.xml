@@ -25,6 +25,7 @@
         <typeAlias alias="ServiceDashboardInfo" type="com.innogrid.uniq.core.model.ServiceDashboardInfo"/>
 		<typeAlias alias="MeterServerInfo" type="com.innogrid.uniq.core.model.MeterServerInfo"/>
 		<typeAlias alias="MeterServerAccumulateInfo" type="com.innogrid.uniq.core.model.MeterServerAccumulateInfo"/>
+		<typeAlias alias="MeterServerAccumulateBillingInfo" type="com.innogrid.uniq.core.model.MeterServerAccumulateBillingInfo"/>
         <typeAlias alias="ImageInfo" type="com.innogrid.uniq.core.model.ImageInfo"/>
         <typeAlias alias="ImageDetailInfo" type="com.innogrid.uniq.core.model.ImageDetailInfo"/>
         <typeAlias alias="ActionInfo" type="com.innogrid.uniq.core.model.ActionInfo"/>

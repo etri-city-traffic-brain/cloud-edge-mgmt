@@ -102,7 +102,9 @@ public class OpenStackServiceImpl implements OpenStackService {
     @Override
     public List<ServerInfo> getServers(String cloudId, Map<String, Object> params, UserInfo reqInfo, String token) {
         logger.info("[{}] Get Servers", CommonUtil.getUserUUID());
+        logger.info("reqInfo = " + reqInfo);
         com.innogrid.uniq.core.model.ProjectInfo projectInfo = getProjectByGroupId(cloudId, reqInfo.getGroupId());
+        logger.info("projectInfo = ");
 
         UriComponentsBuilder url = UriComponentsBuilder.fromUriString(apiUrl);
 //        UriComponentsBuilder url = UriComponentsBuilder.fromUriString(apiUrl_public);
@@ -110,6 +112,7 @@ public class OpenStackServiceImpl implements OpenStackService {
 //        url.path(API_PATH_public + "/servers");
 
         if(projectInfo != null) {
+
             url.queryParam("project", projectInfo.getProjectId());
         }
 
@@ -122,7 +125,7 @@ public class OpenStackServiceImpl implements OpenStackService {
         logger.info("credentialInfo = [{}] ", credentialInfo);
         url.queryParam("webCheck", true);
 
-        List<ServerInfo> lists = restTemplate.exchange(url.build().encode().toUri(), HttpMethod.GET, new HttpEntity(CommonUtil.getAuthHeaders(aes256Util.encrypt(ObjectSerializer.serializedData(credentialInfo)), token)), new ParameterizedTypeReference<List<ServerInfo>>(){}).getBody();
+         List<ServerInfo> lists = restTemplate.exchange(url.build().encode().toUri(), HttpMethod.GET, new HttpEntity(CommonUtil.getAuthHeaders(aes256Util.encrypt(ObjectSerializer.serializedData(credentialInfo)), token)), new ParameterizedTypeReference<List<ServerInfo>>(){}).getBody();
 
         logger.info("[{}] OpenStack Credential : ", CommonUtil.getAuthHeaders(aes256Util.encrypt(ObjectSerializer.serializedData(credentialInfo)), token));
         logger.info("[{}] Get Servers Complete", CommonUtil.getUserUUID());

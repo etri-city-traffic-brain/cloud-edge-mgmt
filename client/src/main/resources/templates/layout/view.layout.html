@@ -59,17 +59,17 @@
 		</li>
 
 		</li>
-				<li sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_CLOUD_READ', 'ROLE_CLOUD_WRITE')" class="haveChild" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/public') ? 'on open':''}">
+				<li sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_CLOUD_READ', 'ROLE_CLOUD_WRITE')" class="haveChild" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/edge') ? 'on open':''}">
 					<a>엣지 서버</a>
 					<ul>
 
-						<li sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_CLOUD_READ', 'ROLE_CLOUD_WRITE')" class="haveChild"><a th:href="@{/edge/etri/compute}">ETRI_EDGE</a>
+						<li sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_CLOUD_READ', 'ROLE_CLOUD_WRITE')" class="haveChild" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/edge/etri/compute') ? 'on':''}"><a th:href="@{/edge/etri/compute}">ETRI_EDGE</a>
 						</li>
-						<li sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_CLOUD_READ', 'ROLE_CLOUD_WRITE')" class="haveChild"><a th:href="@{/edge/rexgen/compute}">REXGEN_EDGE</a>
+						<li sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_CLOUD_READ', 'ROLE_CLOUD_WRITE')" class="haveChild" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/edge/rexgen/compute') ? 'on':''}"><a th:href="@{/edge/rexgen/compute}">REXGEN_EDGE</a>
 
 						</li>
 					</ul>
-
+				</li>
 	</ul>
 </nav>
 

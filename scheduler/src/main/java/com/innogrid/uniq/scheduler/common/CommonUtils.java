@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import java.util.Arrays;
 
 public class CommonUtils {
+
     public static HttpHeaders getAuthHeaders(String credentialInfo) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("credential", credentialInfo);
