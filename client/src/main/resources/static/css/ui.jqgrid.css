@@ -57,7 +57,7 @@
 .ui-jqgrid .ui-jqgrid-btable {table-layout:fixed; margin:0; outline-style: none; border-collapse: separate;}
 .ui-jqgrid tr.jqgrow,
 .ui-jqgrid tr.jqgroup 
-	{ outline-style: none; }
+	{ outline-style: none; background: #202842}
 .ui-jqgrid tr.jqgrow td,
 .ui-jqgrid tr.jqgroup td
 	{font-weight: normal; overflow: hidden; white-space: pre; height: 23px;padding: 1px 2px 1px 2px;border-bottom-width: 1px; border-bottom-color: inherit; border-bottom-style: solid;}
