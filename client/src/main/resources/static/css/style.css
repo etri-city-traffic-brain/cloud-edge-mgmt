@@ -93,7 +93,7 @@ body {
     border: 0;
     background: transparent url(../images/header_user_btn_arr2.png) no-repeat right 14px;
     font-size: 13px;
-    color: #3a3d3c;
+    color: #fff;
     text-align: left;
     /*letter-spacing: 1px;*/
     white-space: nowrap;
@@ -887,7 +887,7 @@ button .ico_add,
 }
 .ui-jqgrid .ui-jqgrid-bdiv {
     height: auto !important;
-    /*min-height: 156px;*/
+    min-height: 156px;
     max-height: 783px;
 }
 .cont_detail .ui-jqgrid .ui-jqgrid-bdiv {
@@ -2791,12 +2791,14 @@ button span.ico_minus {
 }
 .pop_a a {
     font-size: 13px;
-    color: black;
-    background-color: #FFFFFF;
+    color: #6c7286;
+    background: #202842;
 }
 .pop_a .billing_text {
     font-size: 15px;
     padding: 5px 10px 5px 10px;
+    color: #6c7286;
+    background: #202842;
 }
 .pop_common {
     padding: 4px;
