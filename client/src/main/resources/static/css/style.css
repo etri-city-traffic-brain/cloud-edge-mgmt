@@ -10,7 +10,7 @@ article,aside,details,figcaption,figure,footer,header,main,menu,nav,section,summ
 html, body {height: 100%}
 html {font-size:12px}
 body, h1,h2,h3,h4,h5,h6 {font-family:'Roboto', 'Noto', sans-serif, sans-serif;}
-body {font-size:1rem; color:#BABABA; background:#0076FF }
+body {font-size:1rem; color:#BABABA; background:#202842 }
 ul, li {list-style: none}
 button {cursor: pointer; outline: transparent}
 a {text-decoration:none;color:#ffffff}
@@ -776,7 +776,7 @@ button .ico_add,
 /************************* PAGENATION *************************/
 .pagenation_wrap {
     padding: 9px 0;
-    text-align: center
+    text-align: center;
 }
 .pagenation_current{
     padding-left: 10px;
@@ -878,7 +878,14 @@ button .ico_add,
     height: 70px;
     background: url(../images/jqgrid_loading.gif) no-repeat center center;
 }
-
+.ui-jqgrid .ui-jqgrid-view button {
+    background-color: #202842;
+    border: 1px solid #009cad;
+    border-radius: 4px;
+    color: #009cad;
+    font-size: 12px;
+    padding: 3px 3px 3px 3px;
+}
 .tb_wrap .tb_grid {
     width: 100%;
     border-spacing: 0;
@@ -926,7 +933,8 @@ button .ico_add,
     border-bottom: 1px solid #373f5a;
 }
 .tb_wrap .ui-jqgrid .ui-jqgrid-htable th.ui-th-column {
-    /*border-right: 1px solid #00b6c2;*/
+    border-right: 1px solid #00b6c2;
+    border-bottom: 1px solid #00b6c2;
 }
 /*.cont_detail .tb_grid thead th,*/
 /*.cont_detail .ui-jqgrid-htable thead th,*/
@@ -966,7 +974,7 @@ button .ico_add,
 .tb_wrap .tb_grid tbody tr td {
     height: 36px;
     text-align: center;
-    border-right: 1px solid #6093c8;
+    border-right: 1px solid #009cad;
     border-bottom: 1px solid #2e364f;
     text-overflow: ellipsis;
     position: relative;
@@ -1665,15 +1673,15 @@ button span.ico_minus {
 .detail_cont#tab2>div {
     float: left;
     text-align: center;
-    width: 530px;
+    width: 100%;
     height: 270px;
     border: 1px solid #373f5a;
     margin: 1px;
 }
 
 .detail_cont#tab2>div button {
-    margin-top: 10px;
-    margin-bottom: 10px;
+    /*margin-top: 10px;*/
+    /*margin-bottom: 10px;*/
 }
 
 .detail_cont#tab2>div>div:first-child {
@@ -2904,6 +2912,9 @@ button span.ico_minus {
     border-top: 1px solid #373f5a;
     color: #667285
 }
+.tb_pop_data td textarea{
+    background-color: #202842;
+}
 .tb_pop_data tr:first-child th,
 .tb_pop_data tr:first-child td {
     border-top: 0
@@ -3084,6 +3095,7 @@ button span.ico_minus {
 .pop_tab .inner {
     right: 0 ;
     margin-left: 10px;
+    border-bottom: 1px solid #009cad;
 }
 .pop_tab a {
     color: #BABABA;
@@ -3130,8 +3142,8 @@ button span.ico_minus {
 .pop_tab_cont .tb_wrap {
     max-height: 362px;
     overflow-y: auto;
-    border-top: 1px solid #6093c8;
-    border-bottom: 1px solid #6093c8
+    border-top: 1px solid #009cad;
+    border-bottom: 1px solid #009cad;
 }
 .pop_tab_cont .tb_wrap.fixed {
     max-height: 322px;
