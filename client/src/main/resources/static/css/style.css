@@ -878,7 +878,14 @@ button .ico_add,
     height: 70px;
     background: url(../images/jqgrid_loading.gif) no-repeat center center;
 }
-
+.ui-jqgrid .ui-jqgrid-view button {
+    background-color: #202842;
+    border: 1px solid #009cad;
+    border-radius: 4px;
+    color: #009cad;
+    font-size: 12px;
+    padding: 3px 3px 3px 3px;
+}
 .tb_wrap .tb_grid {
     width: 100%;
     border-spacing: 0;
