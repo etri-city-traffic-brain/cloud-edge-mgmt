@@ -1175,7 +1175,7 @@ public class OpenStackController {
         response.setHeader("Access-Control-Allow-Origin", "*");
         HttpUtils htppUtils = new HttpUtils();
 
-        String url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid";
+        String url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid_vm1";
         String method = "POST";
         String result = "";
         String Time_range = request.getParameter("range") == null ? "5m" : request.getParameter("range");
@@ -1186,7 +1186,7 @@ public class OpenStackController {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid\") |> range(start: - "+ Time_range +") |> filter(fn: (r) => " +
+            String str = "from(bucket: \"innogrid_vm1\") |> range(start: - "+ Time_range +") |> filter(fn: (r) => " +
                     "r[\"_measurement\"] == \"cpu\") |> filter(fn: (r) => r[\"cpu\"] == \"cpu-total\") " +
                     "|> filter(fn: (r) => r[\"_field\"] == \"usage_idle\") |> yield(name: \"mean\")";
 
@@ -1204,16 +1204,17 @@ public class OpenStackController {
 
         JSONArray array = new JSONArray();
 
-        for(int i=0; i< result.split("dev.etri.re.kr").length; i++) {
+        for(int i=0; i< result.split("innogrid-test").length; i++) {
             JSONObject data = new JSONObject();
-            data.put("name", "" + (result.split("dev.etri.re.kr")[i]).split(",")[(result.split("dev.etri.re.kr")[i]).split(",").length - 1]);
-            data.put("host", "dev.etri.re.kr");
-            data.put("start", "" + (result.split("dev.etri.re.kr")[i]).split(",")[(result.split("dev.etri.re.kr")[i]).split(",").length - 7]);
-            data.put("end", "" + (result.split("dev.etri.re.kr")[i]).split(",")[(result.split("dev.etri.re.kr")[i]).split(",").length - 6]);
-            data.put("now", "" + (result.split("dev.etri.re.kr")[i]).split(",")[(result.split("dev.etri.re.kr")[i]).split(",").length - 5]);
-            data.put("value", "" + (result.split("dev.etri.re.kr")[i]).split(",")[(result.split("dev.etri.re.kr")[i]).split(",").length - 4]);
+            data.put("name", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 1]);
+            data.put("host", "innogrid-test");
+            data.put("start", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 7]);
+            data.put("end", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 6]);
+            data.put("now", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 5]);
+            data.put("value", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 4]);
             array.add(data);
         }
+        logger.error("array : {} ", array);
         return array;
     }
 
@@ -1224,7 +1225,7 @@ public class OpenStackController {
         response.setHeader("Access-Control-Allow-Origin", "*");
         HttpUtils htppUtils = new HttpUtils();
 
-        String url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid";
+        String url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid_vm1";
         String method = "POST";
         String result = "";
         String Time_range = request.getParameter("range") == null ? "5m" : request.getParameter("range");
@@ -1235,7 +1236,7 @@ public class OpenStackController {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"mem\") |> filter(fn: (r) => r[\"_field\"] == \"used_percent\") |> yield(name: \"mean\")";
+            String str = "from(bucket: \"innogrid_vm1\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"mem\") |> filter(fn: (r) => r[\"_field\"] == \"used_percent\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -1251,14 +1252,14 @@ public class OpenStackController {
 
         JSONArray array = new JSONArray();
 
-        for(int i=0; i< result.split("dev.etri.re.kr").length; i++) {
+        for(int i=0; i< result.split("innogrid-test").length; i++) {
             JSONObject data = new JSONObject();
             data.put("name", "");
-            data.put("host", "dev.etri.re.kr");
-            data.put("start", "" + (result.split("dev.etri.re.kr")[i]).split(",")[(result.split("dev.etri.re.kr")[i]).split(",").length - 6]);
-            data.put("end", "" + (result.split("dev.etri.re.kr")[i]).split(",")[(result.split("dev.etri.re.kr")[i]).split(",").length - 5]);
-            data.put("now", "" + (result.split("dev.etri.re.kr")[i]).split(",")[(result.split("dev.etri.re.kr")[i]).split(",").length - 4]);
-            data.put("value", "" + (result.split("dev.etri.re.kr")[i]).split(",")[(result.split("dev.etri.re.kr")[i]).split(",").length - 3]);
+            data.put("host", "innogrid-test");
+            data.put("start", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 6]);
+            data.put("end", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 5]);
+            data.put("now", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 4]);
+            data.put("value", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 3]);
             array.add(data);
         }
         return array;
@@ -1271,7 +1272,7 @@ public class OpenStackController {
         response.setHeader("Access-Control-Allow-Origin", "*");
         HttpUtils htppUtils = new HttpUtils();
 
-        String url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid";
+        String url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid_vm1";
         String method = "POST";
         String result = "";
         String Time_range = request.getParameter("range") == null ? "5m" : request.getParameter("range");
@@ -1283,7 +1284,7 @@ public class OpenStackController {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid\") |> range(start: -" + Time_range + ")|> filter(fn: (r) => r[\"_measurement\"] == \"mem\") |> filter(fn: (r) => r[\"_field\"] == \"total\") |> yield(name: \"mean\")";
+            String str = "from(bucket: \"innogrid_vm1\") |> range(start: -" + Time_range + ")|> filter(fn: (r) => r[\"_measurement\"] == \"mem\") |> filter(fn: (r) => r[\"_field\"] == \"total\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -1299,14 +1300,14 @@ public class OpenStackController {
 
         JSONArray array = new JSONArray();
 
-        for(int i=0; i< result.split("dev.etri.re.kr").length; i++) {
+        for(int i=0; i< result.split("innogrid-test").length; i++) {
             JSONObject data = new JSONObject();
             data.put("name", "");
-            data.put("host", "dev.etri.re.kr");
-            data.put("start", "" + (result.split("dev.etri.re.kr")[i]).split(",")[(result.split("dev.etri.re.kr")[i]).split(",").length - 6]);
-            data.put("end", "" + (result.split("dev.etri.re.kr")[i]).split(",")[(result.split("dev.etri.re.kr")[i]).split(",").length - 5]);
-            data.put("now", "" + (result.split("dev.etri.re.kr")[i]).split(",")[(result.split("dev.etri.re.kr")[i]).split(",").length - 4]);
-            data.put("value", "" + (result.split("dev.etri.re.kr")[i]).split(",")[(result.split("dev.etri.re.kr")[i]).split(",").length - 3]);
+            data.put("host", "innogrid-test");
+            data.put("start", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 6]);
+            data.put("end", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 5]);
+            data.put("now", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 4]);
+            data.put("value", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 3]);
             array.add(data);
         }
         return array;
@@ -1319,7 +1320,7 @@ public class OpenStackController {
         response.setHeader("Access-Control-Allow-Origin", "*");
         HttpUtils htppUtils = new HttpUtils();
 
-        String url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid";
+        String url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid_vm1";
         String method = "POST";
         String result = "";
         String Time_range = request.getParameter("range") == null ? "5m" : request.getParameter("range");
@@ -1330,7 +1331,7 @@ public class OpenStackController {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"disk\") |> filter(fn: (r) => r[\"_field\"] == \"used_percent\") |> filter(fn: (r) => r[\"device\"] == \"100.100.100.100:/share\") |> yield(name: \"mean\")";
+            String str = "from(bucket: \"innogrid_vm1\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"disk\") |> filter(fn: (r) => r[\"_field\"] == \"used_percent\") |> filter(fn: (r) => r[\"device\"] == \"vda1\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -1346,14 +1347,14 @@ public class OpenStackController {
 
         JSONArray array = new JSONArray();
 
-        for(int i=0; i< result.split("/root/test").length; i++) {
+        for(int i=0; i< result.split("/").length; i++) {
             JSONObject data = new JSONObject();
-            data.put("host", "dev.etri.re.kr");
-            data.put("device", "" + (result.split("/root/test")[i]).split(",")[(result.split("/root/test")[i]).split(",").length - 4]);
-            data.put("start", "" + (result.split("/root/test")[i]).split(",")[(result.split("/root/test")[i]).split(",").length - 10]);
-            data.put("end", "" + (result.split("/root/test")[i]).split(",")[(result.split("/root/test")[i]).split(",").length - 9]);
-            data.put("now", "" + (result.split("/root/test")[i]).split(",")[(result.split("/root/test")[i]).split(",").length - 8]);
-            data.put("value", "" + (result.split("/root/test")[i]).split(",")[(result.split("/root/test")[i]).split(",").length - 7]);
+            data.put("host", "innogrid-test");
+            data.put("device", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 4]);
+            data.put("start", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 10]);
+            data.put("end", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 9]);
+            data.put("now", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 8]);
+            data.put("value", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 7]);
 
             array.add(data);
         }
@@ -1367,7 +1368,7 @@ public class OpenStackController {
         response.setHeader("Access-Control-Allow-Origin", "*");
         HttpUtils htppUtils = new HttpUtils();
 
-        String url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid";
+        String url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid_vm1";
         String method = "POST";
         String result = "";
         String Time_range = request.getParameter("range") == null ? "5m" : request.getParameter("range");
@@ -1378,7 +1379,7 @@ public class OpenStackController {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"disk\") |> filter(fn: (r) => r[\"_field\"] == \"total\") |> filter(fn: (r) => r[\"device\"] == \"100.100.100.100:/share\") |> yield(name: \"mean\")";
+            String str = "from(bucket: \"innogrid_vm1\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"disk\") |> filter(fn: (r) => r[\"_field\"] == \"total\") |> filter(fn: (r) => r[\"device\"] == \"vda1\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -1394,14 +1395,14 @@ public class OpenStackController {
 
         JSONArray array = new JSONArray();
 
-        for(int i=0; i< result.split("/root/test").length; i++) {
+        for(int i=0; i< result.split("/").length; i++) {
             JSONObject data = new JSONObject();
-            data.put("host", "dev.etri.re.kr");
-            data.put("device", "" + (result.split("/root/test")[i]).split(",")[(result.split("/root/test")[i]).split(",").length - 4]);
-            data.put("start", "" + (result.split("/root/test")[i]).split(",")[(result.split("/root/test")[i]).split(",").length - 10]);
-            data.put("end", "" + (result.split("/root/test")[i]).split(",")[(result.split("/root/test")[i]).split(",").length - 9]);
-            data.put("now", "" + (result.split("/root/test")[i]).split(",")[(result.split("/root/test")[i]).split(",").length - 8]);
-            data.put("value", "" + (result.split("/root/test")[i]).split(",")[(result.split("/root/test")[i]).split(",").length - 7]);
+            data.put("host", "innogrid-test");
+            data.put("device", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 4]);
+            data.put("start", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 10]);
+            data.put("end", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 9]);
+            data.put("now", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 8]);
+            data.put("value", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 7]);
 
             array.add(data);
         }
@@ -1416,7 +1417,7 @@ public class OpenStackController {
 
         HttpUtils htppUtils = new HttpUtils();
 
-        String url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid";
+        String url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid_vm1";
         String method = "POST";
         String result = "";
         String Time_range = request.getParameter("range") == null ? "5m" : request.getParameter("range");
@@ -1427,7 +1428,7 @@ public class OpenStackController {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"diskio\") |> filter(fn: (r) => r[\"_field\"] == \"write_bytes\") |> filter(fn: (r) => r[\"host\"] == \"dev.etri.re.kr\") |> filter(fn: (r) => r[\"name\"] == \"sda\") |> yield(name: \"mean\")";
+            String str = "from(bucket: \"innogrid_vm1\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"diskio\") |> filter(fn: (r) => r[\"_field\"] == \"write_bytes\") |> filter(fn: (r) => r[\"host\"] == \"innogrid-test\") |> filter(fn: (r) => r[\"name\"] == \"vda\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -1443,14 +1444,14 @@ public class OpenStackController {
 
         JSONArray array = new JSONArray();
 
-        for(int i=0; i< result.split("sda").length; i++) {
+        for(int i=0; i< result.split("vda").length; i++) {
             JSONObject data = new JSONObject();
-            data.put("name", "sda");
-            data.put("host", "" + (result.split("sda")[i]).split(",")[(result.split("sda")[i]).split(",").length - 1]);
-            data.put("start", "" + (result.split("sda")[i]).split(",")[(result.split("sda")[i]).split(",").length - 7]);
-            data.put("end", "" + (result.split("sda")[i]).split(",")[(result.split("sda")[i]).split(",").length - 6]);
-            data.put("now", "" + (result.split("sda")[i]).split(",")[(result.split("sda")[i]).split(",").length - 5]);
-            data.put("value", "" + (result.split("sda")[i]).split(",")[(result.split("sda")[i]).split(",").length - 4]);
+            data.put("name", "vda");
+            data.put("host", "" + (result.split("vda")[i]).split(",")[(result.split("vda")[i]).split(",").length - 1]);
+            data.put("start", "" + (result.split("vda")[i]).split(",")[(result.split("vda")[i]).split(",").length - 7]);
+            data.put("end", "" + (result.split("vda")[i]).split(",")[(result.split("vda")[i]).split(",").length - 6]);
+            data.put("now", "" + (result.split("vda")[i]).split(",")[(result.split("vda")[i]).split(",").length - 5]);
+            data.put("value", "" + (result.split("vda")[i]).split(",")[(result.split("vda")[i]).split(",").length - 4]);
 
             array.add(data);
         }
@@ -1465,7 +1466,7 @@ public class OpenStackController {
 
         HttpUtils htppUtils = new HttpUtils();
 
-        String url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid";
+        String url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid_vm1";
         String method = "POST";
         String result = "";
         String Time_range = request.getParameter("range") == null ? "5m" : request.getParameter("range");
@@ -1476,7 +1477,7 @@ public class OpenStackController {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid\") |> range(start: " + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"diskio\") |> filter(fn: (r) => r[\"_field\"] == \"read_bytes\") |> filter(fn: (r) => r[\"host\"] == \"dev.etri.re.kr\") |> filter(fn: (r) => r[\"name\"] == \"sda\") |> yield(name: \"mean\")";
+            String str = "from(bucket: \"innogrid\") |> range(start: " + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"diskio\") |> filter(fn: (r) => r[\"_field\"] == \"read_bytes\") |> filter(fn: (r) => r[\"host\"] == \"innogrid-test\") |> filter(fn: (r) => r[\"name\"] == \"sda\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -1512,7 +1513,7 @@ public class OpenStackController {
         response.setHeader("Access-Control-Allow-Origin", "*");
         HttpUtils htppUtils = new HttpUtils();
 
-        String url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid";
+        String url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid_vm1";
         String method = "POST";
         String result = "";
         String Time_range = request.getParameter("range") == null ? "5m" : request.getParameter("range");
@@ -1523,9 +1524,9 @@ public class OpenStackController {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => " +
+            String str = "from(bucket: \"innogrid_vm1\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => " +
                     "r[\"_measurement\"] == \"system\") |> filter(fn: (r) => r[\"_field\"] == \"n_cpus\") " +
-                    "|> filter(fn: (r) => r[\"host\"] == \"dev.etri.re.kr\") |> yield(name: \"mean\")";
+                    "|> filter(fn: (r) => r[\"host\"] == \"innogrid-test\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -1541,14 +1542,14 @@ public class OpenStackController {
 
         JSONArray array = new JSONArray();
 
-        for(int i=0; i< result.split("dev.etri.re.kr").length; i++) {
+        for(int i=0; i< result.split("innogrid-test").length; i++) {
             JSONObject data = new JSONObject();
-            data.put("name", "" + (result.split("dev.etri.re.kr")[i]).split(",")[(result.split("dev.etri.re.kr")[i]).split(",").length - 1]);
-            data.put("host", "dev.etri.re.kr");
-            data.put("start", "" + (result.split("dev.etri.re.kr")[i]).split(",")[(result.split("dev.etri.re.kr")[i]).split(",").length - 6]);
-            data.put("end", "" + (result.split("dev.etri.re.kr")[i]).split(",")[(result.split("dev.etri.re.kr")[i]).split(",").length - 5]);
-            data.put("now", "" + (result.split("dev.etri.re.kr")[i]).split(",")[(result.split("dev.etri.re.kr")[i]).split(",").length - 4]);
-            data.put("value", "" + (result.split("dev.etri.re.kr")[i]).split(",")[(result.split("dev.etri.re.kr")[i]).split(",").length - 3]);
+            data.put("name", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 1]);
+            data.put("host", "innogrid-test");
+            data.put("start", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 6]);
+            data.put("end", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 5]);
+            data.put("now", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 4]);
+            data.put("value", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 3]);
             array.add(data);
         }
         return array;
