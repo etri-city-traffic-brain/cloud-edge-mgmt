@@ -1,28 +1,16 @@
 package com.innogrid.uniq.apiopenstack.controller;
 
-import com.innogrid.uniq.apiopenstack.service.OpenStackService;
-import com.innogrid.uniq.core.model.*;
 import com.innogrid.uniq.core.util.AES256Util;
-import com.innogrid.uniq.core.util.ObjectSerializer;
-import com.innogrid.uniq.coredb.dao.CredentialDao;
-import com.innogrid.uniq.coredb.service.CredentialService;
-import com.innogrid.uniq.coredb.service.MeterService;
-import com.innogrid.uniq.coreopenstack.model.ImageInfo;
-import com.innogrid.uniq.coreopenstack.model.ProjectInfo;
-import com.innogrid.uniq.coreopenstack.model.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.openstack4j.model.compute.InterfaceAttachment;
-import org.openstack4j.model.compute.ext.Hypervisor;
-import org.openstack4j.model.compute.ext.HypervisorStatistics;
-import org.openstack4j.model.storage.block.VolumeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,9 +21,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static javax.ws.rs.HttpMethod.POST;
 
@@ -44,13 +29,13 @@ import static javax.ws.rs.HttpMethod.POST;
  */
 @Controller
 @RequestMapping("/infra/cloudServices/VM1")
-public class EtriVM1Controller {
-    private static Logger logger = LoggerFactory.getLogger(EtriVM1Controller.class);
+public class EtriVM2Controller {
+    private static Logger logger = LoggerFactory.getLogger(EtriVM2Controller.class);
 
     @Autowired
     private AES256Util aes256Util;
 
-    String openstackVm1Url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid_vm1";
+    String openstackVm2Url = "http://101.79.1.113:8086/api/v2/query?orgID=fecf3660a510e8c2&bucket=innogrid_vm2";
 
     // cpu 사용량 => 현재 usage_idle 로 설정되어있어 보완 필요
     @RequestMapping(value = {"/monitoring/cpu_usage"}, method = RequestMethod.GET)
@@ -59,7 +44,7 @@ public class EtriVM1Controller {
         response.setHeader("Access-Control-Allow-Origin", "*");
         HttpUtils htppUtils = new HttpUtils();
 
-        String url = openstackVm1Url;
+        String url = openstackVm2Url;
         String method = "POST";
         String result = "";
         String Time_range = request.getParameter("range") == null ? "5m" : request.getParameter("range");
@@ -109,7 +94,7 @@ public class EtriVM1Controller {
         response.setHeader("Access-Control-Allow-Origin", "*");
         HttpUtils htppUtils = new HttpUtils();
 
-        String url = openstackVm1Url;
+        String url = openstackVm2Url;
         String method = "POST";
         String result = "";
         String Time_range = request.getParameter("range") == null ? "5m" : request.getParameter("range");
@@ -156,7 +141,7 @@ public class EtriVM1Controller {
         response.setHeader("Access-Control-Allow-Origin", "*");
         HttpUtils htppUtils = new HttpUtils();
 
-        String url = openstackVm1Url;
+        String url = openstackVm2Url;
         String method = "POST";
         String result = "";
         String Time_range = request.getParameter("range") == null ? "5m" : request.getParameter("range");
@@ -204,7 +189,7 @@ public class EtriVM1Controller {
         response.setHeader("Access-Control-Allow-Origin", "*");
         HttpUtils htppUtils = new HttpUtils();
 
-        String url = openstackVm1Url;
+        String url = openstackVm2Url;
         String method = "POST";
         String result = "";
         String Time_range = request.getParameter("range") == null ? "5m" : request.getParameter("range");
@@ -252,7 +237,7 @@ public class EtriVM1Controller {
         response.setHeader("Access-Control-Allow-Origin", "*");
         HttpUtils htppUtils = new HttpUtils();
 
-        String url = openstackVm1Url;
+        String url = openstackVm2Url;
         String method = "POST";
         String result = "";
         String Time_range = request.getParameter("range") == null ? "5m" : request.getParameter("range");
@@ -301,7 +286,7 @@ public class EtriVM1Controller {
 
         HttpUtils htppUtils = new HttpUtils();
 
-        String url = openstackVm1Url;
+        String url = openstackVm2Url;
         String method = "POST";
         String result = "";
         String Time_range = request.getParameter("range") == null ? "5m" : request.getParameter("range");
@@ -350,7 +335,7 @@ public class EtriVM1Controller {
 
         HttpUtils htppUtils = new HttpUtils();
 
-        String url = openstackVm1Url;
+        String url = openstackVm2Url;
         String method = "POST";
         String result = "";
         String Time_range = request.getParameter("range") == null ? "5m" : request.getParameter("range");
@@ -397,7 +382,7 @@ public class EtriVM1Controller {
         response.setHeader("Access-Control-Allow-Origin", "*");
         HttpUtils htppUtils = new HttpUtils();
 
-        String url = openstackVm1Url;
+        String url = openstackVm2Url;
         String method = "POST";
         String result = "";
         String Time_range = request.getParameter("range") == null ? "5m" : request.getParameter("range");
