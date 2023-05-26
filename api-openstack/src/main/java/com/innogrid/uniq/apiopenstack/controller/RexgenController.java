@@ -28,7 +28,7 @@ import static javax.ws.rs.HttpMethod.POST;
  * Created by ksh on 23. 5. 25.
  */
 @Controller
-@RequestMapping("/infra/cloudServices/VM1")
+@RequestMapping("/infra/cloudServices/Rexgen")
 public class RexgenController {
     private static Logger logger = LoggerFactory.getLogger(RexgenController.class);
 
@@ -55,9 +55,9 @@ public class RexgenController {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid_vm1\") |> range(start: - "+ Time_range +") |> filter(fn: (r) => " +
-                    "r[\"_measurement\"] == \"cpu\") |> filter(fn: (r) => r[\"cpu\"] == \"cpu-total\") " +
-                    "|> filter(fn: (r) => r[\"_field\"] == \"usage_idle\") |> yield(name: \"mean\")";
+            String str = "from(bucket: \"rexgen\") |> range(start: - "+ Time_range +") |> filter(fn: (r) => " +
+                    "r[\"_measurement\"] == \"win_cpu\") |> filter(fn: (r) => r[\"host\"] == \"DC637Q53\") |> filter(fn: (r) => r[\"instance\"] == \"_Total\")" +
+                    "|> filter(fn: (r) => r[\"_field\"] == \"Percent_User_Time\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -70,17 +70,18 @@ public class RexgenController {
         }
 
         System.out.println("GET = " + result);
+        System.out.println("length1 = " + result.split("DC637Q53").length);
 
         JSONArray array = new JSONArray();
 
-        for(int i=0; i< result.split("innogrid-test").length; i++) {
+        for(int i=0; i< result.split("DC637Q53").length-1; i++) {
             JSONObject data = new JSONObject();
-            data.put("name", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 1]);
-            data.put("host", "innogrid-test");
-            data.put("start", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 7]);
-            data.put("end", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 6]);
-            data.put("now", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 5]);
-            data.put("value", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 4]);
+            data.put("name", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 1]);
+            data.put("host", "DC637Q53");
+            data.put("start", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 6]);
+            data.put("end", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 5]);
+            data.put("now", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 4]);
+            data.put("value", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 3]);
             array.add(data);
         }
         logger.error("array : {} ", array);
@@ -105,7 +106,9 @@ public class RexgenController {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid_vm1\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"mem\") |> filter(fn: (r) => r[\"_field\"] == \"used_percent\") |> yield(name: \"mean\")";
+            String str = "from(bucket: \"rexgen\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"win_mem\") |> " +
+                    "filter(fn: (r) => r[\"_field\"] == \"Standby_Cache_Normal_Priority_Bytes\") |> filter(fn: (r) => r[\"host\"] == \"DC637Q53\") |> " +
+                    "filter(fn: (r) => r[\"objectname\"] == \"Memory\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -121,14 +124,15 @@ public class RexgenController {
 
         JSONArray array = new JSONArray();
 
-        for(int i=0; i< result.split("innogrid-test").length; i++) {
+        for(int i=0; i< result.split("DC637Q53").length-1; i++) {
             JSONObject data = new JSONObject();
+            
             data.put("name", "");
-            data.put("host", "innogrid-test");
-            data.put("start", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 6]);
-            data.put("end", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 5]);
-            data.put("now", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 4]);
-            data.put("value", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 3]);
+            data.put("host", "DC637Q53");
+            data.put("start", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 6]);
+            data.put("end", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 5]);
+            data.put("now", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 4]);
+            data.put("value", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 3]);
             array.add(data);
         }
         return array;
@@ -153,7 +157,9 @@ public class RexgenController {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid_vm1\") |> range(start: -" + Time_range + ")|> filter(fn: (r) => r[\"_measurement\"] == \"mem\") |> filter(fn: (r) => r[\"_field\"] == \"total\") |> yield(name: \"mean\")";
+            String str = "from(bucket: \"rexgen\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"win_mem\") |> " +
+                    "filter(fn: (r) => r[\"_field\"] == \"Available_Bytes\") |> filter(fn: (r) => r[\"host\"] == \"DC637Q53\") |> " +
+                    "filter(fn: (r) => r[\"objectname\"] == \"Memory\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -165,18 +171,19 @@ public class RexgenController {
             e.printStackTrace();
         }
 
-        System.out.println("GET = " + result);
+        System.out.println("mem_total GET = " + result);
 
         JSONArray array = new JSONArray();
 
-        for(int i=0; i< result.split("innogrid-test").length; i++) {
+        for(int i=0; i< result.split("DC637Q53").length-1; i++) {
             JSONObject data = new JSONObject();
+
             data.put("name", "");
-            data.put("host", "innogrid-test");
-            data.put("start", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 6]);
-            data.put("end", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 5]);
-            data.put("now", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 4]);
-            data.put("value", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 3]);
+            data.put("host", "DC637Q53");
+            data.put("start", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 6]);
+            data.put("end", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 5]);
+            data.put("now", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 4]);
+            data.put("value", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 3]);
             array.add(data);
         }
         return array;
@@ -200,7 +207,10 @@ public class RexgenController {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid_vm1\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"disk\") |> filter(fn: (r) => r[\"_field\"] == \"used_percent\") |> filter(fn: (r) => r[\"device\"] == \"vda1\") |> yield(name: \"mean\")";
+            String str = "from(bucket: \"rexgen\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"win_disk\") |> " +
+                    "filter(fn: (r) => r[\"_field\"] == \"Percent_Disk_Time\") |> filter(fn: (r) => r[\"host\"] == \"DC637Q53\") |> " +
+                    "filter(fn: (r) => r[\"instance\"] == \"C:\") |> " +
+                    "filter(fn: (r) => r[\"objectname\"] == \"LogicalDisk\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -216,14 +226,15 @@ public class RexgenController {
 
         JSONArray array = new JSONArray();
 
-        for(int i=0; i< result.split("/").length; i++) {
+        for(int i=0; i< result.split("DC637Q53").length-1; i++) {
             JSONObject data = new JSONObject();
-            data.put("host", "innogrid-test");
-            data.put("device", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 4]);
-            data.put("start", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 10]);
-            data.put("end", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 9]);
-            data.put("now", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 8]);
-            data.put("value", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 7]);
+
+            data.put("host", "DC637Q53");
+            data.put("device", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 4]);
+            data.put("start", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 10]);
+            data.put("end", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 9]);
+            data.put("now", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 8]);
+            data.put("value", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 7]);
 
             array.add(data);
         }
@@ -248,7 +259,10 @@ public class RexgenController {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid_vm1\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"disk\") |> filter(fn: (r) => r[\"_field\"] == \"total\") |> filter(fn: (r) => r[\"device\"] == \"vda1\") |> yield(name: \"mean\")";
+            String str = "from(bucket: \"rexgen\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"win_disk\") |> " +
+                    "filter(fn: (r) => r[\"_field\"] == \"Percent_Free_Space\") |> filter(fn: (r) => r[\"host\"] == \"DC637Q53\") |> " +
+                    "filter(fn: (r) => r[\"instance\"] == \"C:\") |> " +
+                    "filter(fn: (r) => r[\"objectname\"] == \"LogicalDisk\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -260,18 +274,19 @@ public class RexgenController {
             e.printStackTrace();
         }
 
-        System.out.println("GET = " + result);
+        System.out.println("disk_total GET = " + result);
 
         JSONArray array = new JSONArray();
 
-        for(int i=0; i< result.split("/").length; i++) {
+        for(int i=0; i< result.split("DC637Q53").length-1; i++) {
             JSONObject data = new JSONObject();
-            data.put("host", "innogrid-test");
-            data.put("device", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 4]);
-            data.put("start", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 10]);
-            data.put("end", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 9]);
-            data.put("now", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 8]);
-            data.put("value", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 7]);
+
+            data.put("host", "DC637Q53");
+            data.put("device", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 4]);
+            data.put("start", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 10]);
+            data.put("end", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 9]);
+            data.put("now", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 8]);
+            data.put("value", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 7]);
 
             array.add(data);
         }
@@ -297,8 +312,10 @@ public class RexgenController {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid_vm1\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"diskio\") |> filter(fn: (r) => r[\"_field\"] == \"write_bytes\") |> filter(fn: (r) => r[\"host\"] == \"innogrid-test\") |> filter(fn: (r) => r[\"name\"] == \"vda\") |> yield(name: \"mean\")";
-
+            String str = "from(bucket: \"rexgen\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"win_disk\") |> " +
+                    "filter(fn: (r) => r[\"_field\"] == \"Percent_Disk_Write_Time\") |> filter(fn: (r) => r[\"host\"] == \"DC637Q53\") |> " +
+                    "filter(fn: (r) => r[\"instance\"] == \"C:\") |> " +
+                    "filter(fn: (r) => r[\"objectname\"] == \"LogicalDisk\") |> yield(name: \"mean\")";
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
 
@@ -313,14 +330,15 @@ public class RexgenController {
 
         JSONArray array = new JSONArray();
 
-        for(int i=0; i< result.split("vda").length; i++) {
+        for(int i=0; i< result.split("DC637Q53").length-1; i++) {
             JSONObject data = new JSONObject();
-            data.put("name", "vda");
-            data.put("host", "" + (result.split("vda")[i]).split(",")[(result.split("vda")[i]).split(",").length - 1]);
-            data.put("start", "" + (result.split("vda")[i]).split(",")[(result.split("vda")[i]).split(",").length - 7]);
-            data.put("end", "" + (result.split("vda")[i]).split(",")[(result.split("vda")[i]).split(",").length - 6]);
-            data.put("now", "" + (result.split("vda")[i]).split(",")[(result.split("vda")[i]).split(",").length - 5]);
-            data.put("value", "" + (result.split("vda")[i]).split(",")[(result.split("vda")[i]).split(",").length - 4]);
+
+            data.put("host", "DC637Q53");
+            data.put("device", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 4]);
+            data.put("start", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 10]);
+            data.put("end", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 9]);
+            data.put("now", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 8]);
+            data.put("value", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 7]);
 
             array.add(data);
         }
@@ -346,8 +364,10 @@ public class RexgenController {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid\") |> range(start: " + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"diskio\") |> filter(fn: (r) => r[\"_field\"] == \"read_bytes\") |> filter(fn: (r) => r[\"host\"] == \"innogrid-test\") |> filter(fn: (r) => r[\"name\"] == \"sda\") |> yield(name: \"mean\")";
-
+            String str = "from(bucket: \"rexgen\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"win_disk\") |> " +
+                    "filter(fn: (r) => r[\"_field\"] == \"Percent_Disk_Read_Time\") |> filter(fn: (r) => r[\"host\"] == \"DC637Q53\") |> " +
+                    "filter(fn: (r) => r[\"instance\"] == \"C:\") |> " +
+                    "filter(fn: (r) => r[\"objectname\"] == \"LogicalDisk\") |> yield(name: \"mean\")";
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
 
@@ -362,21 +382,21 @@ public class RexgenController {
 
         JSONArray array = new JSONArray();
 
-        for(int i=0; i< result.split("sda").length; i++) {
+        for(int i=0; i< result.split("DC637Q53").length-1; i++) {
             JSONObject data = new JSONObject();
-            data.put("name", "sda");
-            data.put("host", "" + (result.split("sda")[i]).split(",")[(result.split("sda")[i]).split(",").length - 1]);
-            data.put("start", "" + (result.split("sda")[i]).split(",")[(result.split("sda")[i]).split(",").length - 7]);
-            data.put("end", "" + (result.split("sda")[i]).split(",")[(result.split("sda")[i]).split(",").length - 6]);
-            data.put("now", "" + (result.split("sda")[i]).split(",")[(result.split("sda")[i]).split(",").length - 5]);
-            data.put("value", "" + (result.split("sda")[i]).split(",")[(result.split("sda")[i]).split(",").length - 4]);
+            data.put("host", "DC637Q53");
+            data.put("device", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 4]);
+            data.put("start", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 10]);
+            data.put("end", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 9]);
+            data.put("now", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 8]);
+            data.put("value", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 7]);
 
             array.add(data);
         }
         return array;
     }
 
-    @RequestMapping(value = {"/monitoring/cpu_core"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/monitoring/system_up_time"}, method = RequestMethod.GET)
     @ResponseBody
     public JSONArray getCpuCoreMonitoringData(HttpServletRequest request, HttpServletResponse response, Principal principal, HttpSession session, Model model) {
         response.setHeader("Access-Control-Allow-Origin", "*");
@@ -393,9 +413,9 @@ public class RexgenController {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid_vm1\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => " +
-                    "r[\"_measurement\"] == \"system\") |> filter(fn: (r) => r[\"_field\"] == \"n_cpus\") " +
-                    "|> filter(fn: (r) => r[\"host\"] == \"innogrid-test\") |> yield(name: \"mean\")";
+            String str = "from(bucket: \"rexgen\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => " +
+                    "r[\"_measurement\"] == \"win_system\") |> filter(fn: (r) => r[\"_field\"] == \"System_Up_Time\") " +
+                    "|> filter(fn: (r) => r[\"host\"] == \"DC637Q53\") |> filter(fn: (r) => r[\"objectname\"] == \"System\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -407,18 +427,18 @@ public class RexgenController {
             e.printStackTrace();
         }
 
-        System.out.println("GET = " + result);
+        System.out.println("system_up_time GET = " + result);
 
         JSONArray array = new JSONArray();
 
-        for(int i=0; i< result.split("innogrid-test").length; i++) {
+        for(int i=0; i< result.split("DC637Q53").length-1; i++) {
             JSONObject data = new JSONObject();
-            data.put("name", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 1]);
-            data.put("host", "innogrid-test");
-            data.put("start", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 6]);
-            data.put("end", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 5]);
-            data.put("now", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 4]);
-            data.put("value", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 3]);
+            data.put("name", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 1]);
+            data.put("host", "DC637Q53");
+            data.put("start", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 6]);
+            data.put("end", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 5]);
+            data.put("now", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 4]);
+            data.put("value", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 3]);
             array.add(data);
         }
         return array;

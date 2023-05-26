@@ -72,7 +72,7 @@ public class EtriVM1Controller {
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
             String str = "from(bucket: \"innogrid_vm1\") |> range(start: - "+ Time_range +") |> filter(fn: (r) => " +
                     "r[\"_measurement\"] == \"cpu\") |> filter(fn: (r) => r[\"cpu\"] == \"cpu-total\") " +
-                    "|> filter(fn: (r) => r[\"_field\"] == \"usage_idle\") |> yield(name: \"mean\")";
+                    "|> filter(fn: (r) => r[\"_field\"] == \"usage_system\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();

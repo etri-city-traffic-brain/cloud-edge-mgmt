@@ -28,7 +28,7 @@ import static javax.ws.rs.HttpMethod.POST;
  * Created by ksh on 23. 5. 25.
  */
 @Controller
-@RequestMapping("/infra/cloudServices/VM1")
+@RequestMapping("/infra/cloudServices/VM2")
 public class EtriVM2Controller {
     private static Logger logger = LoggerFactory.getLogger(EtriVM2Controller.class);
 
@@ -55,9 +55,9 @@ public class EtriVM2Controller {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid_vm1\") |> range(start: - "+ Time_range +") |> filter(fn: (r) => " +
+            String str = "from(bucket: \"innogrid_vm2\") |> range(start: - "+ Time_range +") |> filter(fn: (r) => " +
                     "r[\"_measurement\"] == \"cpu\") |> filter(fn: (r) => r[\"cpu\"] == \"cpu-total\") " +
-                    "|> filter(fn: (r) => r[\"_field\"] == \"usage_idle\") |> yield(name: \"mean\")";
+                    "|> filter(fn: (r) => r[\"_field\"] == \"usage_system\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -69,18 +69,18 @@ public class EtriVM2Controller {
             e.printStackTrace();
         }
 
-        System.out.println("GET = " + result);
+        System.out.println("GET VM2 = " + result);
 
         JSONArray array = new JSONArray();
 
-        for(int i=0; i< result.split("innogrid-test").length; i++) {
+        for(int i=0; i< result.split("innogrid-test2").length; i++) {
             JSONObject data = new JSONObject();
-            data.put("name", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 1]);
-            data.put("host", "innogrid-test");
-            data.put("start", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 7]);
-            data.put("end", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 6]);
-            data.put("now", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 5]);
-            data.put("value", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 4]);
+            data.put("name", "" + (result.split("innogrid-test2")[i]).split(",")[(result.split("innogrid-test2")[i]).split(",").length - 1]);
+            data.put("host", "innogrid-test2");
+            data.put("start", "" + (result.split("innogrid-test2")[i]).split(",")[(result.split("innogrid-test2")[i]).split(",").length - 7]);
+            data.put("end", "" + (result.split("innogrid-test2")[i]).split(",")[(result.split("innogrid-test2")[i]).split(",").length - 6]);
+            data.put("now", "" + (result.split("innogrid-test2")[i]).split(",")[(result.split("innogrid-test2")[i]).split(",").length - 5]);
+            data.put("value", "" + (result.split("innogrid-test2")[i]).split(",")[(result.split("innogrid-test2")[i]).split(",").length - 4]);
             array.add(data);
         }
         logger.error("array : {} ", array);
@@ -105,7 +105,7 @@ public class EtriVM2Controller {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid_vm1\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"mem\") |> filter(fn: (r) => r[\"_field\"] == \"used_percent\") |> yield(name: \"mean\")";
+            String str = "from(bucket: \"innogrid_vm2\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"mem\") |> filter(fn: (r) => r[\"_field\"] == \"used_percent\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -121,14 +121,14 @@ public class EtriVM2Controller {
 
         JSONArray array = new JSONArray();
 
-        for(int i=0; i< result.split("innogrid-test").length; i++) {
+        for(int i=0; i< result.split("innogrid-test2").length; i++) {
             JSONObject data = new JSONObject();
             data.put("name", "");
-            data.put("host", "innogrid-test");
-            data.put("start", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 6]);
-            data.put("end", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 5]);
-            data.put("now", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 4]);
-            data.put("value", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 3]);
+            data.put("host", "innogrid-test2");
+            data.put("start", "" + (result.split("innogrid-test2")[i]).split(",")[(result.split("innogrid-test2")[i]).split(",").length - 6]);
+            data.put("end", "" + (result.split("innogrid-test2")[i]).split(",")[(result.split("innogrid-test2")[i]).split(",").length - 5]);
+            data.put("now", "" + (result.split("innogrid-test2")[i]).split(",")[(result.split("innogrid-test2")[i]).split(",").length - 4]);
+            data.put("value", "" + (result.split("innogrid-test2")[i]).split(",")[(result.split("innogrid-test2")[i]).split(",").length - 3]);
             array.add(data);
         }
         return array;
@@ -153,7 +153,7 @@ public class EtriVM2Controller {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid_vm1\") |> range(start: -" + Time_range + ")|> filter(fn: (r) => r[\"_measurement\"] == \"mem\") |> filter(fn: (r) => r[\"_field\"] == \"total\") |> yield(name: \"mean\")";
+            String str = "from(bucket: \"innogrid_vm2\") |> range(start: -" + Time_range + ")|> filter(fn: (r) => r[\"_measurement\"] == \"mem\") |> filter(fn: (r) => r[\"_field\"] == \"total\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -169,14 +169,14 @@ public class EtriVM2Controller {
 
         JSONArray array = new JSONArray();
 
-        for(int i=0; i< result.split("innogrid-test").length; i++) {
+        for(int i=0; i< result.split("innogrid-test2").length; i++) {
             JSONObject data = new JSONObject();
             data.put("name", "");
-            data.put("host", "innogrid-test");
-            data.put("start", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 6]);
-            data.put("end", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 5]);
-            data.put("now", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 4]);
-            data.put("value", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 3]);
+            data.put("host", "innogrid-test2");
+            data.put("start", "" + (result.split("innogrid-test2")[i]).split(",")[(result.split("innogrid-test2")[i]).split(",").length - 6]);
+            data.put("end", "" + (result.split("innogrid-test2")[i]).split(",")[(result.split("innogrid-test2")[i]).split(",").length - 5]);
+            data.put("now", "" + (result.split("innogrid-test2")[i]).split(",")[(result.split("innogrid-test2")[i]).split(",").length - 4]);
+            data.put("value", "" + (result.split("innogrid-test2")[i]).split(",")[(result.split("innogrid-test2")[i]).split(",").length - 3]);
             array.add(data);
         }
         return array;
@@ -200,7 +200,7 @@ public class EtriVM2Controller {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid_vm1\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"disk\") |> filter(fn: (r) => r[\"_field\"] == \"used_percent\") |> filter(fn: (r) => r[\"device\"] == \"vda1\") |> yield(name: \"mean\")";
+            String str = "from(bucket: \"innogrid_vm2\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"disk\") |> filter(fn: (r) => r[\"_field\"] == \"used_percent\") |> filter(fn: (r) => r[\"device\"] == \"vda1\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -218,7 +218,7 @@ public class EtriVM2Controller {
 
         for(int i=0; i< result.split("/").length; i++) {
             JSONObject data = new JSONObject();
-            data.put("host", "innogrid-test");
+            data.put("host", "innogrid-test2");
             data.put("device", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 4]);
             data.put("start", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 10]);
             data.put("end", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 9]);
@@ -248,7 +248,7 @@ public class EtriVM2Controller {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid_vm1\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"disk\") |> filter(fn: (r) => r[\"_field\"] == \"total\") |> filter(fn: (r) => r[\"device\"] == \"vda1\") |> yield(name: \"mean\")";
+            String str = "from(bucket: \"innogrid_vm2\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"disk\") |> filter(fn: (r) => r[\"_field\"] == \"total\") |> filter(fn: (r) => r[\"device\"] == \"vda1\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -266,7 +266,7 @@ public class EtriVM2Controller {
 
         for(int i=0; i< result.split("/").length; i++) {
             JSONObject data = new JSONObject();
-            data.put("host", "innogrid-test");
+            data.put("host", "innogrid-test2");
             data.put("device", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 4]);
             data.put("start", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 10]);
             data.put("end", "" + (result.split("/")[i]).split(",")[(result.split("/")[i]).split(",").length - 9]);
@@ -297,7 +297,7 @@ public class EtriVM2Controller {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid_vm1\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"diskio\") |> filter(fn: (r) => r[\"_field\"] == \"write_bytes\") |> filter(fn: (r) => r[\"host\"] == \"innogrid-test\") |> filter(fn: (r) => r[\"name\"] == \"vda\") |> yield(name: \"mean\")";
+            String str = "from(bucket: \"innogrid_vm2\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"diskio\") |> filter(fn: (r) => r[\"_field\"] == \"write_bytes\") |> filter(fn: (r) => r[\"host\"] == \"innogrid-test2\") |> filter(fn: (r) => r[\"name\"] == \"vda\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -346,7 +346,7 @@ public class EtriVM2Controller {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid\") |> range(start: " + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"diskio\") |> filter(fn: (r) => r[\"_field\"] == \"read_bytes\") |> filter(fn: (r) => r[\"host\"] == \"innogrid-test\") |> filter(fn: (r) => r[\"name\"] == \"sda\") |> yield(name: \"mean\")";
+            String str = "from(bucket: \"innogrid\") |> range(start: " + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"diskio\") |> filter(fn: (r) => r[\"_field\"] == \"read_bytes\") |> filter(fn: (r) => r[\"host\"] == \"innogrid-test2\") |> filter(fn: (r) => r[\"name\"] == \"sda\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -393,9 +393,9 @@ public class EtriVM2Controller {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"innogrid_vm1\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => " +
+            String str = "from(bucket: \"innogrid_vm2\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => " +
                     "r[\"_measurement\"] == \"system\") |> filter(fn: (r) => r[\"_field\"] == \"n_cpus\") " +
-                    "|> filter(fn: (r) => r[\"host\"] == \"innogrid-test\") |> yield(name: \"mean\")";
+                    "|> filter(fn: (r) => r[\"host\"] == \"innogrid-test2\") |> yield(name: \"mean\")";
 
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
@@ -411,14 +411,14 @@ public class EtriVM2Controller {
 
         JSONArray array = new JSONArray();
 
-        for(int i=0; i< result.split("innogrid-test").length; i++) {
+        for(int i=0; i< result.split("innogrid-test2").length; i++) {
             JSONObject data = new JSONObject();
-            data.put("name", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 1]);
-            data.put("host", "innogrid-test");
-            data.put("start", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 6]);
-            data.put("end", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 5]);
-            data.put("now", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 4]);
-            data.put("value", "" + (result.split("innogrid-test")[i]).split(",")[(result.split("innogrid-test")[i]).split(",").length - 3]);
+            data.put("name", "" + (result.split("innogrid-test2")[i]).split(",")[(result.split("innogrid-test2")[i]).split(",").length - 1]);
+            data.put("host", "innogrid-test2");
+            data.put("start", "" + (result.split("innogrid-test2")[i]).split(",")[(result.split("innogrid-test2")[i]).split(",").length - 6]);
+            data.put("end", "" + (result.split("innogrid-test2")[i]).split(",")[(result.split("innogrid-test2")[i]).split(",").length - 5]);
+            data.put("now", "" + (result.split("innogrid-test2")[i]).split(",")[(result.split("innogrid-test2")[i]).split(",").length - 4]);
+            data.put("value", "" + (result.split("innogrid-test2")[i]).split(",")[(result.split("innogrid-test2")[i]).split(",").length - 3]);
             array.add(data);
         }
         return array;
