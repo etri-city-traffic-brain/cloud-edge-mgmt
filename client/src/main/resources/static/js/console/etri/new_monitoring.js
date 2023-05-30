@@ -14,7 +14,7 @@ xhr.cpu_core = new XMLHttpRequest();
 xhr.mem_total = new XMLHttpRequest();
 xhr.disk_total = new XMLHttpRequest();
 
-const url = "http://127.0.0.1:9300/infra/cloudServices/openstack/monitoring";
+const url = "http://127.0.0.1:9300/infra/cloudServices/VM1/monitoring";
 
 // 서버로부터 API 기반으로 호출하는 메트릭 데이터 가져오기.
 xhr.cpu_usage.open("GET", url + "/cpu_usage", false);
