@@ -222,7 +222,7 @@ public class RexgenController {
             e.printStackTrace();
         }
 
-        System.out.println("GET = " + result);
+        System.out.println("DISK GET = " + result);
 
         JSONArray array = new JSONArray();
 
@@ -230,11 +230,11 @@ public class RexgenController {
             JSONObject data = new JSONObject();
 
             data.put("host", "DC637Q53");
-            data.put("device", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 4]);
-            data.put("start", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 10]);
-            data.put("end", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 9]);
-            data.put("now", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 8]);
-            data.put("value", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 7]);
+            data.put("device", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 10]);
+            data.put("start", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 5]);
+            data.put("end", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 6]);
+            data.put("now", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 4]);
+            data.put("value", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 3]);
 
             array.add(data);
         }
@@ -282,11 +282,11 @@ public class RexgenController {
             JSONObject data = new JSONObject();
 
             data.put("host", "DC637Q53");
-            data.put("device", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 4]);
-            data.put("start", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 10]);
-            data.put("end", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 9]);
-            data.put("now", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 8]);
-            data.put("value", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 7]);
+            data.put("device", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 10]);
+            data.put("start", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 5]);
+            data.put("end", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 6]);
+            data.put("now", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 4]);
+            data.put("value", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 3]);
 
             array.add(data);
         }
