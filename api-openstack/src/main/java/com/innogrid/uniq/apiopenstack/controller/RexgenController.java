@@ -70,11 +70,11 @@ public class RexgenController {
         }
 
         System.out.println("GET = " + result);
-        System.out.println("length1 = " + result.split("DC637Q53").length);
 
         JSONArray array = new JSONArray();
 
         for(int i=0; i< result.split("DC637Q53").length-1; i++) {
+
             JSONObject data = new JSONObject();
             data.put("name", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 1]);
             data.put("host", "DC637Q53");
@@ -127,7 +127,7 @@ public class RexgenController {
         for(int i=0; i< result.split("DC637Q53").length-1; i++) {
             JSONObject data = new JSONObject();
             
-            data.put("name", "");
+            data.put("name", (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 1]);
             data.put("host", "DC637Q53");
             data.put("start", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 6]);
             data.put("end", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 5]);
@@ -178,7 +178,7 @@ public class RexgenController {
         for(int i=0; i< result.split("DC637Q53").length-1; i++) {
             JSONObject data = new JSONObject();
 
-            data.put("name", "");
+            data.put("name", (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 1]);
             data.put("host", "DC637Q53");
             data.put("start", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 6]);
             data.put("end", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 5]);
@@ -312,10 +312,10 @@ public class RexgenController {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"rexgen\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"win_disk\") |> " +
+            String str = "from(bucket: \"rexgen\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"win_diskio\") |> " +
                     "filter(fn: (r) => r[\"_field\"] == \"Percent_Disk_Write_Time\") |> filter(fn: (r) => r[\"host\"] == \"DC637Q53\") |> " +
-                    "filter(fn: (r) => r[\"instance\"] == \"C:\") |> " +
-                    "filter(fn: (r) => r[\"objectname\"] == \"LogicalDisk\") |> yield(name: \"mean\")";
+                    "filter(fn: (r) => r[\"instance\"] == \"0 C:\") |> " +
+                    "filter(fn: (r) => r[\"objectname\"] == \"PhysicalDisk\") |> yield(name: \"mean\")";
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
 
@@ -334,11 +334,11 @@ public class RexgenController {
             JSONObject data = new JSONObject();
 
             data.put("host", "DC637Q53");
-            data.put("device", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 4]);
-            data.put("start", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 10]);
-            data.put("end", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 9]);
-            data.put("now", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 8]);
-            data.put("value", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 7]);
+            data.put("device", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 10]);
+            data.put("start", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 6]);
+            data.put("end", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 5]);
+            data.put("now", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 4]);
+            data.put("value", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 3]);
 
             array.add(data);
         }
@@ -364,10 +364,10 @@ public class RexgenController {
 //        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
         conn.setDoOutput(true);
         try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
-            String str = "from(bucket: \"rexgen\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"win_disk\") |> " +
+            String str = "from(bucket: \"rexgen\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => r[\"_measurement\"] == \"win_diskio\") |> " +
                     "filter(fn: (r) => r[\"_field\"] == \"Percent_Disk_Read_Time\") |> filter(fn: (r) => r[\"host\"] == \"DC637Q53\") |> " +
-                    "filter(fn: (r) => r[\"instance\"] == \"C:\") |> " +
-                    "filter(fn: (r) => r[\"objectname\"] == \"LogicalDisk\") |> yield(name: \"mean\")";
+                    "filter(fn: (r) => r[\"instance\"] == \"0 C:\") |> " +
+                    "filter(fn: (r) => r[\"objectname\"] == \"PhysicalDisk\") |> yield(name: \"mean\")";
             dataOutputStream.write(str.getBytes());
             dataOutputStream.flush();
 
@@ -384,12 +384,13 @@ public class RexgenController {
 
         for(int i=0; i< result.split("DC637Q53").length-1; i++) {
             JSONObject data = new JSONObject();
+
             data.put("host", "DC637Q53");
-            data.put("device", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 4]);
-            data.put("start", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 10]);
-            data.put("end", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 9]);
-            data.put("now", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 8]);
-            data.put("value", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 7]);
+            data.put("device", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 10]);
+            data.put("start", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 6]);
+            data.put("end", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 5]);
+            data.put("now", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 4]);
+            data.put("value", "" + (result.split("DC637Q53")[i]).split(",")[(result.split("DC637Q53")[i]).split(",").length - 3]);
 
             array.add(data);
         }
