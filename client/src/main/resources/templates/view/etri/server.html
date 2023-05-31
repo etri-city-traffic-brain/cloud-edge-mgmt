@@ -68,42 +68,42 @@
         </div>
         <!-- TAB 2 -->
         <div class="detail_cont" id="tab2">
-            <div>
+            <div style="width: 520px;">
                 <div>CPU Usage</div>
                 <canvas width="500" height="200" id="cpu_usage"></canvas>
                 <button id="cpu-usage-5m">5m</button>
                 <button id="cpu-usage-10m">10m</button>
                 <button id="cpu-usage-30m">30m</button>
             </div>
-            <div>
+            <div style="width: 520px;">
                 <div>Memory Usage</div>
                 <canvas width="500" height="200" id="mem_usage"></canvas>
                 <button id="mem-usage-5m">5m</button>
                 <button id="mem-usage-10m">10m</button>
                 <button id="mem-usage-30m">30m</button>
             </div>
-            <div>
+            <div style="width: 520px;">
                 <div>Disk Usage</div>
                 <canvas width="500" height="200" id="disk_usage"></canvas>
                 <button id="disk-usage-5m">5m</button>
                 <button id="disk-usage-10m">10m</button>
                 <button id="disk-usage-30m">30m</button>
             </div>
-            <div>
+            <div style="width: 520px;">
                 <div>CPU Core</div>
                 <canvas width="500" height="200" id="cpu_core"></canvas>
                 <button id="cpu-core-5m">5m</button>
                 <button id="cpu-core-10m">10m</button>
                 <button id="cpu-core-30m">30m</button>
             </div>
-            <div>
+            <div style="width: 520px;">
                 <div>Memory Total</div>
                 <canvas width="500" height="200" id="mem_total"></canvas>
                 <button id="mem-total-5m">5m</button>
                 <button id="mem-total-10m">10m</button>
                 <button id="mem-total-30m">30m</button>
             </div>
-            <div>
+            <div style="width: 520px;">
                 <div>Disk Total</div>
                 <canvas width="500" height="200" id="disk_total"></canvas>
                 <button id="disk-total-5m">5m</button>
@@ -122,8 +122,7 @@
 
     </script>
     <script type="text/javascript" th:src="@{/js/console/etri/server.js}"></script>
-    <script type="text/javascript" th:src="@{/js/console/etri/monitoring.js}"></script>
-    <script type="text/javascript" th:src="@{/js/console/etri/new_monitoring.js}"></script>
+        <script type="text/javascript" th:src="@{/js/console/etri/new_monitoring.js}"></script>
     <script type="text/javascript" th:inline="javascript">
         $(function () {
             ServerUI.init();
