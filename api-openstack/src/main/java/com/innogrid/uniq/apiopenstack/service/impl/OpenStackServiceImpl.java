@@ -2451,7 +2451,7 @@ public class OpenStackServiceImpl implements OpenStackService {
 
         // Connect Influx
 //        String influxDBURL = credentialInfo.getUrl().split("//")[1].split(":")[0]; //"182.252.135.150";
-        String influxDBURL = "133.186.162.210";
+        String influxDBURL = "101.79.1.113";
         InfluxDB influxDB = InfluxDBFactory.connect("http://" + influxDBURL + ":" + INFLUX_DB_QUERY_PORT, "root", "root");
 
         // Chart Param
