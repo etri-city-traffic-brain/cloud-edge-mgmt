@@ -50,7 +50,7 @@ public class CredentialController {
     @Autowired
     private MessageSource messageSource;
 
-    @Secured({"ROLE_ADMIN", "ROLE_CREDENTIAL_READ", "ROLE_CREDENTIAL_WRITE"})
+    @Secured({"ROLE_ADMIN", "ROLE_CRElDENTIAL_READ", "ROLE_CREDENTIAL_WRITE"})
     @RequestMapping(value = {"", "/credential"}, method = RequestMethod.GET)
     public String getCredential(HttpServletRequest request, Principal principal, HttpSession session, Model model) {
 

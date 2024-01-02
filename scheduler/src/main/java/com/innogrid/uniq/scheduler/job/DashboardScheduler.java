@@ -26,11 +26,6 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-/**
- * @author kkm
- * @date 2019.4.24
- * @brief
- */
 @Service
 @Transactional
 public class DashboardScheduler {
@@ -105,6 +100,51 @@ public class DashboardScheduler {
 
             } catch (Exception e) {
                 logger.error("ServiceDashboard Scheduler Target : {}, Error : {}", info, e.getMessage());
+            }
+        }
+    }
+
+    @Scheduled(fixedRateString = "${scheduler.dashboard.billing.period}")
+    private void setBillingDashboard () {
+        List<CredentialInfo> credentialInfoList = credentialService.getCredentialsFromMemory();
+
+        SimpleDateFormat dateTemplate = new SimpleDateFormat("yyyy-MM-dd");
+
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+        Date curMonStartDt = calendar.getTime();
+        Date curMonEndDt = new Date();
+
+        calendar.setTime(curMonEndDt);
+        calendar.add(Calendar.DATE, 1);
+        Date forecastStartDt = calendar.getTime();
+
+        calendar.setTime(forecastStartDt);
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date forecastEndDt = calendar.getTime();
+
+        calendar.setTime(curMonStartDt);
+        calendar.add(Calendar.MONTH, -1);
+        Date prevMonStartDt = calendar.getTime();
+
+        calendar.setTime(curMonEndDt);
+        calendar.add(Calendar.MONTH, -1);
+        Date prevMonEndDt = calendar.getTime();
+
+        calendar.setTime(prevMonEndDt);
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date prevMonFullEndDt = calendar.getTime();
+
+        for(int i=0; i<credentialInfoList.size(); i++) {
+            CredentialInfo info = credentialInfoList.get(i);
+            int idCount = dashboardService.getIDCount(info.getId());
+
+            try {
+                if (info.getType().equals("openstack")) {
+
+                }
+            } catch (Exception e) {
+                logger.error("BillingDashboard Scheduler Target : {}, Error : {}", info, e.getMessage());
             }
         }
     }

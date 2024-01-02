@@ -3,6 +3,8 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
+!core-db/src/main/java/com/innogrid/uniq/coredb/config
+!**/src/main/**/application.properties
 
 ### STS ###
 .apt_generated

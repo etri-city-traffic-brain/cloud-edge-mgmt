@@ -1,17 +1,18 @@
 package com.innogrid.uniq.apiopenstack.controller;
 
 import com.innogrid.uniq.apiopenstack.service.OpenStackService;
-import com.innogrid.uniq.core.model.CctvInfo;
-import com.innogrid.uniq.core.model.CredentialInfo;
-import com.innogrid.uniq.core.model.MeterServerAccumulateInfo;
-import com.innogrid.uniq.core.model.MeterServerInfo;
+import com.innogrid.uniq.core.model.*;
 import com.innogrid.uniq.core.util.AES256Util;
 import com.innogrid.uniq.core.util.ObjectSerializer;
 import com.innogrid.uniq.coredb.dao.CredentialDao;
 import com.innogrid.uniq.coredb.service.CredentialService;
 import com.innogrid.uniq.coredb.service.MeterService;
 import com.innogrid.uniq.coreopenstack.model.*;
-import net.minidev.json.JSONObject;
+import com.innogrid.uniq.coreopenstack.model.ImageInfo;
+import com.innogrid.uniq.coreopenstack.model.ProjectInfo;
+import org.json.simple.JSONArray;
+import org.json.JSONException;
+import org.json.simple.JSONObject;
 import org.openstack4j.model.compute.InterfaceAttachment;
 import org.openstack4j.model.compute.ext.Hypervisor;
 import org.openstack4j.model.compute.ext.HypervisorStatistics;
@@ -21,12 +22,25 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.security.Principal;
+import java.sql.Time;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+
+import static javax.ws.rs.HttpMethod.POST;
 
 /**
  * Created by wss on 19. 7. 10.
@@ -35,6 +49,7 @@ import java.util.Map;
 @RequestMapping("/infra/cloudServices/openstack")
 public class OpenStackController {
     private static Logger logger = LoggerFactory.getLogger(OpenStackController.class);
+
 
     @Autowired
     private OpenStackService openStackService;
@@ -1009,9 +1024,24 @@ public class OpenStackController {
             @RequestHeader(value = "credential") String credential
     ) {
 
+        logger.error("/meter/servers credential ? : {}", credential);
         CredentialInfo credentialInfo = ObjectSerializer.deserializedData(aes256Util.decrypt(credential));
 
         return meterService.getMeterServerAccumulates(new HashMap<String, Object>(){{
+            put("cloudTarget", credentialInfo.getUrl());
+        }});
+    }
+
+    @RequestMapping(value = "/meter/servers/billing", method = RequestMethod.GET)
+    @ResponseBody
+    public List<MeterServerAccumulateBillingInfo> getMeterServerBillingAccumulateInfos(
+            @RequestHeader(value = "credential") String credential
+    ) {
+
+        logger.error("/meter/servers/billing credential ? : {}", credential);
+        CredentialInfo credentialInfo = ObjectSerializer.deserializedData(aes256Util.decrypt(credential));
+
+        return meterService.getMeterServerBillingAccumulateInfos(new HashMap<String, Object>(){{
             put("cloudTarget", credentialInfo.getUrl());
         }});
     }
@@ -1126,6 +1156,9 @@ public class OpenStackController {
                             @RequestParam(required = false) String q0,
                             @RequestParam(required = false) String q1) {
 
+        System.out.println("#@!#!@#!@#!@#@!RR!#F!#$@D!D#@");
+
+
         Map<String, Object> params = new HashMap<>();
 
         params.put("sidx", sidx);
@@ -1134,5 +1167,80 @@ public class OpenStackController {
         params.put("rows", rows);
 
         return openStackService.getCctvs(params);
+    }
+
+    class HttpUtils {
+        public HttpURLConnection getHttpURLConnection(String strUrl, String method) {
+            URL url;
+            HttpURLConnection conn = null;
+            try {
+                url = new URL(strUrl);
+
+                conn = (HttpURLConnection) url.openConnection(); //HttpURLConnection 객체 생성
+                conn.setRequestMethod(POST); //Method 방식 설정. GET/POST/DELETE/PUT/HEAD/OPTIONS/TRACE
+                conn.setConnectTimeout(5000); //연결제한 시간 설정. 5초 간 연결시도
+                conn.setRequestProperty("Content-Type", "application/vnd.flux");
+                conn.setRequestProperty("Authorization", "Token q7yGkB-dz4MkDY-AMKSnOL2blfuDssrk7WRPwRZB0igyqSVQmwGSRvT8J_ueX9sYXSzo5qYsiYNF5sVIJNK9CA==");
+
+            } catch (MalformedURLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
+
+            return conn;
+
+        }
+
+        public String getHttpRespons(HttpURLConnection conn) {
+            StringBuilder sb = null;
+
+            try {
+                if(conn.getResponseCode() == 200) {
+                    // 정상적으로 데이터를 받았을 경우
+                    //데이터 가져오기
+                    System.out.println(conn.getResponseCode());
+                    sb = readResopnseData(conn.getInputStream());
+                    System.out.println(sb);
+                }else{
+                    // 정상적으로 데이터를 받지 못했을 경우
+
+                    //오류코드, 오류 메시지 표출
+                    System.out.println(conn.getResponseCode());
+                    System.out.println(conn.getResponseMessage());
+                    //오류정보 가져오기
+                    sb = readResopnseData(conn.getErrorStream());
+                    System.out.println("error : " + sb.toString());
+                    return null;
+                }
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }finally {
+                conn.disconnect(); //연결 해제
+            };
+            if(sb == null) return null;
+
+            return sb.toString();
+        }
+
+        public StringBuilder readResopnseData(InputStream in) {
+            if(in == null ) return null;
+
+            StringBuilder sb = new StringBuilder();
+            String line = "";
+
+            try (InputStreamReader ir = new InputStreamReader(in);
+                 BufferedReader br = new BufferedReader(ir)){
+                while( (line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            return sb;
+        }
     }
 }

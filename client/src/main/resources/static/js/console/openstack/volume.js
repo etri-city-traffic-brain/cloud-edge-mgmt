@@ -185,6 +185,7 @@ var VolumeUI = (function (options) {
                     autowidth: true,
                     // width:1618,
                     gridComplete: function () {
+                        console.log($(this));
                         $(this).resetSize();
                     },
                     // multiSort: true,

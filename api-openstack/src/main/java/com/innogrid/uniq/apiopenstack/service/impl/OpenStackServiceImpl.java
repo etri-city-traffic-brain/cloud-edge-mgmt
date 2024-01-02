@@ -148,6 +148,8 @@ public class OpenStackServiceImpl implements OpenStackService {
 
         logger.error("apiopenstack, openstackserviceimpl, webCheck is ? : {}", webCheck);
 
+        logger.error("projectId, webCheck is ? : {} , {}", projectId, webCheck);
+
         OSClient os = getOpenstackClient(credentialInfo, projectId);
 
         List<? extends Server> openstackServers = os.compute().servers().list(new HashMap<String, String>(){{
@@ -165,10 +167,12 @@ public class OpenStackServiceImpl implements OpenStackService {
             for (int j = 0; j < openstackServers.size(); j++) {
                 Server server = openstackServers.get(j);
                 ServerInfo info = new ServerInfo(server);
-//                logger.error("[TRUE] apiopenstack, openstackserviceimpl, server = " + server);
-//                logger.error("[TRUE] apiopenstack, openstackserviceimpl, info = " + info);
+                logger.error("[TRUE] apiopenstack, openstackserviceimpl, server = " + server);
+                logger.error("[TRUE] apiopenstack, openstackserviceimpl, info = " + info);
                 if (info.getProjectId() != null) {
                     info.setProjectName(getProjectName(credentialInfo, info.getProjectId()));
+                }else{
+                    logger.error("Where is ProjectId?");
                 }
 
                 list.add(info);
@@ -185,9 +189,10 @@ public class OpenStackServiceImpl implements OpenStackService {
 
             for (int j = 0; j < openstackServers.size(); j++) {
                 Server server = openstackServers.get(j);
-
                 ServerInfo2 info = new ServerInfo2(server, networkInfoList);
-
+//                ServerInfo info2 = new ServerInfo(server);
+                logger.error("info test : {} ", info);
+//                logger.error("info2  test: {} ", info2);
                 for(ImageInfo temp : imageInfos){
                     if(temp.getId().equals(server.getImageId())){
                         info.setImageName(temp.getType());
@@ -209,10 +214,12 @@ public class OpenStackServiceImpl implements OpenStackService {
         logger.error("-------- jsonArray -------- ==== " + jsonArray);
         logger.error("-------- jsonArray -------- ==== " + jsonArray2);
         if(webCheck) {
-//            logger.error("으아아아아아아아아아아아아아아아아아아아아아아");
+            logger.error("test 1");
             return jsonArray;
         }
-        else return jsonArray2;
+        else {
+            logger.error("test2");
+            return jsonArray2;}
     }
 
     @Override
@@ -2444,7 +2451,7 @@ public class OpenStackServiceImpl implements OpenStackService {
 
         // Connect Influx
 //        String influxDBURL = credentialInfo.getUrl().split("//")[1].split(":")[0]; //"182.252.135.150";
-        String influxDBURL = "133.186.162.210";
+        String influxDBURL = "101.79.1.113";
         InfluxDB influxDB = InfluxDBFactory.connect("http://" + influxDBURL + ":" + INFLUX_DB_QUERY_PORT, "root", "root");
 
         // Chart Param

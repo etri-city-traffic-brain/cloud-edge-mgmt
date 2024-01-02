@@ -33,6 +33,19 @@
 		<result column="create_datetime" property="createdAt" />
 		<result column="update_datetime" property="updatedAt" />
 		<result column="cloud_target" property="cloudTarget" />
+		<result column="billing" property="billing" />
+	</resultMap>
+
+	<resultMap id="meterBillingServerAccumulateResultMap" type="MeterServerAccumulateBillingInfo">
+		<result column="id" property="id" />
+		<result column="instance_id" property="instanceId" />
+		<result column="instance_name" property="instanceName" />
+		<result column="flavor_name" property="flavorName" />
+		<result column="flavor_vcpu" property="flavorVcpu" />
+		<result column="flavor_ram" property="flavorRam" />
+		<result column="flavor_disk" property="flavorDisk" />
+		<result column="meter_duration" property="meterDuration" />
+		<result column="billing" property="billing" />
 	</resultMap>
 
 	<sql id="meterServerWhere">
@@ -101,7 +114,7 @@
 		<include refid="com.innogrid.uniq.coredb.paging" />
 	</select>
 
-	<select id="getMeterServerIdCount" resultType="int">
+	<select id="getMeterServerIDCount" resultType="int">
         SELECT COUNT(1) FROM cmp.cmp_meter_instance WHERE instance_id = #{instanceId}
     </select>
 
@@ -116,7 +129,7 @@
 			create_datetime
 		)
 		VALUES (
-			nextval('meter_instance_id_seq'),
+			nextval('cmp.meter_instance_id_seq'),
 			#{instanceId},
 			#{flavorId},
             #{status},
@@ -133,16 +146,16 @@
 				instance_id = #{instanceId},
 			</if>
 			<if test="flavorId != null">
-				flavorId = #{flavorId},
+				flavor_id = #{flavorId},
 			</if>
 			<if test="status != null">
 				status = #{status},
 			</if>
 			<if test="cloudType != null">
-				cloudType = #{cloudType},
+				cloud_type = #{cloudType},
 			</if>
 			<if test="cloudName != null">
-				cloudName = #{cloudName},
+				cloud_name = #{cloudName},
 			</if>
 			<if test="createdAt != null">
 				create_datetime = CURRENT_TIMESTAMP,
@@ -184,15 +197,39 @@
 			meter_instance_accumulate.meter_end_datetime,
 			meter_instance_accumulate.create_datetime,
 			meter_instance_accumulate.update_datetime,
-			meter_instance_accumulate.cloud_target
+			meter_instance_accumulate.cloud_target,
+			meter_instance_accumulate.billing
 		FROM cmp.cmp_meter_instance_accumulate as meter_instance_accumulate
     </sql>
+
+	<sql id="meterBillingServerAccumulateSQL">
+		SELECT
+		meter_instance_accumulate.id,
+		meter_instance_accumulate.instance_id,
+		meter_instance_accumulate.instance_name,
+		meter_instance_accumulate.flavor_name,
+		meter_instance_accumulate.flavor_vcpu,
+		meter_instance_accumulate.flavor_ram,
+		meter_instance_accumulate.flavor_disk,
+		meter_instance_accumulate.meter_duration,
+		meter_instance_accumulate.billing
+		FROM cmp.cmp_meter_instance_accumulate as meter_instance_accumulate
+	</sql>
 
 	<select id="getMeterServerAccumulate" resultMap="meterServerAccumulateResultMap">
 		SELECT * FROM (
 		<include refid="meterServerAccumulateSQL" />
 		) AS d
 		<include refid="meterServerAccumulateWhere" />
+		<include refid="com.innogrid.uniq.coredb.orderby" />
+		<include refid="com.innogrid.uniq.coredb.paging" />
+	</select>
+
+	<select id="getMeterBillingServerAccumulate" resultMap="meterBillingServerAccumulateResultMap">
+		SELECT * FROM (
+		<include refid="meterBillingServerAccumulateSQL" />
+		) AS d
+<!--		<include refid="meterServerAccumulateWhere" />-->
 		<include refid="com.innogrid.uniq.coredb.orderby" />
 		<include refid="com.innogrid.uniq.coredb.paging" />
 	</select>
@@ -229,10 +266,11 @@
 			meter_end_datetime,
 			create_datetime,
 			update_datetime,
-			cloud_target
+			cloud_target,
+			billing
 		)
 		VALUES (
-			nextval('meter_instance_accumulate_id_seq'),
+			nextval('cmp.meter_instance_accumulate_id_seq'),
 			#{credentialId},
 			#{cloudType},
             #{cloudName},
@@ -250,7 +288,8 @@
             #{meterEndTime},
             #{createdAt},
             #{updatedAt},
-            #{cloudTarget}
+            #{cloudTarget},
+            #{billing}
 		)
 	</insert>
 

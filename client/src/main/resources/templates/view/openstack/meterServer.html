@@ -3,6 +3,9 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="layout/openstack.layout">
+<script src="../../../static/js/console/dashboard/public.js"></script>
+<script src="../../../static/js/console/dashboard/private.js"></script>
+<script src="../../../static/js/console/dashboard.js"></script>
 <div class="common_clearfix" layout:fragment="tit">
     <div class="cont_current" th:text="#{w.usage2}">Usage</div>
 </div>
@@ -70,6 +73,31 @@
     <!--    </div>&lt;!&ndash; //cont_body_top &ndash;&gt;-->
 
     <div class="tb_wrap">
+        <div class="pop_wrap" id="pop_billing" style="width: 650px">
+            <button type="button" class="btn_pop_close">
+                <span class="ico_del"></span>
+            </button>
+            <div class="pop_common">
+                <div class="pop_billing_tit">청구서 상세내역</div>
+                <div class="pop_body">
+                    <div class="pop_cont">
+                        <!--                        <table class="tb_pop_data">-->
+                        <table class="tb_grid" id="meterServer-popGrid1">
+                        </table>
+                        <table class="tb_grid" id="meterServer-popGrid2">
+                        </table>
+<!--                        <hr style="background: #373f5a; height: 1px; border: 0;" />-->
+                        <div class="pop_a">
+                            <a>예상 금액(VAT 별도)</a><span class="billing_text"></span><a>원</a>
+                        </div>
+                    </div>
+                    <div class="pop_billing_di">
+                        <button type="button" class="btn_confirm">확인</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
         <table class="tb_grid" id="meterServer-grid">
         </table>
     </div><!-- //tb_wrap -->

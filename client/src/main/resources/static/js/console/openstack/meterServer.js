@@ -2,6 +2,7 @@ var MeterServerUI = (function (options) {
 
     var
         modules = {},
+        // gridData = [],
         MeterServerModel = Backbone.Model.extend({
             idAttribute: 'id',
             urlRoot: '/private/openstack/meter/servers?id=' + id,
@@ -14,7 +15,11 @@ var MeterServerUI = (function (options) {
                 instanceName: '',
                 meterDuration: '',
                 meterStartTime: '',
-                meterEndTime: ''
+                meterEndTime: '',
+                billing: '',
+                flavorVcpu: '',
+                flavorRam: '',
+                flavorDisk: '',
             }
         }),
         MeterServerCollection = Backbone.Collection.extend({
@@ -32,10 +37,40 @@ var MeterServerUI = (function (options) {
         ServerCollection = Backbone.Collection.extend({
             model: ServerModel
         }),
+        BillingModel = Backbone.Model.extend({
+            idAttribute: 'id',
+            urlRoot: '/private/openstack/meter/servers?id='+id,
+            defaults: {
+                id: null,
+                credentialId: '',
+                cloudType: '',
+                cloudName: '',
+                projectId: '',
+                instanceId: '',
+                instanceName: '',
+                ImageId: '',
+                flavorId: '',
+                flavorName: '',
+                flavorVcpu: '',
+                flavorRam: '',
+                flavordisk: '',
+                meterDuration: '',
+                meterStartTime: '',
+                meterEndTime: '',
+                createdAt: '',
+                updatedAt: '',
+                cloudTarget: '',
+                billing: '',
+                state: ''
+            }
+        }),
+        BillingCollection = Backbone.Collection.extend({
+            model: BillingModel
+        }),
         MeterServerDetailView = Backbone.View.extend({
             el: "#tab1",
             model: new MeterServerModel(),
-            template: _.template('<div class="detail_data">\n    <table class="tb_data">\n        <tr>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.instanceId\') }}</th>\n            <td>{{= instanceId }}</td>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.instanceName\') }}</th>\n            <td>{{= instanceName }}</td>\n        </tr>\n        <tr>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.flavorId\') }}</th>\n            <td>{{= flavorId }}</td>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.spec\') }}</th>\n            <td>{{= flavorName }}</td>\n        </tr>\n        <tr>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.measureStartDate\') }}</th>\n            <td>{{= meterStartTime }}</td>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.measureEndDate\') }}</th>\n            <td>{{= meterEndTime }}</td>\n        </tr>\n        <tr>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.usageTime\') }}</th>\n            <td>{{= meterDuration }}</td>\n            <th></th>\n            <td></td>\n        </tr>\n    </table>\n</div><!-- //detail_data -->'),
+            template: _.template('<div class="detail_data">\n    <table class="tb_data">\n        <tr>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.instanceId\') }}</th>\n            <td>{{= instanceId }}</td>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.instanceName\') }}</th>\n            <td>{{= instanceName }}</td>\n        </tr>\n        <tr>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.flavorId\') }}</th>\n            <td>{{= flavorId }}</td>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.spec\') }}</th>\n            <td>{{= flavorName }}</td>\n        </tr>\n        <tr>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.measureStartDate\') }}</th>\n            <td>{{= meterStartTime }}</td>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.measureEndDate\') }}</th>\n            <td>{{= meterEndTime }}</td>\n        </tr>\n        <tr>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.usageTime\') }}</th>\n            <td>{{= meterDuration }}</td>\n            <th>{{= jQuery.i18n.prop(\'title.jqgrid.billing\') }}</th>\n            <td>{{= billing }}원</td>\n        </tr>\n    </table>\n</div><!-- //detail_data -->'),
             initialize: function () {
                 var self = this;
                 this.model.on('change', function(model) {
@@ -48,13 +83,15 @@ var MeterServerUI = (function (options) {
             // }
         }),
         MeterServerView = Backbone.View.extend({
+
             el: ".cont_wrap",
             events: {
                 "click .cont_list .searchBtn": "search",
                 "keyup .cont_list .input_search": "searchEnter",
                 "click .cont_list .btn_control":"resetGrid",
                 "click .detail_tab a": "detailView",
-                "click .detail_label_btn":"clearDetail"
+                "click .detail_label_btn":"clearDetail",
+                "click .btn1" : "billing"
             },
             search: function() {
                 this.grid.search();
@@ -103,6 +140,13 @@ var MeterServerUI = (function (options) {
                 // modules.detailServerView.reset();
                 // this.closeDetail();
             },
+            billing: function (e) {
+                var rowId = e.currentTarget.id.replace("btn", "");
+                // console.log(this.grid.getGridParam("data"));
+                var billingData = this.grid.getGridParam("data");
+                modules.billingPage.show(rowId, billingData);
+                modules.billingPage.initialize(billingData);
+            },
             currentSelRow: function () {
                 var selRow = this.grid.getGridParam("selrow");
                 if (!selRow) {
@@ -116,6 +160,7 @@ var MeterServerUI = (function (options) {
                 var self = this;
                 this.gridId = "#meterServer-grid";
                 this.grid = $(this.gridId).jqGrid({
+                    idAttribute: 'id',
                     datatype: "json",
                     url: '/private/openstack/meter/servers?id=' + id,
                     jsonReader: {
@@ -131,8 +176,13 @@ var MeterServerUI = (function (options) {
                         jQuery.i18n.prop('title.jqgrid.measureStartDate'),
                         jQuery.i18n.prop('title.jqgrid.measureEndDate'),
                         jQuery.i18n.prop('title.jqgrid.usageTime'),
+                        jQuery.i18n.prop('title.jqgrid.billing'),
+                        '청구서 확인',
                         jQuery.i18n.prop('title.jqgrid.projectID'),
-                        jQuery.i18n.prop('title.jqgrid.id')
+                        jQuery.i18n.prop('title.jqgrid.id'),
+                        'CPU',
+                        'Memory',
+                        'Volume'
                     ],
                     colModel: [
                         {name: 'instanceName'},
@@ -142,8 +192,16 @@ var MeterServerUI = (function (options) {
                         {name: 'meterStartTime'},
                         {name: 'meterEndTime'},
                         {name: 'meterDuration', formatter: dateFormatter, sorttype: 'integer'},
+                        // {name: 'billing', formatter: fn_numberFormat},
+                        {name: 'billing', sorttype:'integer', formatter:function (cellVal, options, row) {
+                                return cellVal + "원";
+                            }},
+                        {name:'btn_confirm', index:'btn1', width:80, align: "center", formatter:formatOpt1, sortable: false},
                         {name: 'projectId', hidden: true},
-                        {name: 'id', hidden: true}
+                        {name: 'id', hidden: true},
+                        {name: 'flavorVcpu', hidden: true},
+                        {name: 'flavorRam', hidden: true},
+                        {name: 'flavorDisk', hidden: true},
                     ],
                     altRows: true,
                     sortname: "id",
@@ -155,22 +213,22 @@ var MeterServerUI = (function (options) {
                     },
                     // multiSort: true,
                     scrollOffset: 0,
-                    rowNum: setRowNum(15, self.gridId),
+                    rowNum: setRowNum(15, this.gridId),
                     loadtext: "",
                     autoencode: true,
                     onSelectRow: function (id) {
-                        // var m = self.collection.get(id);
-                        // // if ($("#detailBtn").hasClass("selected")) {
-                        // var tabIndex = $('.detail_tab a.on').index();
-                        // modules.detailView.model.set(m.toJSON());
-                        // if(tabIndex == 1) {
-                        //     modules.detailServerView.render(m);
+                        var m = self.collection.get(id);
+                        // if ($("#detailBtn").hasClass("selected")) {
+                        var tabIndex = $('.detail_tab a.on').index();
+                        modules.detailView.model.set(m.toJSON());
+                        if(tabIndex == 1) {
+                            modules.detailServerView.render(m);
+                        }
                         // }
-                        // // }
-                        // $('.content').addClass('detail_on');
-                        // setTimeout(function() {
-                        //     self.grid.resetSize()
-                        // }, options.gridReSizeTime);
+                        $('.content').addClass('detail_on');
+                        setTimeout(function() {
+                            self.grid.resetSize()
+                        }, options.gridReSizeTime);
                     },
                     loadComplete: function (data) {
                         self.collection.reset(data.rows);
@@ -181,6 +239,8 @@ var MeterServerUI = (function (options) {
                         //         'q1': $(".input_search").val()
                         //     }
                         // };
+                        gridData = $(this).jqGrid('getGridParam', 'data');
+                        console.log("gridData ", gridData);
                         data.rowNum = $(this).getGridParam("rowNum");
                         data.reccount = $(this).getGridParam("reccount");
                         $("#pager1").pager(data);
@@ -188,6 +248,19 @@ var MeterServerUI = (function (options) {
 
                     }
                 });
+
+                function formatOpt1(cellvalue, options, rowObject){
+                    var str = "";
+                    var row_id = options.rowId;
+                    var idx = rowObject.idx;
+
+                    // str += "<div class=\"btn-group\">";
+                    str += "<button id='btn"+row_id+"' type='button' class='btn1'>확인</button>"
+                    // str += "</div>";
+                    str += "<script>$('#btn"+row_id+"').click(function(){ var row_id = "+row_id+";});</script>";
+
+                    return str;
+                };
 
                 this.collection = new MeterServerCollection();
                 this.collection.on("add", function (model) {
@@ -203,6 +276,94 @@ var MeterServerUI = (function (options) {
                 });
             }
         }),
+
+        BillingPage = Backbone.View.extend({
+            model: new BillingModel(),
+            el : "#pop_billing",
+            events : {
+                "click .btn_confirm": "close",
+                "click .btn_pop_close": "close"
+            },
+            initialize: function (billingData) {
+                var self = this;
+                // console.log(billingData);
+                this.gridId = '#meterServer-popGrid1';
+                var grid1 = $('#meterServer-popGrid1');
+                var grid2 = $('#meterServer-popGrid2');
+                // this.grid = $('#meterServer-popGrid').jqGrid({
+                this.grid1 = grid1.jqGrid({
+                    datatype: "json",
+                    url: '/private/openstack/meter/servers?id=' + id,
+                    jsonReader: {
+                        repeatitems: false,
+                        id: "id"
+                    },
+                    colNames: [
+                        'ID',
+                        '인스턴스 이름',
+                        '인스턴스 ID',
+                        '사양',
+                    ],
+                    colModel: [
+                        {name: 'id', hidden: true},
+                        {name: 'instanceName'},
+                        {name: 'instanceId', width: '305px'},
+                        {name: 'flavorName'},
+                    ],
+                    width: 'auto',
+                    gridComplete: function () {
+                        $(this).resetSize();
+                    },
+                });
+                this.grid2 = grid2.jqGrid({
+                    datatype: "json",
+                    url: '/private/openstack/meter/servers?id=' + id,
+                    jsonReader: {
+                        repeatitems: false,
+                        id: "id"
+                    },
+                    colNames: [
+                        'ID',
+                        '사용 시간',
+                        'CPU',
+                        'Memory',
+                        'Volume',
+                    ],
+                    colModel: [
+                        {name: 'id', hidden: true},
+                        {name: 'meterDuration', formatter: dateFormatter, sorttype: 'integer'},
+                        {name: 'flavorVcpu'},
+                        {name: 'flavorRam' },
+                        {name: 'flavorDisk'},
+                    ],
+                    width: 'auto',
+                    gridComplete: function () {
+                        $(this).resetSize();
+                    },
+                });
+            },
+            show : function (rowId, billingData) {
+                var gridData = billingData.filter(data => data.id === rowId);
+                this.grid1.setGridParam({
+                    datatype: "local",
+                    page: 1,
+                    data: gridData,
+                }).trigger("reloadGrid");
+                this.grid2.setGridParam({
+                    datatype: "local",
+                    page: 1,
+                    data: gridData,
+                }).trigger("reloadGrid");
+                $myPlugin.setPopupCenter(this.el);
+                this.$el.fadeIn(100);
+                var billingText = document.querySelector('.billing_text');
+                billingText.textContent = gridData[0].billing;
+            },
+            close : function(){
+                this.$el.fadeOut(100);
+            },
+        }),
+
         ServerView = Backbone.View.extend({
             el: "#tab2",
             events: {
@@ -325,7 +486,7 @@ var MeterServerUI = (function (options) {
             modules.view = new MeterServerView();
             modules.detailView = new MeterServerDetailView();
             modules.detailServerView = new ServerView();
-
+            modules.billingPage = new BillingPage();
         };
 
     return {

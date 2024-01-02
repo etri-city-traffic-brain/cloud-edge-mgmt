@@ -1,9 +1,6 @@
 package com.innogrid.uniq.client.service;
 
-import com.innogrid.uniq.core.model.CredentialInfo;
-import com.innogrid.uniq.core.model.MeterServerAccumulateInfo;
-import com.innogrid.uniq.core.model.MeterServerInfo;
-import com.innogrid.uniq.core.model.ProjectInfo;
+import com.innogrid.uniq.core.model.*;
 
 import java.util.List;
 
@@ -31,5 +28,7 @@ public interface ApiService {
     List<MeterServerInfo> getMeterServers(String cloudId, String serverId, String token);
 
     List<MeterServerAccumulateInfo> getMeterServerAccumulates(String cloudId, String token);
+
+    List<MeterServerAccumulateBillingInfo> getMeterServerAccumulatesbilling(String cloudId, String token);
 
 }
