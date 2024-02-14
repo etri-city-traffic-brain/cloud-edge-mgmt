@@ -14,7 +14,7 @@ xhr.system_up_time = new XMLHttpRequest();
 xhr.mem_total = new XMLHttpRequest();
 xhr.disk_total = new XMLHttpRequest();
 
-const url = "http://127.0.0.1:9300/infra/cloudServices/Rexgen/monitoring";
+const url = "http://127.0.0.1:9300/infra/cloudServices/VM2/monitoring";
 
 // 서버로부터 API 기반으로 호출하는 메트릭 데이터 가져오기.
 xhr.cpu_usage.open("GET", url + "/cpu_usage", false);
@@ -39,9 +39,8 @@ metricData.cpu_usage.forEach((obj) => {
 });
 metricData.mem_usage = JSON.parse(xhr.mem_usage.response);
 metricData.mem_usage.forEach((obj) => {
-    obj.unit = "GB";
+    obj.unit = "%";
     obj.chartColor = "rgba(168, 209, 209, 0.5)";
-    obj.value = obj.value / 1000 / 1000 / 1000;
 });
 metricData.disk_usage = JSON.parse(xhr.disk_usage.response);
 metricData.disk_usage.forEach((obj) => {
@@ -64,8 +63,8 @@ metricData.disk_total = JSON.parse(xhr.disk_total.response);
 metricData.disk_total.forEach((obj) => {
     obj.unit = "TB";
     obj.chartColor = "rgba(158, 161, 212, 0.5)";
+    obj.value = obj.value / 1000 / 1000 / 1000 / 1000;
 });
-console.log(metricData.disk_total);
 
 // 차트 그리는 함수 정의.
 function drawChart(element, metricData) {
@@ -140,9 +139,14 @@ function redrawChart(metric, time) {
                 }
             } else if (metric == "mem_usage" || metric == "mem_total") {
                 obj.chartColor = "rgba(168, 209, 209, 0.5)";
-                obj.value = obj.value / 1000 / 1000 / 1000;
+                if (metric == "mem_total") {
+                    obj.value = obj.value / 1000 / 1000 / 1000;
+                }
             } else if (metric == "disk_usage" || metric == "disk_total") {
                 obj.chartColor = "rgba(158, 161, 212, 0.5)";
+                if (metric == "disk_total") {
+                    obj.value = obj.value / 1000 / 1000 / 1000 / 1000;
+                }
             }
         });
 

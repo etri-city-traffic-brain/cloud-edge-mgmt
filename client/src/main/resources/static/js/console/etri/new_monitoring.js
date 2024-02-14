@@ -64,7 +64,6 @@ metricData.disk_total.forEach((obj) => {
     obj.chartColor = "rgba(158, 161, 212, 0.5)";
     obj.value = obj.value / 1000 / 1000 / 1000 / 1000;
 });
-console.log(metricData.disk_total);
 
 // 차트 그리는 함수 정의.
 function drawChart(element, metricData) {

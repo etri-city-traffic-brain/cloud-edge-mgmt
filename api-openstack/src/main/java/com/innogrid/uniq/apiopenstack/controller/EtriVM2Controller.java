@@ -87,6 +87,54 @@ public class EtriVM2Controller {
         return array;
     }
 
+    @RequestMapping(value = {"/monitoring/system_up_time"}, method = RequestMethod.GET)
+    @ResponseBody
+    public JSONArray getSystemTimeMonitoringData(HttpServletRequest request, HttpServletResponse response, Principal principal, HttpSession session, Model model) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        HttpUtils htppUtils = new HttpUtils();
+
+        String url = openstackVm2Url;
+        String method = "POST";
+        String result = "";
+        String Time_range = request.getParameter("range") == null ? "5m" : request.getParameter("range");
+        HttpURLConnection conn = null;
+
+        //HttpURLConnection 객체 생성
+        conn = htppUtils.getHttpURLConnection(url, method);
+//        BufferedOutputStream dataOutputStream = new BufferedOutputStream(conn.getOutputStream());
+        conn.setDoOutput(true);
+        try (DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());){
+            String str = "from(bucket: \"innogrid_vm2\") |> range(start: -" + Time_range + ") |> filter(fn: (r) => " +
+                    "r[\"_measurement\"] == \"system\") |> filter(fn: (r) => r[\"_field\"] == \"uptime\") " +
+                    "|> yield(name: \"mean\")";
+
+            dataOutputStream.write(str.getBytes());
+            dataOutputStream.flush();
+
+            result = htppUtils.getHttpRespons(conn);
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        System.out.println("system_up_time GET = " + result);
+
+        JSONArray array = new JSONArray();
+
+        for(int i=0; i< result.split("innogrid-test2").length-1; i++) {
+            JSONObject data = new JSONObject();
+            data.put("name", "" + (result.split("innogrid-test2")[i]).split(",")[(result.split("innogrid-test2")[i]).split(",").length - 1]);
+            data.put("host", "innogrid-test2");
+            data.put("start", "" + (result.split("innogrid-test2")[i]).split(",")[(result.split("innogrid-test2")[i]).split(",").length - 6]);
+            data.put("end", "" + (result.split("innogrid-test2")[i]).split(",")[(result.split("innogrid-test2")[i]).split(",").length - 5]);
+            data.put("now", "" + (result.split("innogrid-test2")[i]).split(",")[(result.split("innogrid-test2")[i]).split(",").length - 4]);
+            data.put("value", "" + (result.split("innogrid-test2")[i]).split(",")[(result.split("innogrid-test2")[i]).split(",").length - 3]);
+            array.add(data);
+        }
+        return array;
+    }
+
     // memory 사용량
     @RequestMapping(value = {"/monitoring/mem_usage"}, method = RequestMethod.GET)
     @ResponseBody
@@ -117,7 +165,7 @@ public class EtriVM2Controller {
             e.printStackTrace();
         }
 
-        System.out.println("GET = " + result);
+        System.out.println("GET Mem Usage= " + result);
 
         JSONArray array = new JSONArray();
 
@@ -165,7 +213,7 @@ public class EtriVM2Controller {
             e.printStackTrace();
         }
 
-        System.out.println("GET = " + result);
+        System.out.println("GET Mem Total= " + result);
 
         JSONArray array = new JSONArray();
 
@@ -212,7 +260,7 @@ public class EtriVM2Controller {
             e.printStackTrace();
         }
 
-        System.out.println("GET = " + result);
+        System.out.println("GET Disk Usgae= " + result);
 
         JSONArray array = new JSONArray();
 
@@ -260,7 +308,7 @@ public class EtriVM2Controller {
             e.printStackTrace();
         }
 
-        System.out.println("GET = " + result);
+        System.out.println("GET Disk Total = " + result);
 
         JSONArray array = new JSONArray();
 
